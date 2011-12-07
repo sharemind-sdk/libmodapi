@@ -229,9 +229,13 @@ SMVM_Module * SMVM_Module_new(SMVM_MODAPI * modapi, const char * filename) {
     m->version = *modVersion;
 
     /* Do API specific loading: */
-    SMVM_MODAPI_Error status = (*(apis[m->apiVersion - 1u].module_load))(m);
-    if (likely(status == SMVM_MODAPI_OK))
-        return m;
+    {
+        SMVM_MODAPI_Error status = (*(apis[m->apiVersion - 1u].module_load))(m);
+        if (likely(status == SMVM_MODAPI_OK))
+            return m;
+
+        SMVM_MODAPI_setErrorWithStaticString(modapi, status, NULL);
+    }
 
 loadModule_fail_3:
 

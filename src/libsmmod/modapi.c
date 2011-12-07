@@ -172,7 +172,7 @@ SMVM_Module * SMVM_Module_new(SMVM_MODAPI * modapi, const char * filename) {
     m->filename = strdup(filename);
     if (unlikely(!m->filename)) {
         OOM(modapi);
-        goto loadModule_fail_0;
+        goto SMVM_Module_new_fail_0;
     }
 
     /* Load module: */
@@ -180,14 +180,14 @@ SMVM_Module * SMVM_Module_new(SMVM_MODAPI * modapi, const char * filename) {
     m->handle = dlopen(filename, RTLD_NOW | RTLD_LOCAL | RTLD_DEEPBIND);
     if (unlikely(!m->handle)) {
         SMVM_MODAPI_setErrorWithDynamicString(modapi, SMVM_MODAPI_UNABLE_TO_OPEN_MODULE, dlerror());
-        goto loadModule_fail_1;
+        goto SMVM_Module_new_fail_1;
     }
 
     /* Determine API version to use: */
     modApiVersions = (const uint32_t (*)[]) dlsym(m->handle, "SMVM_MOD_api_versions");
     if (unlikely(!modApiVersions || (*modApiVersions)[0] == 0u)) {
         SMVM_MODAPI_setErrorWithDynamicString(modapi, SMVM_MODAPI_INVALID_MODULE, dlerror());
-        goto loadModule_fail_2;
+        goto SMVM_Module_new_fail_2;
     }
     i = 0u;
     m->apiVersion = 0u;
@@ -201,30 +201,30 @@ SMVM_Module * SMVM_Module_new(SMVM_MODAPI * modapi, const char * filename) {
     } while ((*modApiVersions)[++i] == 0u);
     if (unlikely(m->apiVersion <= 0u)) {
         SMVM_MODAPI_setErrorWithStaticString(modapi, SMVM_MODAPI_API_NOT_SUPPORTED, "API not supported!");
-        goto loadModule_fail_2;
+        goto SMVM_Module_new_fail_2;
     }
 
     /* Determine module name: */
     modName = (const char **) dlsym(m->handle, "SMVM_MOD_name");
     if (unlikely(!modName)) {
         SMVM_MODAPI_setErrorWithDynamicString(modapi, SMVM_MODAPI_INVALID_MODULE, dlerror());
-        goto loadModule_fail_2;
+        goto SMVM_Module_new_fail_2;
     }
     if (unlikely(!*modName)) {
         SMVM_MODAPI_setErrorWithStaticString(modapi, SMVM_MODAPI_INVALID_MODULE, NULL);
-        goto loadModule_fail_2;
+        goto SMVM_Module_new_fail_2;
     }
     m->name = strdup(*modName);
     if (unlikely(!m->name)) {
         OOM(modapi);
-        goto loadModule_fail_2;
+        goto SMVM_Module_new_fail_2;
     }
 
     /* Determine module version: */
     modVersion = (const uint32_t *) dlsym(m->handle, "SMVM_MOD_version");
     if (unlikely(!modVersion)) {
         SMVM_MODAPI_setErrorWithDynamicString(modapi, SMVM_MODAPI_INVALID_MODULE, dlerror());
-        goto loadModule_fail_3;
+        goto SMVM_Module_new_fail_3;
     }
     m->version = *modVersion;
 
@@ -237,19 +237,19 @@ SMVM_Module * SMVM_Module_new(SMVM_MODAPI * modapi, const char * filename) {
         SMVM_MODAPI_setErrorWithStaticString(modapi, status, NULL);
     }
 
-loadModule_fail_3:
+SMVM_Module_new_fail_3:
 
     free(m->name);
 
-loadModule_fail_2:
+SMVM_Module_new_fail_2:
 
     dlclose(m->handle);
 
-loadModule_fail_1:
+SMVM_Module_new_fail_1:
 
     free(m->filename);
 
-loadModule_fail_0:
+SMVM_Module_new_fail_0:
 
     free(m);
     return NULL;

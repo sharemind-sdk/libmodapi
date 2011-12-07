@@ -108,7 +108,8 @@ typedef struct {
 typedef enum {
     SMVM_MODAPI_0x1_SC_OK = 0x00,
     SMVM_MODAPI_0x1_SC_OUT_OF_MEMORY = 0x01,
-    SMVM_MODAPI_0x1_SC_INVALID_CALL = 0x02
+    SMVM_MODAPI_0x1_SC_INVALID_CALL = 0x02,
+    SMVM_MODAPI_0x1_SC_GENERAL_FAILURE = 0x03
 } SMVM_MODAPI_0x1_Syscall_Code;
 
 /** Additional context provided for system calls: */

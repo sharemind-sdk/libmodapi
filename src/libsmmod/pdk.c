@@ -108,4 +108,9 @@ SMVM_Module * SMVM_PDK_get_module(const SMVM_PDK * pdk) {
     return pdk->module;
 }
 
+size_t SMVM_PDK_get_index(const SMVM_PDK * pdk) {
+    assert(pdk);
+    return pdk->pdk_index;
+}
+
 SMVM_REFS_DEFINE_FUNCTIONS(SMVM_PDK)

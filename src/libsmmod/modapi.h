@@ -110,6 +110,7 @@ void * SMVM_Syscall_get_null_or_impl(const SMVM_Syscall * sc) __attribute__ ((no
 
 const char * SMVM_PDK_get_name(const SMVM_PDK * pdk) __attribute__ ((nonnull(1)));
 SMVM_Module * SMVM_PDK_get_module(const SMVM_PDK * sc) __attribute__ ((nonnull(1)));
+size_t SMVM_PDK_get_index(const SMVM_PDK * sc) __attribute__ ((nonnull(1)));
 
 
 /*******************************************************************************

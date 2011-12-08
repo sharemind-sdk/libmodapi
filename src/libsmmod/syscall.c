@@ -21,9 +21,16 @@ int SMVM_Syscall_init(SMVM_Syscall * sc, const char * name, void * impl, void * 
     assert(name);
     assert(impl);
 
-    sc->name = strdup(name);
-    if (!sc->name)
+    if (!SMVM_Module_ref(m))
         return 0;
+
+    SMVM_REFS_INIT(sc);
+
+    sc->name = strdup(name);
+    if (!sc->name) {
+        SMVM_Module_unref(m);
+        return 0;
+    }
 
     if (wrapper) {
         sc->impl_or_wrapper = wrapper;
@@ -36,23 +43,14 @@ int SMVM_Syscall_init(SMVM_Syscall * sc, const char * name, void * impl, void * 
     return 1;
 }
 
-SMVM_Syscall * SMVM_Syscall_copy(SMVM_Syscall * dest, const SMVM_Syscall * src) {
-    dest->name = strdup(src->name);
-    if (!dest->name)
-        return NULL;
-
-    dest->impl_or_wrapper = src->impl_or_wrapper;
-    dest->null_or_impl = src->null_or_impl;
-    dest->module = src->module;
-    return dest;
-}
-
 void SMVM_Syscall_destroy(SMVM_Syscall * sc) {
     assert(sc);
     assert(sc->impl_or_wrapper);
     assert(sc->name);
+    SMVM_REFS_ASSERT_IF_REFERENCED(sc);
 
     free(sc->name);
+    SMVM_Module_unref(sc->module);
 }
 
 const char * SMVM_Syscall_get_name(const SMVM_Syscall * sc) {
@@ -74,3 +72,5 @@ void * SMVM_Syscall_get_null_or_impl(const SMVM_Syscall * sc) {
     assert(sc);
     return sc->null_or_impl;
 }
+
+SMVM_REFS_DEFINE_FUNCTIONS(SMVM_Syscall)

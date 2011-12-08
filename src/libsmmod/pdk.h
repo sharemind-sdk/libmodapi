@@ -14,6 +14,7 @@
 #error including an internal header!
 #endif
 
+#include "../refs.h"
 #include "modapi.h"
 
 
@@ -59,6 +60,9 @@ struct _SMVM_PDK {
 
     /** Pointer to the module which provides this protection domain kind. */
     SMVM_Module * module;
+
+    SMVM_REFS_DECLARE_FIELDS
+
 };
 
 int SMVM_PDK_init(SMVM_PDK * pdk,
@@ -74,6 +78,8 @@ int SMVM_PDK_init(SMVM_PDK * pdk,
                   void * pdpi_shutdown_wrapper,
                   SMVM_Module * module) __attribute__ ((nonnull(1, 3, 4, 6, 8, 10, 12)));
 void SMVM_PDK_destroy(SMVM_PDK * pdk) __attribute__ ((nonnull(1)));
+
+SMVM_REFS_DECLARE_FUNCTIONS(SMVM_PDK)
 
 
 #ifdef __cplusplus

@@ -38,11 +38,16 @@ int SMVM_PDK_init(SMVM_PDK * pdk,
     assert(pd_process_shutdown_impl);
     assert(module);
 
+    if (!SMVM_Module_ref(module))
+        return 0;
+
     pdk->pdk_index = pdk_index;
 
     pdk->name = strdup(name);
-    if (unlikely(!pdk->name))
+    if (unlikely(!pdk->name)) {
+        SMVM_Module_unref(module);
         return 0;
+    }
 
     if (pd_startup_wrapper) {
         pdk->pd_startup_impl_or_wrapper = pd_startup_wrapper;
@@ -77,6 +82,7 @@ int SMVM_PDK_init(SMVM_PDK * pdk,
     }
 
     pdk->module = module;
+    SMVM_REFS_INIT(pdk);
     return 1;
 }
 
@@ -88,8 +94,10 @@ void SMVM_PDK_destroy(SMVM_PDK * pdk) {
     assert(pdk->pdpi_startup_impl_or_wrapper);
     assert(pdk->pdpi_shutdown_impl_or_wrapper);
     assert(pdk->module);
+    SMVM_REFS_ASSERT_IF_REFERENCED(pdk);
 
     free(pdk->name);
+    SMVM_Module_unref(pdk->module);
 }
 
 const char * SMVM_PDK_get_name(const SMVM_PDK * pdk) {
@@ -99,3 +107,5 @@ const char * SMVM_PDK_get_name(const SMVM_PDK * pdk) {
 SMVM_Module * SMVM_PDK_get_module(const SMVM_PDK * pdk) {
     return pdk->module;
 }
+
+SMVM_REFS_DEFINE_FUNCTIONS(SMVM_PDK)

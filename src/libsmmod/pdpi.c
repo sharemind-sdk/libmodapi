@@ -28,9 +28,13 @@ SMVM_PDPI * SMVM_PDPI_new(SMVM_PD * pd) {
     assert(pd->pdk->module);
     assert(pd->pdk->module->modapi);
 
+    if (!SMVM_PD_ref(pd))
+        return NULL;
+
     SMVM_PDPI * const pdpi = (SMVM_PDPI *) malloc(sizeof(SMVM_PDPI));
     if (unlikely(!pdpi)) {
         OOM(pd->pdk->module->modapi);
+        SMVM_PD_unref(pd);
         return NULL;
     }
 
@@ -45,6 +49,7 @@ SMVM_PDPI * SMVM_PDPI_new(SMVM_PD * pd) {
     const int r = (*((SMVM_MODAPI_0x1_PDPI_Startup) pdk->pdpi_startup_impl_or_wrapper))(&pdpiWrapper);
     if (likely(r == 0)) {
         pdpi->pdProcessHandle = pdpiWrapper.pdProcessHandle;
+        SMVM_REFS_INIT(pdpi);
         return pdpi;
     }
 
@@ -57,6 +62,7 @@ SMVM_PDPI * SMVM_PDPI_new(SMVM_PD * pd) {
         snprintf(errorString, len, errorFormatString, r);
     SMVM_MODAPI_setErrorWithDynamicString(pdk->module->modapi, SMVM_MODAPI_PDPI_STARTUP_FAILED, errorString);
 
+    SMVM_PD_unref(pd);
     return NULL;
 }
 
@@ -64,6 +70,7 @@ void SMVM_PDPI_free(SMVM_PDPI * pdpi) {
     assert(pdpi);
     assert(pdpi->pd);
     assert(pdpi->pd->pdk);
+    SMVM_REFS_ASSERT_IF_REFERENCED(pdpi);
 
     const SMVM_PDK * const pdk = pdpi->pd->pdk;
     SMVM_MODAPI_0x1_PDPI_Wrapper pdpiWrapper = {
@@ -72,6 +79,8 @@ void SMVM_PDPI_free(SMVM_PDPI * pdpi) {
         .internal = pdk->pdpi_shutdown_null_or_impl
     };
     (*((SMVM_MODAPI_0x1_PDPI_Shutdown) pdk->pdpi_shutdown_impl_or_wrapper))(&pdpiWrapper);
+    SMVM_PD_unref(pdpi->pd);
+    free(pdpi);
 }
 
 void * SMVM_PDPI_get_handle(const SMVM_PDPI * pdpi) {

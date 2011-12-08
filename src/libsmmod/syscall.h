@@ -15,6 +15,7 @@
 #endif
 
 #include "modapi.h"
+#include "../refs.h"
 
 
 #ifdef __cplusplus
@@ -36,6 +37,8 @@ struct _SMVM_Syscall {
     /** Pointer to module providing this syscall. */
     SMVM_Module * module;
 
+    SMVM_REFS_DECLARE_FIELDS
+
 };
 
 int SMVM_Syscall_init(SMVM_Syscall * sc,
@@ -45,11 +48,9 @@ int SMVM_Syscall_init(SMVM_Syscall * sc,
                       SMVM_Module * m)
      __attribute__ ((nonnull(1, 2, 3, 5)));
 
-SMVM_Syscall * SMVM_Syscall_copy(SMVM_Syscall * dest,
-                                 const SMVM_Syscall * src)
-     __attribute__ ((nonnull(1, 2)));
-
 void SMVM_Syscall_destroy(SMVM_Syscall * sc) __attribute__ ((nonnull(1)));
+
+SMVM_REFS_DECLARE_FUNCTIONS(SMVM_Syscall)
 
 
 #ifdef __cplusplus

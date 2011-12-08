@@ -14,6 +14,7 @@
 #error including an internal header!
 #endif
 
+#include "../refs.h"
 #include "modapi.h"
 
 
@@ -30,7 +31,11 @@ struct _SMVM_PDPI {
     /** Pointer to the protection domain kind. */
     SMVM_PD * pd;
 
+    SMVM_REFS_DECLARE_FIELDS
+
 };
+
+SMVM_REFS_DECLARE_FUNCTIONS(SMVM_PDPI)
 
 
 #ifdef __cplusplus

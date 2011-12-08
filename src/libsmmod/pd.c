@@ -22,10 +22,13 @@
 #include "pdk.h"
 
 
-SMVM_PD * SMVM_PD_new(const SMVM_PDK * pdk, const char * name, const char * conf) {
+SMVM_PD * SMVM_PD_new(SMVM_PDK * pdk, const char * name, const char * conf) {
     assert(pdk);
     assert(name);
     assert(name[0]);
+
+    if (!SMVM_PDK_ref(pdk))
+        return NULL;
 
     SMVM_PD * const pd = (SMVM_PD *) malloc(sizeof(SMVM_PD));
     if (unlikely(!pd))
@@ -45,6 +48,7 @@ SMVM_PD * SMVM_PD_new(const SMVM_PDK * pdk, const char * name, const char * conf
 
     pd->pdk = pdk;
     pd->isStarted = false;
+    SMVM_REFS_INIT(pd);
     return pd;
 
 SMVM_PD_new_fail_2:
@@ -58,6 +62,7 @@ SMVM_PD_new_fail_1:
 SMVM_PD_new_fail_0:
 
     OOM(pdk->module->modapi);
+    SMVM_PDK_unref(pdk);
     return NULL;
 }
 
@@ -65,10 +70,12 @@ void SMVM_PD_free(SMVM_PD * pd) {
     assert(pd);
     assert(pd->name);
     assert(pd->pdk);
+    SMVM_REFS_ASSERT_IF_REFERENCED(pd);
 
     if (likely(pd->conf))
         free(pd->conf);
     free(pd->name);
+    SMVM_PDK_unref(pd->pdk);
     free(pd);
 }
 
@@ -142,7 +149,7 @@ void SMVM_PD_stop(SMVM_PD * pd) {
     pd->isStarted = false;
 }
 
-const SMVM_PDK * SMVM_PD_get_pdk(const SMVM_PD * pd) {
+SMVM_PDK * SMVM_PD_get_pdk(const SMVM_PD * pd) {
     assert(pd);
     return pd->pdk;
 }
@@ -210,3 +217,5 @@ void * SMVM_PD_get_handle(const SMVM_PD * pd) {
     assert(pd);
     return pd->pdHandle;
 }
+
+SMVM_REFS_DEFINE_FUNCTIONS(SMVM_PD)

@@ -86,12 +86,12 @@ void * SMVM_Module_get_handle(const SMVM_Module * m) __attribute__ ((nonnull(1))
 SMVM_MODAPI * SMVM_Module_get_modapi(const SMVM_Module * m) __attribute__ ((nonnull(1)));
 
 size_t SMVM_Module_get_num_syscalls(const SMVM_Module * m) __attribute__ ((nonnull(1)));
-const SMVM_Syscall * SMVM_Module_get_syscall(const SMVM_Module * m, size_t index) __attribute__ ((nonnull(1)));
-const SMVM_Syscall * SMVM_Module_find_syscall(const SMVM_Module * m, const char * signature) __attribute__ ((nonnull(1, 2)));
+SMVM_Syscall * SMVM_Module_get_syscall(const SMVM_Module * m, size_t index) __attribute__ ((nonnull(1)));
+SMVM_Syscall * SMVM_Module_find_syscall(const SMVM_Module * m, const char * signature) __attribute__ ((nonnull(1, 2)));
 
 size_t SMVM_Module_get_num_pdks(const SMVM_Module * m) __attribute__ ((nonnull(1)));
-const SMVM_PDK * SMVM_Module_get_pdk(const SMVM_Module * m, size_t index) __attribute__ ((nonnull(1)));
-const SMVM_PDK * SMVM_Module_find_pdk(const SMVM_Module * m, const char * name) __attribute__ ((nonnull(1, 2)));
+SMVM_PDK * SMVM_Module_get_pdk(const SMVM_Module * m, size_t index) __attribute__ ((nonnull(1)));
+SMVM_PDK * SMVM_Module_find_pdk(const SMVM_Module * m, const char * name) __attribute__ ((nonnull(1, 2)));
 
 
 /*******************************************************************************
@@ -116,10 +116,10 @@ SMVM_Module * SMVM_PDK_get_module(const SMVM_PDK * sc) __attribute__ ((nonnull(1
   SMVM_PD
 *******************************************************************************/
 
-SMVM_PD * SMVM_PD_new(const SMVM_PDK * pdk, const char * name, const char * conf) __attribute__ ((nonnull(1, 2)));
+SMVM_PD * SMVM_PD_new(SMVM_PDK * pdk, const char * name, const char * conf) __attribute__ ((nonnull(1, 2)));
 void SMVM_PD_free(SMVM_PD * pd) __attribute__ ((nonnull(1)));
 
-const SMVM_PDK * SMVM_PD_get_pdk(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
+SMVM_PDK * SMVM_PD_get_pdk(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
 
 const char * SMVM_PD_get_name(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
 bool SMVM_PD_set_name(SMVM_PD * pd, const char * name) __attribute__ ((nonnull(1, 2)));

@@ -230,14 +230,14 @@ size_t getNumSyscalls_0x1(const SMVM_Module * m) {
     return apiData->syscalls.size;
 }
 
-const SMVM_Syscall * getSyscall_0x1(const SMVM_Module * m, size_t index) {
+SMVM_Syscall * getSyscall_0x1(const SMVM_Module * m, size_t index) {
     ApiData * const apiData = (ApiData *) m->apiData;
 
     return SMVM_SyscallMap_value_at(&apiData->syscalls, index);
 }
 
 
-const SMVM_Syscall * findSyscall_0x1(const SMVM_Module * m, const char * signature) {
+SMVM_Syscall * findSyscall_0x1(const SMVM_Module * m, const char * signature) {
     ApiData * const apiData = (ApiData *) m->apiData;
 
     return SMVM_SyscallMap_get(&apiData->syscalls, signature);
@@ -249,14 +249,14 @@ size_t getNumPdks_0x1(const SMVM_Module * m) {
     return apiData->pdks.size;
 }
 
-const SMVM_PDK * getPdk_0x1(const SMVM_Module * m, size_t index) {
+SMVM_PDK * getPdk_0x1(const SMVM_Module * m, size_t index) {
     ApiData * const apiData = (ApiData *) m->apiData;
 
     return SMVM_PDKMap_value_at(&apiData->pdks, index);
 }
 
 
-const SMVM_PDK * findPdk_0x1(const SMVM_Module * m, const char * name) {
+SMVM_PDK * findPdk_0x1(const SMVM_Module * m, const char * name) {
     ApiData * const apiData = (ApiData *) m->apiData;
 
     return SMVM_PDKMap_get(&apiData->pdks, name);

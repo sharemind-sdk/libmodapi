@@ -16,6 +16,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "../refs.h"
 #include "modapi.h"
 
 
@@ -32,6 +33,8 @@ struct _SMVM_MODAPI {
     SMVM_MODAPI_Error lastError;
     const char * lastErrorStaticString;
     char * lastErrorDynamicString;
+
+    SMVM_REFS_DECLARE_FIELDS
 };
 
 void SMVM_MODAPI_setErrorWithStaticString(SMVM_MODAPI * modapi,
@@ -43,6 +46,8 @@ void SMVM_MODAPI_setErrorWithStaticString(SMVM_MODAPI * modapi,
 bool SMVM_MODAPI_setErrorWithDynamicString(SMVM_MODAPI * modapi,
                                            SMVM_MODAPI_Error error,
                                            const char * errorString) __attribute__ ((nonnull(1)));
+
+SMVM_REFS_DECLARE_FUNCTIONS(SMVM_MODAPI)
 
 
 /*******************************************************************************
@@ -61,7 +66,11 @@ struct _SMVM_Module {
 
     bool isInitialized;
     SMVM_MODAPI * modapi;
+
+    SMVM_REFS_DECLARE_FIELDS
 };
+
+SMVM_REFS_DECLARE_FUNCTIONS(SMVM_Module)
 
 #ifdef __cplusplus
 } /* extern "C" { */

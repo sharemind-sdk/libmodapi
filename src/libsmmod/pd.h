@@ -15,12 +15,14 @@
 #endif
 
 #include <stdbool.h>
+#include "../refs.h"
 #include "modapi.h"
 
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 
 struct _SMVM_PD {
 
@@ -34,12 +36,16 @@ struct _SMVM_PD {
     void * pdHandle;
 
     /** Pointer to the protection domain kind. */
-    const SMVM_PDK * pdk;
+    SMVM_PDK * pdk;
 
     /** Whether this protection domain is started. */
     bool isStarted;
 
+    SMVM_REFS_DECLARE_FIELDS
+
 };
+
+SMVM_REFS_DECLARE_FUNCTIONS(SMVM_PD)
 
 
 #ifdef __cplusplus

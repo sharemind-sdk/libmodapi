@@ -101,10 +101,14 @@ void SMVM_PDK_destroy(SMVM_PDK * pdk) {
 }
 
 const char * SMVM_PDK_get_name(const SMVM_PDK * pdk) {
+    assert(pdk);
+    assert(pdk->name);
     return pdk->name;
 }
 
 SMVM_Module * SMVM_PDK_get_module(const SMVM_PDK * pdk) {
+    assert(pdk);
+    assert(pdk->module);
     return pdk->module;
 }
 

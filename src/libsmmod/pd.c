@@ -24,6 +24,8 @@
 
 SMVM_PD * SMVM_PD_new(SMVM_PDK * pdk, const char * name, const char * conf) {
     assert(pdk);
+    assert(pdk->module);
+    assert(pdk->module->moduleHandle);
     assert(name);
     assert(name[0]);
 
@@ -93,6 +95,7 @@ static inline void SMVM_PD_init_start_stop_wrappers(SMVM_PD * pd,
 
     pdWrapper->pdHandle = pd->pdHandle;
     pdWrapper->moduleHandle = pdk->module->moduleHandle;
+    assert(pdWrapper->moduleHandle);
     pdWrapper->conf = pdConf;
 }
 
@@ -106,6 +109,7 @@ bool SMVM_PD_start(SMVM_PD * pd) {
     assert(pd->pdk);
     assert(pd->pdk->module);
     assert(pd->pdk->module->modapi);
+    assert(pd->pdk->module->moduleHandle);
 
     if (pd->isStarted)
         return true;
@@ -118,6 +122,7 @@ bool SMVM_PD_start(SMVM_PD * pd) {
 
     const int r = (*((SMVM_MODAPI_0x1_PD_Startup) pdk->pd_startup_impl_or_wrapper))(&pdWrapper);
     if (likely(r == 0)) {
+        pd->pdHandle = pdWrapper.pdHandle;
         pd->isStarted = true;
         return true;
     }

@@ -283,8 +283,11 @@ SMVM_MODAPI_Error SMVM_Module_mod_init(SMVM_Module * m) {
     assert(m);
     assert(!m->isInitialized);
     SMVM_MODAPI_Error e = (*(apis[m->apiVersion - 1u].module_init))(m);
-    if (likely(e == SMVM_MODAPI_OK))
+    if (likely(e == SMVM_MODAPI_OK)) {
+        assert(m->moduleHandle);
         m->isInitialized = true;
+    }
+
     return e;
 }
 

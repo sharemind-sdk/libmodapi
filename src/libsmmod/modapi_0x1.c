@@ -207,6 +207,10 @@ SMVM_MODAPI_Error initModule_0x1(SMVM_Module * const m) {
     SMVM_MODAPI_0x1_Initializer_Code r = apiData->initializer(&apiData->context);
     switch (r) {
         case SMVM_MODAPI_0x1_IC_OK:
+            if (!apiData->context.moduleHandle) {
+                apiData->deinitializer(&apiData->context);
+                return SMVM_MODAPI_API_ERROR;
+            }
             m->moduleHandle = apiData->context.moduleHandle;
             return SMVM_MODAPI_OK;
         case SMVM_MODAPI_0x1_IC_OUT_OF_MEMORY:

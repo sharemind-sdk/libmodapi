@@ -125,28 +125,28 @@ struct _SMVM_MODAPI_0x1_Syscall_Context {
     void * ICONST moduleHandle;
 
     /** Access to public dynamic memory inside the VM process: */
-    uint64_t (* ICONST publicAlloc)(size_t nBytes, SMVM_MODAPI_0x1_Syscall_Context * c);
-    int (* ICONST publicFree)(uint64_t ptr, SMVM_MODAPI_0x1_Syscall_Context * c);
-    size_t (* ICONST publicMemPtrSize)(uint64_t ptr, SMVM_MODAPI_0x1_Syscall_Context * c);
-    void * (* ICONST publicMemPtrData)(uint64_t ptr, SMVM_MODAPI_0x1_Syscall_Context * c);
+    uint64_t (* ICONST publicAlloc)(SMVM_MODAPI_0x1_Syscall_Context * c, size_t nBytes);
+    int (* ICONST publicFree)(SMVM_MODAPI_0x1_Syscall_Context * c, uint64_t ptr);
+    size_t (* ICONST publicMemPtrSize)(SMVM_MODAPI_0x1_Syscall_Context * c, uint64_t ptr);
+    void * (* ICONST publicMemPtrData)(SMVM_MODAPI_0x1_Syscall_Context * c, uint64_t ptr);
 
     /** Access to dynamic memory not exposed to VM instructions: */
-    void * (* ICONST allocPrivate)(size_t nBytes, SMVM_MODAPI_0x1_Syscall_Context * c);
-    int (* ICONST freePrivate)(void * ptr, SMVM_MODAPI_0x1_Syscall_Context * c);
+    void * (* ICONST allocPrivate)(SMVM_MODAPI_0x1_Syscall_Context * c, size_t nBytes);
+    int (* ICONST freePrivate)(SMVM_MODAPI_0x1_Syscall_Context * c, void * ptr);
 
     /**
       Used to get access to internal data of protection domain per-process data
       (see below for pdProcessHandle).
-      \param[in] pd_index the protection domain index
       \param[in] c context
+      \param[in] pd_index the protection domain index
       \param[out] processHandle Pointer to protection domain per-process data.
       \param[out] pdk_index The index of the protection domain kind in the module.
       \param[out] moduleHandle Pointer to protection domain module data.
       \retval 0 on error (protection domain not found).
       \retval 1 on success.
     */
-    int (* ICONST get_pd_process_instance_handle)(uint64_t pd_index,
-                                                  SMVM_MODAPI_0x1_Syscall_Context * c,
+    int (* ICONST get_pd_process_instance_handle)(SMVM_MODAPI_0x1_Syscall_Context * c,
+                                                  uint64_t pd_index,
                                                   void ** pdProcessHandle,
                                                   size_t * pdkIndex,
                                                   void ** moduleHandle);

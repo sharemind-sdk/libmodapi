@@ -138,10 +138,10 @@ struct _SMVM_MODAPI_0x1_Syscall_Context {
       Used to get access to internal data of protection domain per-process data
       (see below for pdProcessHandle).
       \param[in] c context
-      \param[in] pd_index the protection domain index
-      \param[out] processHandle Pointer to protection domain per-process data.
-      \param[out] pdk_index The index of the protection domain kind in the module.
-      \param[out] moduleHandle Pointer to protection domain module data.
+      \param[in] pd_index the protection domain index.
+      \param[out] processHandle Where to save the pointer to protection domain per-process data.
+      \param[out] pdk_index Where to save the index of the protection domain kind in the module.
+      \param[out] moduleHandle Where to save the pointer to protection domain module data.
       \retval 0 on error (protection domain not found).
       \retval 1 on success.
     */

@@ -19,7 +19,7 @@
 extern "C" {
 #endif
 
-#ifdef _SHAREMIND_INTERNAL
+#ifdef SHAREMIND_INTERNAL__
 #define ICONST
 #else
 #define ICONST const
@@ -301,7 +301,7 @@ typedef SMVM_MODAPI_0x1_PDK_Definition SMVM_MODAPI_0x1_PDK_Definitions[];
 #endif
 
 
-#ifdef _SHAREMIND_INTERNAL
+#ifdef SHAREMIND_INTERNAL__
 #include "modapi_0x1_internal.h"
 #endif
 

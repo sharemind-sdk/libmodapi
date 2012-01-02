@@ -7,7 +7,7 @@
  * code is subject to the appropriate license agreement.
  */
 
-#define _SHAREMIND_INTERNAL
+#define SHAREMIND_INTERNAL__
 
 #include "modapi_0x1.h"
 #include "modapi_0x1_internal.h"

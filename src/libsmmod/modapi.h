@@ -152,7 +152,7 @@ SMVM_PD * SMVM_PDPI_get_pd(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
 #endif
 
 
-#ifdef _SHAREMIND_INTERNAL
+#ifdef SHAREMIND_INTERNAL__
 #include "modapi_internal.h"
 #endif
 

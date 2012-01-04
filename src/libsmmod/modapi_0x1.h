@@ -133,6 +133,8 @@ struct _SMVM_MODAPI_0x1_Syscall_Context {
     /** Access to dynamic memory not exposed to VM instructions: */
     void * (* ICONST allocPrivate)(SMVM_MODAPI_0x1_Syscall_Context * c, size_t nBytes);
     int (* ICONST freePrivate)(SMVM_MODAPI_0x1_Syscall_Context * c, void * ptr);
+    int (* ICONST reservePrivate)(SMVM_MODAPI_0x1_Syscall_Context * c, size_t nBytes);
+    int (* ICONST releasePrivate)(SMVM_MODAPI_0x1_Syscall_Context * c, size_t nBytes);
 
     /**
       Used to get access to internal data of protection domain per-process data

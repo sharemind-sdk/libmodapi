@@ -29,4 +29,4 @@ static int SMVM_SyscallMap_key_copy(char ** const pDest, const char * src) {
     return (*pDest) != NULL;
 }
 
-SM_MAP_DEFINE(SMVM_SyscallMap,char *,const char * const,SMVM_Syscall,fnv_16a_str,SMVM_SyscallMap_key_equals,SMVM_SyscallMap_key_less_than,SMVM_SyscallMap_key_copy,free,malloc,free,)
+SM_MAP_DEFINE(SMVM_SyscallMap,char *,const char * const,SMVM_Syscall,fnv_16a_str(key),SMVM_SyscallMap_key_equals,SMVM_SyscallMap_key_less_than,SMVM_SyscallMap_key_copy,free,malloc,free,)

@@ -15,13 +15,18 @@
 #include <assert.h>
 #include <dlfcn.h>
 #include <stdlib.h>
+#include "../stringmap.h"
 #include "modapi.h"
 #include "pd.h"
 #include "pdk.h"
-#include "pdkmap.h"
 #include "syscall.h"
-#include "syscallmap.h"
 
+
+SM_STRINGMAP_DECLARE(SMVM_PDKMap,SMVM_PDK,)
+SM_STRINGMAP_DEFINE(SMVM_PDKMap,SMVM_PDK,malloc,free,strdup,)
+
+SM_MAP_DECLARE(SMVM_SyscallMap,char *,const char * const,SMVM_Syscall,)
+SM_STRINGMAP_DEFINE(SMVM_SyscallMap,SMVM_Syscall,malloc,free,strdup,)
 
 static void SMVM_SyscallMap_destroyer(const char * const * key, SMVM_Syscall * value) {
     (void) key;

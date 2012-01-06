@@ -15,20 +15,10 @@
 #endif
 
 
-#include "../map.h"
+#include "../stringmap.h"
 #include "syscall.h"
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
 SM_MAP_DECLARE(SMVM_SyscallMap,char *,const char * const,SMVM_Syscall,)
-
-
-#ifdef __cplusplus
-} /* extern "C" { */
-#endif
 
 #endif /* SHAREMIND_LIBSMVM_SYSCALLMAP_H */

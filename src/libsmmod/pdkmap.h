@@ -15,20 +15,10 @@
 #endif
 
 
-#include "../map.h"
+#include "../stringmap.h"
 #include "pdk.h"
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-SM_MAP_DECLARE(SMVM_PDKMap,char *,const char * const,SMVM_PDK,)
-
-
-#ifdef __cplusplus
-} /* extern "C" { */
-#endif
+SM_STRINGMAP_DECLARE(SMVM_PDKMap,SMVM_PDK,)
 
 #endif /* SHAREMIND_LIBSMVM_PDKMAP_H */

@@ -156,7 +156,15 @@ void SMVM_PD_stop(SMVM_PD * pd) {
 
 SMVM_PDK * SMVM_PD_get_pdk(const SMVM_PD * pd) {
     assert(pd);
+    assert(pd->pdk);
     return pd->pdk;
+}
+
+SMVM_Module * SMVM_PD_get_module(const SMVM_PD * pd) {
+    assert(pd);
+    assert(pd->pdk);
+    assert(pd->pdk->module);
+    return pd->pdk->module;
 }
 
 const char * SMVM_PD_get_name(const SMVM_PD * pd) {
@@ -166,56 +174,11 @@ const char * SMVM_PD_get_name(const SMVM_PD * pd) {
     return pd->name;
 }
 
-bool SMVM_PD_set_name(SMVM_PD * pd, const char * name) {
-    assert(pd);
-    assert(pd->name);
-    assert(pd->name[0]);
-    assert(name);
-    assert(name[0]);
-    assert(pd->pdk);
-    assert(pd->pdk->module);
-    assert(pd->pdk->module->modapi);
-
-    const size_t newNameLength = strlen(name);
-    char * const newName = (char *) realloc(pd->name, newNameLength + 1);
-    if (unlikely(!newName)) {
-        OOM(pd->pdk->module->modapi);
-        return false;
-    }
-
-    strcpy(newName, name);
-    pd->name = newName;
-    return true;
-}
-
 const char * SMVM_PD_get_conf(const SMVM_PD * pd) {
     assert(pd);
     assert(pd->conf);
     assert(pd->conf[0]);
     return pd->conf;
-}
-
-bool SMVM_PD_set_conf(SMVM_PD * pd, const char * conf) {
-    assert(pd);
-    assert(pd->pdk);
-    assert(pd->pdk->module);
-    assert(pd->pdk->module->modapi);
-
-    if (likely(conf && conf[0])) {
-        const size_t newConfLength = strlen(conf);
-        char * const newConf = (char *) realloc(pd->conf, newConfLength + 1);
-        if (unlikely(!newConf)) {
-            OOM(pd->pdk->module->modapi);
-            return false;
-        }
-
-        strcpy(newConf, conf);
-        pd->conf = newConf;
-    } else if (likely(pd->conf)) {
-        free(pd->conf);
-        pd->conf = NULL;
-    }
-    return true;
 }
 
 void * SMVM_PD_get_handle(const SMVM_PD * pd) {

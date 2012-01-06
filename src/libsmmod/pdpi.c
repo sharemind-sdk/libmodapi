@@ -91,7 +91,23 @@ void * SMVM_PDPI_get_handle(const SMVM_PDPI * pdpi) {
 
 SMVM_PD * SMVM_PDPI_get_pd(const SMVM_PDPI * pdpi) {
     assert(pdpi);
+    assert(pdpi->pd);
     return pdpi->pd;
+}
+
+SMVM_PDK * SMVM_PDPI_get_pdk(const SMVM_PDPI * pdpi) {
+    assert(pdpi);
+    assert(pdpi->pd);
+    assert(pdpi->pd->pdk);
+    return pdpi->pd->pdk;
+}
+
+SMVM_Module * SMVM_PDPI_get_module(const SMVM_PDPI * pdpi) {
+    assert(pdpi);
+    assert(pdpi->pd);
+    assert(pdpi->pd->pdk);
+    assert(pdpi->pd->pdk->module);
+    return pdpi->pd->pdk->module;
 }
 
 void * SMVM_PDPI_get_process(const SMVM_PDPI * pdpi) {

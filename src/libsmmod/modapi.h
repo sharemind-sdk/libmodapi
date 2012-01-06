@@ -121,12 +121,10 @@ SMVM_PD * SMVM_PD_new(SMVM_PDK * pdk, const char * name, const char * conf) __at
 void SMVM_PD_free(SMVM_PD * pd) __attribute__ ((nonnull(1)));
 
 SMVM_PDK * SMVM_PD_get_pdk(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
+SMVM_Module * SMVM_PD_get_module(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
 
 const char * SMVM_PD_get_name(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
-bool SMVM_PD_set_name(SMVM_PD * pd, const char * name) __attribute__ ((nonnull(1, 2)));
-
 const char * SMVM_PD_get_conf(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
-bool SMVM_PD_set_conf(SMVM_PD * pd, const char * conf) __attribute__ ((nonnull(1, 2)));
 
 void * SMVM_PD_get_handle(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
 
@@ -145,6 +143,8 @@ void SMVM_PDPI_free(SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
 
 void * SMVM_PDPI_get_handle(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
 SMVM_PD * SMVM_PDPI_get_pd(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
+SMVM_PDK * SMVM_PDPI_get_pdk(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
+SMVM_Module * SMVM_PDPI_get_module(const SMVM_PDPI * pd) __attribute__ ((nonnull(1)));
 void * SMVM_PDPI_get_process(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
 
 

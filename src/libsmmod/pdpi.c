@@ -22,7 +22,7 @@
 #include "pdk.h"
 
 
-SMVM_PDPI * SMVM_PDPI_new(SMVM_PD * pd) {
+SMVM_PDPI * SMVM_PDPI_new(SMVM_PD * pd, void * processHandle) {
     assert(pd);
     assert(pd->pdk);
     assert(pd->pdk->module);
@@ -39,6 +39,7 @@ SMVM_PDPI * SMVM_PDPI_new(SMVM_PD * pd) {
     }
 
     pdpi->pd = pd;
+    pdpi->processHandle = processHandle;
 
     const SMVM_PDK * const pdk = pd->pdk;
     SMVM_MODAPI_0x1_PDPI_Wrapper pdpiWrapper = {
@@ -91,4 +92,9 @@ void * SMVM_PDPI_get_handle(const SMVM_PDPI * pdpi) {
 SMVM_PD * SMVM_PDPI_get_pd(const SMVM_PDPI * pdpi) {
     assert(pdpi);
     return pdpi->pd;
+}
+
+void * SMVM_PDPI_get_process(const SMVM_PDPI * pdpi) {
+    assert(pdpi);
+    return pdpi->processHandle;
 }

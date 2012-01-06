@@ -31,6 +31,9 @@ struct _SMVM_PDPI {
     /** Pointer to the protection domain kind. */
     SMVM_PD * pd;
 
+    /** Pointer to the process data. */
+    void * processHandle;
+
     SMVM_REFS_DECLARE_FIELDS
 
 };

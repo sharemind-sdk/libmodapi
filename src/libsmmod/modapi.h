@@ -140,11 +140,12 @@ void SMVM_PD_stop(SMVM_PD * pd) __attribute__ ((nonnull(1)));
   SMVM_PDPI
 *******************************************************************************/
 
-SMVM_PDPI * SMVM_PDPI_new(SMVM_PD * pd) __attribute__ ((nonnull(1)));
+SMVM_PDPI * SMVM_PDPI_new(SMVM_PD * pd, void * processHandle) __attribute__ ((nonnull(1)));
 void SMVM_PDPI_free(SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
 
 void * SMVM_PDPI_get_handle(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
 SMVM_PD * SMVM_PDPI_get_pd(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
+void * SMVM_PDPI_get_process(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
 
 
 #ifdef __cplusplus

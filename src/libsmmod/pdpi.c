@@ -44,7 +44,7 @@ SMVM_PDPI * SMVM_PDPI_new(SMVM_PD * pd, void * processHandle) {
     const SMVM_PDK * const pdk = pd->pdk;
     SMVM_MODAPI_0x1_PDPI_Wrapper pdpiWrapper = {
         .pdHandle = pd->pdHandle,
-        .internal = pdk->pdpi_startup_null_or_impl
+        .internal = pdpi
     };
 
     const int r = (*((SMVM_MODAPI_0x1_PDPI_Startup) pdk->pdpi_startup_impl_or_wrapper))(&pdpiWrapper);
@@ -77,7 +77,7 @@ void SMVM_PDPI_free(SMVM_PDPI * pdpi) {
     SMVM_MODAPI_0x1_PDPI_Wrapper pdpiWrapper = {
         .pdProcessHandle = pdpi->pdProcessHandle,
         .pdHandle = pdpi->pd->pdHandle,
-        .internal = pdk->pdpi_shutdown_null_or_impl
+        .internal = pdpi
     };
     (*((SMVM_MODAPI_0x1_PDPI_Shutdown) pdk->pdpi_shutdown_impl_or_wrapper))(&pdpiWrapper);
     SMVM_PD_unref(pdpi->pd);

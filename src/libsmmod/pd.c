@@ -118,7 +118,7 @@ bool SMVM_PD_start(SMVM_PD * pd) {
     SMVM_MODAPI_0x1_PD_Wrapper pdWrapper;
     SMVM_PD_init_start_stop_wrappers(pd, &pdConf, &pdWrapper);
     const SMVM_PDK * const pdk = pd->pdk;
-    pdWrapper.internal = pdk->pd_startup_null_or_impl;
+    pdWrapper.internal = pd;
 
     const int r = (*((SMVM_MODAPI_0x1_PD_Startup) pdk->pd_startup_impl_or_wrapper))(&pdWrapper);
     if (likely(r == 0)) {
@@ -148,7 +148,7 @@ void SMVM_PD_stop(SMVM_PD * pd) {
     SMVM_MODAPI_0x1_PD_Wrapper pdWrapper;
     SMVM_PD_init_start_stop_wrappers(pd, &pdConf, &pdWrapper);
     const SMVM_PDK * const pdk = pd->pdk;
-    pdWrapper.internal = pdk->pd_shutdown_null_or_impl;
+    pdWrapper.internal = pd;
 
     (*((SMVM_MODAPI_0x1_PD_Shutdown) pdk->pd_shutdown_impl_or_wrapper))(&pdWrapper);
     pd->isStarted = false;

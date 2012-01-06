@@ -89,19 +89,22 @@ SMVM_MODAPI_Error loadModule_0x1(SMVM_Module * m) {
         size_t i = 0u;
         while ((*scs)[i].name) {
             SMVM_Syscall * sc;
+            size_t oldSize;
 
             if (unlikely(!(*scs)[i].syscall_f)) {
                 status = SMVM_MODAPI_API_ERROR;
                 goto loadModule_0x1_fail_2;
             }
 
-            if (unlikely(SMVM_SyscallMap_get(&apiData->syscalls, (*scs)[i].name))) {
-                status = SMVM_MODAPI_DUPLICATE_SYSCALL;
-                goto loadModule_0x1_fail_2;
-            }
-            sc = SMVM_SyscallMap_insert(&apiData->syscalls, (*scs)[i].name);
+            oldSize = apiData->syscalls.size;
+            sc = SMVM_SyscallMap_get_or_insert(&apiData->syscalls, (*scs)[i].name);
+            assert(oldSize <= apiData->syscalls.size);
             if (unlikely(!sc)) {
                 status = SMVM_MODAPI_OUT_OF_MEMORY;
+                goto loadModule_0x1_fail_2;
+            }
+            if (unlikely(oldSize == apiData->syscalls.size)) {
+                status = SMVM_MODAPI_DUPLICATE_SYSCALL;
                 goto loadModule_0x1_fail_2;
             }
             if (unlikely(!SMVM_Syscall_init(sc, (*scs)[i].name, (*scs)[i].syscall_f, NULL, m))) {
@@ -126,6 +129,7 @@ SMVM_MODAPI_Error loadModule_0x1(SMVM_Module * m) {
         size_t i = 0u;
         while ((*pdks)[i].name) {
             SMVM_PDK * pdk;
+            size_t oldSize;
 
             if (unlikely(!(*pdks)[i].pd_startup_f
                          || !(*pdks)[i].pd_shutdown_f
@@ -136,13 +140,15 @@ SMVM_MODAPI_Error loadModule_0x1(SMVM_Module * m) {
                 goto loadModule_0x1_fail_3;
             }
 
-            if (unlikely(SMVM_PDKMap_get(&apiData->pdks, (*pdks)[i].name))) {
-                status = SMVM_MODAPI_DUPLICATE_PROTECTION_DOMAIN;
-                goto loadModule_0x1_fail_3;
-            }
-            pdk = SMVM_PDKMap_insert(&apiData->pdks, (*pdks)[i].name);
+            oldSize = apiData->pdks.size;
+            pdk = SMVM_PDKMap_get_or_insert(&apiData->pdks, (*pdks)[i].name);
+            assert(oldSize <= apiData->syscalls.size);
             if (unlikely(!pdk)) {
                 status = SMVM_MODAPI_OUT_OF_MEMORY;
+                goto loadModule_0x1_fail_3;
+            }
+            if (unlikely(oldSize == apiData->pdks.size)) {
+                status = SMVM_MODAPI_DUPLICATE_PROTECTION_DOMAIN;
                 goto loadModule_0x1_fail_3;
             }
             if (unlikely(!SMVM_PDK_init(pdk,

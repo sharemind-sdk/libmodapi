@@ -28,6 +28,14 @@ SM_STRINGMAP_DEFINE(SMVM_PDKMap,SMVM_PDK,malloc,free,strdup,)
 SM_MAP_DECLARE(SMVM_SyscallMap,char *,const char * const,SMVM_Syscall,)
 SM_STRINGMAP_DEFINE(SMVM_SyscallMap,SMVM_Syscall,malloc,free,strdup,)
 
+static void * SMVM_Module_get_facility_wrapper(SMVM_MODAPI_0x1_Module_Context * w, const char * name) {
+    assert(w);
+    assert(w->internal);
+    assert(name);
+    assert(name[0]);
+    return SMVM_Module_get_facility((SMVM_Module *) w->internal, name);
+}
+
 static void SMVM_SyscallMap_destroyer(const char * const * key, SMVM_Syscall * value) {
     (void) key;
     SMVM_Syscall_destroy(value);
@@ -41,7 +49,6 @@ static void SMVM_PDKMap_destroyer(const char * const * key, SMVM_PDK * value) {
 /* API 0x1 data */
 
 typedef struct {
-    SMVM_MODAPI_0x1_Module_Context context;
     SMVM_MODAPI_0x1_Module_Initializer initializer;
     SMVM_MODAPI_0x1_Module_Deinitializer deinitializer;
     SMVM_SyscallMap syscalls;
@@ -57,8 +64,6 @@ SMVM_MODAPI_Error loadModule_0x1(SMVM_Module * m) {
     SMVM_MODAPI_0x1_PDK_Definitions * pdks;
 
     ApiData * apiData;
-    SMVM_MODAPI_0x1_Module_Initializer initializer;
-    SMVM_MODAPI_0x1_Module_Deinitializer deinitializer;
 
     apiData = (ApiData *) malloc(sizeof(ApiData));
     if (unlikely(!apiData)) {
@@ -67,20 +72,18 @@ SMVM_MODAPI_Error loadModule_0x1(SMVM_Module * m) {
     }
 
     /* Handle loader function: */
-    initializer = (SMVM_MODAPI_0x1_Module_Initializer) dlsym(m->handle, "SMVM_MOD_0x1_init");
-    if (unlikely(!initializer)) {
+    apiData->initializer = (SMVM_MODAPI_0x1_Module_Initializer) dlsym(m->handle, "SMVM_MOD_0x1_init");
+    if (unlikely(!apiData->initializer)) {
         status = SMVM_MODAPI_API_ERROR;
         goto loadModule_0x1_fail_1;
     }
-    apiData->initializer = initializer;
 
     /* Handle unloader function: */
-    deinitializer = (SMVM_MODAPI_0x1_Module_Deinitializer) dlsym(m->handle, "SMVM_MOD_0x1_deinit");
-    if (unlikely(!deinitializer)) {
+    apiData->deinitializer = (SMVM_MODAPI_0x1_Module_Deinitializer) dlsym(m->handle, "SMVM_MOD_0x1_deinit");
+    if (unlikely(!apiData->deinitializer)) {
         status = SMVM_MODAPI_API_ERROR;
         goto loadModule_0x1_fail_1;
     }
-    apiData->deinitializer = deinitializer;
 
     /* Handle system call definitions: */
     SMVM_SyscallMap_init(&apiData->syscalls);
@@ -179,7 +182,6 @@ SMVM_MODAPI_Error loadModule_0x1(SMVM_Module * m) {
     }
 
     /** \todo Handle protection domain definitions: */
-
     m->apiData = (void *) apiData;
 
     return SMVM_MODAPI_OK;
@@ -215,14 +217,18 @@ void unloadModule_0x1(SMVM_Module * const m) {
 SMVM_MODAPI_Error initModule_0x1(SMVM_Module * const m) {
     ApiData * const apiData = (ApiData *) m->apiData;
 
-    SMVM_MODAPI_0x1_Initializer_Code r = apiData->initializer(&apiData->context);
+    SMVM_MODAPI_0x1_Module_Context context = {
+        .getModuleFacility = &SMVM_Module_get_facility_wrapper,
+        .internal = m
+    };
+    SMVM_MODAPI_0x1_Initializer_Code r = apiData->initializer(&context);
     switch (r) {
         case SMVM_MODAPI_0x1_IC_OK:
-            if (!apiData->context.moduleHandle) {
-                apiData->deinitializer(&apiData->context);
+            if (!context.moduleHandle) {
+                apiData->deinitializer(&context);
                 return SMVM_MODAPI_API_ERROR;
             }
-            m->moduleHandle = apiData->context.moduleHandle;
+            m->moduleHandle = context.moduleHandle;
             return SMVM_MODAPI_OK;
         case SMVM_MODAPI_0x1_IC_OUT_OF_MEMORY:
             return SMVM_MODAPI_OUT_OF_MEMORY;
@@ -236,7 +242,12 @@ SMVM_MODAPI_Error initModule_0x1(SMVM_Module * const m) {
 void deinitModule_0x1(SMVM_Module * const m) {
     ApiData * const apiData = (ApiData *) m->apiData;
 
-    apiData->deinitializer(&apiData->context);
+    SMVM_MODAPI_0x1_Module_Context context = {
+        .moduleHandle = m->moduleHandle,
+        .getModuleFacility = &SMVM_Module_get_facility_wrapper,
+        .internal = m
+    };
+    apiData->deinitializer(&context);
 }
 
 size_t getNumSyscalls_0x1(const SMVM_Module * m) {

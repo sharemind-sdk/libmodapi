@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../likely.h"
+#include "modapi_internal.h"
 
 
 int SMVM_PDK_init(SMVM_PDK * pdk,
@@ -83,6 +84,8 @@ int SMVM_PDK_init(SMVM_PDK * pdk,
 
     pdk->module = module;
     SMVM_REFS_INIT(pdk);
+    SMVM_FacilityMap_init(&pdk->pdFacilityMap, &module->pdFacilityMap);
+    SMVM_FacilityMap_init(&pdk->pdpiFacilityMap, &module->pdpiFacilityMap);
     return 1;
 }
 
@@ -98,6 +101,9 @@ void SMVM_PDK_destroy(SMVM_PDK * pdk) {
 
     free(pdk->name);
     SMVM_Module_unref(pdk->module);
+
+    SMVM_FacilityMap_destroy(&pdk->pdFacilityMap);
+    SMVM_FacilityMap_destroy(&pdk->pdpiFacilityMap);
 }
 
 const char * SMVM_PDK_get_name(const SMVM_PDK * pdk) {
@@ -115,6 +121,34 @@ SMVM_Module * SMVM_PDK_get_module(const SMVM_PDK * pdk) {
 size_t SMVM_PDK_get_index(const SMVM_PDK * pdk) {
     assert(pdk);
     return pdk->pdk_index;
+}
+
+int SMVM_PDK_set_pd_facility(SMVM_PDK * pdk, const char * name, void * facility) {
+    assert(pdk);
+    assert(name);
+    assert(name[0]);
+    return SMVM_FacilityMap_set(&pdk->pdFacilityMap, name, facility);
+}
+
+void * SMVM_PDK_get_pd_facility(const SMVM_PDK * pdk, const char * name) {
+    assert(pdk);
+    assert(name);
+    assert(name[0]);
+    return SMVM_FacilityMap_get(&pdk->pdFacilityMap, name);
+}
+
+int SMVM_PDK_set_pdpi_facility(SMVM_PDK * pdk, const char * name, void * facility) {
+    assert(pdk);
+    assert(name);
+    assert(name[0]);
+    return SMVM_FacilityMap_set(&pdk->pdpiFacilityMap, name, facility);
+}
+
+void * SMVM_PDK_get_pdpi_facility(const SMVM_PDK * pdk, const char * name) {
+    assert(pdk);
+    assert(name);
+    assert(name[0]);
+    return SMVM_FacilityMap_get(&pdk->pdpiFacilityMap, name);
 }
 
 SMVM_REFS_DEFINE_FUNCTIONS(SMVM_PDK)

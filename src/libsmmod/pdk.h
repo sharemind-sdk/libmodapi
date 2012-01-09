@@ -61,6 +61,12 @@ struct _SMVM_PDK {
     /** Pointer to the module which provides this protection domain kind. */
     SMVM_Module * module;
 
+    /** PD facility name to pointer mapping: */
+    SMVM_FacilityMap pdFacilityMap;
+
+    /** PDPI facility name to pointer mapping: */
+    SMVM_FacilityMap pdpiFacilityMap;
+
     SMVM_REFS_DECLARE_FIELDS
 
 };

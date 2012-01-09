@@ -15,13 +15,13 @@
 #endif
 
 #include "../refs.h"
+#include "facilitymap.h"
 #include "modapi.h"
 
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 struct _SMVM_PDPI {
 
@@ -33,6 +33,9 @@ struct _SMVM_PDPI {
 
     /** Pointer to the process data. */
     void * processHandle;
+
+    /** PDPI facility name to pointer mapping: */
+    SMVM_FacilityMap pdpiFacilityMap;
 
     SMVM_REFS_DECLARE_FIELDS
 

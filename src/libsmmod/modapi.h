@@ -71,6 +71,13 @@ SMVM_MODAPI_Error SMVM_MODAPI_lastError(const SMVM_MODAPI * modapi) __attribute_
 const char * SMVM_MODAPI_lastErrorString(const SMVM_MODAPI * modapi) __attribute__ ((nonnull(1)));
 void SMVM_MODAPI_clearError(SMVM_MODAPI * modapi) __attribute__ ((nonnull(1)));
 
+int SMVM_MODAPI_set_module_facility(SMVM_MODAPI * modapi, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
+void * SMVM_MODAPI_get_module_facility(const SMVM_MODAPI * modapi, const char * name) __attribute__ ((nonnull(1,2)));
+int SMVM_MODAPI_set_pd_facility(SMVM_MODAPI * modapi, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
+void * SMVM_MODAPI_get_pd_facility(const SMVM_MODAPI * modapi, const char * name) __attribute__ ((nonnull(1,2)));
+int SMVM_MODAPI_set_pdpi_facility(SMVM_MODAPI * modapi, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
+void * SMVM_MODAPI_get_pdpi_facility(const SMVM_MODAPI * modapi, const char * name) __attribute__ ((nonnull(1,2)));
+
 
 /*******************************************************************************
   SMVM_Module
@@ -96,6 +103,13 @@ size_t SMVM_Module_get_num_pdks(const SMVM_Module * m) __attribute__ ((nonnull(1
 SMVM_PDK * SMVM_Module_get_pdk(const SMVM_Module * m, size_t index) __attribute__ ((nonnull(1)));
 SMVM_PDK * SMVM_Module_find_pdk(const SMVM_Module * m, const char * name) __attribute__ ((nonnull(1, 2)));
 
+int SMVM_Module_set_facility(SMVM_Module * m, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
+void * SMVM_Module_get_facility(const SMVM_Module * m, const char * name) __attribute__ ((nonnull(1,2)));
+int SMVM_Module_set_pd_facility(SMVM_Module * m, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
+void * SMVM_Module_get_pd_facility(const SMVM_Module * m, const char * name) __attribute__ ((nonnull(1,2)));
+int SMVM_Module_set_pdpi_facility(SMVM_Module * m, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
+void * SMVM_Module_get_pdpi_facility(const SMVM_Module * m, const char * name) __attribute__ ((nonnull(1,2)));
+
 
 /*******************************************************************************
   SMVM_Syscall
@@ -114,6 +128,11 @@ void * SMVM_Syscall_get_null_or_impl(const SMVM_Syscall * sc) __attribute__ ((no
 const char * SMVM_PDK_get_name(const SMVM_PDK * pdk) __attribute__ ((nonnull(1)));
 SMVM_Module * SMVM_PDK_get_module(const SMVM_PDK * sc) __attribute__ ((nonnull(1)));
 size_t SMVM_PDK_get_index(const SMVM_PDK * sc) __attribute__ ((nonnull(1)));
+
+int SMVM_PDK_set_pd_facility(SMVM_PDK * pdk, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
+void * SMVM_PDK_get_pd_facility(const SMVM_PDK * pdk, const char * name) __attribute__ ((nonnull(1,2)));
+int SMVM_PDK_set_pdpi_facility(SMVM_PDK * pdk, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
+void * SMVM_PDK_get_pdpi_facility(const SMVM_PDK * pdk, const char * name) __attribute__ ((nonnull(1,2)));
 
 
 /*******************************************************************************
@@ -136,6 +155,11 @@ bool SMVM_PD_is_started(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
 bool SMVM_PD_start(SMVM_PD * pd) __attribute__ ((nonnull(1)));
 void SMVM_PD_stop(SMVM_PD * pd) __attribute__ ((nonnull(1)));
 
+int SMVM_PD_set_facility(SMVM_PD * pd, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
+void * SMVM_PD_get_facility(const SMVM_PD * pd, const char * name) __attribute__ ((nonnull(1,2)));
+int SMVM_PD_set_pdpi_facility(SMVM_PD * pd, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
+void * SMVM_PD_get_pdpi_facility(const SMVM_PD * pd, const char * name) __attribute__ ((nonnull(1,2)));
+
 
 /*******************************************************************************
   SMVM_PDPI
@@ -150,6 +174,8 @@ SMVM_PDK * SMVM_PDPI_get_pdk(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1))
 SMVM_Module * SMVM_PDPI_get_module(const SMVM_PDPI * pd) __attribute__ ((nonnull(1)));
 void * SMVM_PDPI_get_process(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
 
+int SMVM_PDPI_set_facility(SMVM_PDPI * pdpi, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
+void * SMVM_PDPI_get_facility(const SMVM_PDPI * pdpi, const char * name) __attribute__ ((nonnull(1,2)));
 
 #ifdef __cplusplus
 } /* extern "C" { */

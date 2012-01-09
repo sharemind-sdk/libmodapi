@@ -70,6 +70,11 @@ SMVM_MODAPI * SMVM_MODAPI_new() {
         modapi->lastError = SMVM_MODAPI_OK;
         modapi->lastErrorDynamicString = NULL;
         modapi->lastErrorStaticString = NULL;
+
+        SMVM_FacilityMap_init(&modapi->moduleFacilityMap, NULL);
+        SMVM_FacilityMap_init(&modapi->pdFacilityMap, NULL);
+        SMVM_FacilityMap_init(&modapi->pdpiFacilityMap, NULL);
+
         SMVM_REFS_INIT(modapi);
     }
     return modapi;
@@ -80,6 +85,11 @@ void SMVM_MODAPI_free(SMVM_MODAPI * modapi) {
     SMVM_REFS_ASSERT_IF_REFERENCED(modapi);
     if (modapi->lastErrorDynamicString)
         free(modapi->lastErrorDynamicString);
+
+    SMVM_FacilityMap_destroy(&modapi->moduleFacilityMap);
+    SMVM_FacilityMap_destroy(&modapi->pdFacilityMap);
+    SMVM_FacilityMap_destroy(&modapi->pdpiFacilityMap);
+
     free(modapi);
 }
 
@@ -147,6 +157,48 @@ bool SMVM_MODAPI_setErrorWithDynamicString(SMVM_MODAPI * modapi,
 }
 
 SMVM_REFS_DEFINE_FUNCTIONS(SMVM_MODAPI)
+
+int SMVM_MODAPI_set_module_facility(SMVM_MODAPI * modapi, const char * name, void * facility) {
+    assert(modapi);
+    assert(name);
+    assert(name[0]);
+    return SMVM_FacilityMap_set(&modapi->moduleFacilityMap, name, facility);
+}
+
+void * SMVM_MODAPI_get_module_facility(const SMVM_MODAPI * modapi, const char * name) {
+    assert(modapi);
+    assert(name);
+    assert(name[0]);
+    return SMVM_FacilityMap_get(&modapi->moduleFacilityMap, name);
+}
+
+int SMVM_MODAPI_set_pd_facility(SMVM_MODAPI * modapi, const char * name, void * facility) {
+    assert(modapi);
+    assert(name);
+    assert(name[0]);
+    return SMVM_FacilityMap_set(&modapi->pdFacilityMap, name, facility);
+}
+
+void * SMVM_MODAPI_get_pd_facility(const SMVM_MODAPI * modapi, const char * name) {
+    assert(modapi);
+    assert(name);
+    assert(name[0]);
+    return SMVM_FacilityMap_get(&modapi->pdFacilityMap, name);
+}
+
+int SMVM_MODAPI_set_pdpi_facility(SMVM_MODAPI * modapi, const char * name, void * facility) {
+    assert(modapi);
+    assert(name);
+    assert(name[0]);
+    return SMVM_FacilityMap_set(&modapi->pdpiFacilityMap, name, facility);
+}
+
+void * SMVM_MODAPI_get_pdpi_facility(const SMVM_MODAPI * modapi, const char * name) {
+    assert(modapi);
+    assert(name);
+    assert(name[0]);
+    return SMVM_FacilityMap_get(&modapi->pdpiFacilityMap, name);
+}
 
 
 /*******************************************************************************
@@ -240,8 +292,12 @@ SMVM_Module * SMVM_Module_new(SMVM_MODAPI * modapi, const char * filename) {
     {
         SMVM_REFS_INIT(m);
         SMVM_MODAPI_Error status = (*(apis[m->apiVersion - 1u].module_load))(m);
-        if (likely(status == SMVM_MODAPI_OK))
+        if (likely(status == SMVM_MODAPI_OK)) {
+            SMVM_FacilityMap_init(&m->moduleFacilityMap, &modapi->moduleFacilityMap);
+            SMVM_FacilityMap_init(&m->pdFacilityMap, &modapi->pdFacilityMap);
+            SMVM_FacilityMap_init(&m->pdpiFacilityMap, &modapi->pdpiFacilityMap);
             return m;
+        }
 
         SMVM_MODAPI_setErrorWithStaticString(modapi, status, NULL);
     }
@@ -276,6 +332,10 @@ void SMVM_Module_free(SMVM_Module * m) {
     dlclose(m->handle);
     free(m->filename);
     SMVM_MODAPI_unref(m->modapi);
+
+    SMVM_FacilityMap_destroy(&m->moduleFacilityMap);
+    SMVM_FacilityMap_destroy(&m->pdFacilityMap);
+    SMVM_FacilityMap_destroy(&m->pdpiFacilityMap);
     free(m);
 }
 
@@ -345,6 +405,48 @@ SMVM_PDK * SMVM_Module_get_pdk(const SMVM_Module * m, size_t index) {
 SMVM_PDK * SMVM_Module_find_pdk(const SMVM_Module * m, const char * name) {
     assert(m);
     return (*(apis[m->apiVersion - 1u].module_find_pdk))(m, name);
+}
+
+int SMVM_Module_set_facility(SMVM_Module * m, const char * name, void * facility) {
+    assert(m);
+    assert(name);
+    assert(name[0]);
+    return SMVM_FacilityMap_set(&m->moduleFacilityMap, name, facility);
+}
+
+void * SMVM_Module_get_facility(const SMVM_Module * m, const char * name) {
+    assert(m);
+    assert(name);
+    assert(name[0]);
+    return SMVM_FacilityMap_get(&m->moduleFacilityMap, name);
+}
+
+int SMVM_Module_set_pd_facility(SMVM_Module * m, const char * name, void * facility) {
+    assert(m);
+    assert(name);
+    assert(name[0]);
+    return SMVM_FacilityMap_set(&m->pdFacilityMap, name, facility);
+}
+
+void * SMVM_Module_get_pd_facility(const SMVM_Module * m, const char * name) {
+    assert(m);
+    assert(name);
+    assert(name[0]);
+    return SMVM_FacilityMap_get(&m->pdFacilityMap, name);
+}
+
+int SMVM_Module_set_pdpi_facility(SMVM_Module * m, const char * name, void * facility) {
+    assert(m);
+    assert(name);
+    assert(name[0]);
+    return SMVM_FacilityMap_set(&m->pdpiFacilityMap, name, facility);
+}
+
+void * SMVM_Module_get_pdpi_facility(const SMVM_Module * m, const char * name) {
+    assert(m);
+    assert(name);
+    assert(name[0]);
+    return SMVM_FacilityMap_get(&m->pdpiFacilityMap, name);
 }
 
 SMVM_REFS_DEFINE_FUNCTIONS(SMVM_Module)

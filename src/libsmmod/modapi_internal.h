@@ -17,6 +17,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "../refs.h"
+#include "facilitymap.h"
 #include "modapi.h"
 
 
@@ -33,6 +34,15 @@ struct _SMVM_MODAPI {
     SMVM_MODAPI_Error lastError;
     const char * lastErrorStaticString;
     char * lastErrorDynamicString;
+
+    /** Module facility name to pointer mapping: */
+    SMVM_FacilityMap moduleFacilityMap;
+
+    /** PD facility name to pointer mapping: */
+    SMVM_FacilityMap pdFacilityMap;
+
+    /** PDPI facility name to pointer mapping: */
+    SMVM_FacilityMap pdpiFacilityMap;
 
     SMVM_REFS_DECLARE_FIELDS
 };
@@ -66,6 +76,16 @@ struct _SMVM_Module {
 
     bool isInitialized;
     SMVM_MODAPI * modapi;
+
+    /** Module facility name to pointer mapping: */
+    SMVM_FacilityMap moduleFacilityMap;
+
+    /** PD facility name to pointer mapping: */
+    SMVM_FacilityMap pdFacilityMap;
+
+    /** PDPI facility name to pointer mapping: */
+    SMVM_FacilityMap pdpiFacilityMap;
+
 
     SMVM_REFS_DECLARE_FIELDS
 };

@@ -16,6 +16,7 @@
 
 #include <stdbool.h>
 #include "../refs.h"
+#include "facilitymap.h"
 #include "modapi.h"
 
 
@@ -40,6 +41,12 @@ struct _SMVM_PD {
 
     /** Whether this protection domain is started. */
     bool isStarted;
+
+    /** PD facility name to pointer mapping: */
+    SMVM_FacilityMap pdFacilityMap;
+
+    /** PDPI facility name to pointer mapping: */
+    SMVM_FacilityMap pdpiFacilityMap;
 
     SMVM_REFS_DECLARE_FIELDS
 

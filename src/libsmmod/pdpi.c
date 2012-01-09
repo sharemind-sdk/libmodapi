@@ -22,6 +22,14 @@
 #include "pdk.h"
 
 
+static void * SMVM_PDPI_get_facility_wrapper(SMVM_MODAPI_0x1_PDPI_Wrapper * w, const char * name) {
+    assert(w);
+    assert(w->internal);
+    assert(name);
+    assert(name[0]);
+    return SMVM_PDPI_get_facility((SMVM_PDPI *) w->internal, name);
+}
+
 SMVM_PDPI * SMVM_PDPI_new(SMVM_PD * pd, void * processHandle) {
     assert(pd);
     assert(pd->pdk);
@@ -40,10 +48,12 @@ SMVM_PDPI * SMVM_PDPI_new(SMVM_PD * pd, void * processHandle) {
 
     pdpi->pd = pd;
     pdpi->processHandle = processHandle;
+    SMVM_FacilityMap_init(&pdpi->pdpiFacilityMap, &pd->pdpiFacilityMap);
 
     const SMVM_PDK * const pdk = pd->pdk;
     SMVM_MODAPI_0x1_PDPI_Wrapper pdpiWrapper = {
         .pdHandle = pd->pdHandle,
+        .getPdpiFacility = &SMVM_PDPI_get_facility_wrapper,
         .internal = pdpi
     };
 
@@ -54,6 +64,7 @@ SMVM_PDPI * SMVM_PDPI_new(SMVM_PD * pd, void * processHandle) {
         return pdpi;
     }
 
+    SMVM_FacilityMap_destroy(&pdpi->pdpiFacilityMap);
     free(pdpi);
 
     const char * const errorFormatString = "PDPI startup failed with code %d from the module!";
@@ -77,10 +88,12 @@ void SMVM_PDPI_free(SMVM_PDPI * pdpi) {
     SMVM_MODAPI_0x1_PDPI_Wrapper pdpiWrapper = {
         .pdProcessHandle = pdpi->pdProcessHandle,
         .pdHandle = pdpi->pd->pdHandle,
+        .getPdpiFacility = &SMVM_PDPI_get_facility_wrapper,
         .internal = pdpi
     };
     (*((SMVM_MODAPI_0x1_PDPI_Shutdown) pdk->pdpi_shutdown_impl_or_wrapper))(&pdpiWrapper);
     SMVM_PD_unref(pdpi->pd);
+    SMVM_FacilityMap_destroy(&pdpi->pdpiFacilityMap);
     free(pdpi);
 }
 
@@ -113,4 +126,18 @@ SMVM_Module * SMVM_PDPI_get_module(const SMVM_PDPI * pdpi) {
 void * SMVM_PDPI_get_process(const SMVM_PDPI * pdpi) {
     assert(pdpi);
     return pdpi->processHandle;
+}
+
+int SMVM_PDPI_set_facility(SMVM_PDPI * pdpi, const char * name, void * facility) {
+    assert(pdpi);
+    assert(name);
+    assert(name[0]);
+    return SMVM_FacilityMap_set(&pdpi->pdpiFacilityMap, name, facility);
+}
+
+void * SMVM_PDPI_get_facility(const SMVM_PDPI * pdpi, const char * name) {
+    assert(pdpi);
+    assert(name);
+    assert(name[0]);
+    return SMVM_FacilityMap_get(&pdpi->pdpiFacilityMap, name);
 }

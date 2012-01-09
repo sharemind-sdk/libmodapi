@@ -22,6 +22,14 @@
 #include "pdk.h"
 
 
+static void * SMVM_PD_get_facility_wrapper(SMVM_MODAPI_0x1_PD_Wrapper * w, const char * name) {
+    assert(w);
+    assert(w->internal);
+    assert(name);
+    assert(name[0]);
+    return SMVM_PD_get_facility((SMVM_PD *) w->internal, name);
+}
+
 SMVM_PD * SMVM_PD_new(SMVM_PDK * pdk, const char * name, const char * conf) {
     assert(pdk);
     assert(pdk->module);
@@ -51,6 +59,8 @@ SMVM_PD * SMVM_PD_new(SMVM_PDK * pdk, const char * name, const char * conf) {
     pd->pdk = pdk;
     pd->isStarted = false;
     SMVM_REFS_INIT(pd);
+    SMVM_FacilityMap_init(&pd->pdFacilityMap, &pdk->pdFacilityMap);
+    SMVM_FacilityMap_init(&pd->pdpiFacilityMap, &pdk->pdpiFacilityMap);
     return pd;
 
 SMVM_PD_new_fail_2:
@@ -78,6 +88,9 @@ void SMVM_PD_free(SMVM_PD * pd) {
         free(pd->conf);
     free(pd->name);
     SMVM_PDK_unref(pd->pdk);
+
+    SMVM_FacilityMap_destroy(&pd->pdFacilityMap);
+    SMVM_FacilityMap_destroy(&pd->pdpiFacilityMap);
     free(pd);
 }
 
@@ -97,6 +110,7 @@ static inline void SMVM_PD_init_start_stop_wrappers(SMVM_PD * pd,
     pdWrapper->moduleHandle = pdk->module->moduleHandle;
     assert(pdWrapper->moduleHandle);
     pdWrapper->conf = pdConf;
+    pdWrapper->getPdFacility = &SMVM_PD_get_facility_wrapper;
 }
 
 bool SMVM_PD_is_started(const SMVM_PD * pd) {
@@ -184,6 +198,34 @@ const char * SMVM_PD_get_conf(const SMVM_PD * pd) {
 void * SMVM_PD_get_handle(const SMVM_PD * pd) {
     assert(pd);
     return pd->pdHandle;
+}
+
+int SMVM_PD_set_facility(SMVM_PD * pd, const char * name, void * facility) {
+    assert(pd);
+    assert(name);
+    assert(name[0]);
+    return SMVM_FacilityMap_set(&pd->pdFacilityMap, name, facility);
+}
+
+void * SMVM_PD_get_facility(const SMVM_PD * pd, const char * name) {
+    assert(pd);
+    assert(name);
+    assert(name[0]);
+    return SMVM_FacilityMap_get(&pd->pdFacilityMap, name);
+}
+
+int SMVM_PD_set_pdpi_facility(SMVM_PD * pd, const char * name, void * facility) {
+    assert(pd);
+    assert(name);
+    assert(name[0]);
+    return SMVM_FacilityMap_set(&pd->pdpiFacilityMap, name, facility);
+}
+
+void * SMVM_PD_get_pdpi_facility(const SMVM_PD * pd, const char * name) {
+    assert(pd);
+    assert(name);
+    assert(name[0]);
+    return SMVM_FacilityMap_get(&pd->pdpiFacilityMap, name);
 }
 
 SMVM_REFS_DEFINE_FUNCTIONS(SMVM_PD)

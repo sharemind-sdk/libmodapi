@@ -14,8 +14,8 @@
 #error including an internal header!
 #endif
 
-#include "modapi.h"
 #include "../refs.h"
+#include "modapi.h"
 
 
 #ifdef __cplusplus

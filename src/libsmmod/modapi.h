@@ -10,8 +10,9 @@
 #ifndef SHAREMIND_LIBSMMOD_MODAPI_H
 #define SHAREMIND_LIBSMMOD_MODAPI_H
 
-#include <stddef.h>
 #include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 #include "../preprocessor.h"
 
 
@@ -81,6 +82,8 @@ void SMVM_Module_free(SMVM_Module * m) __attribute__ ((nonnull(1)));
 SMVM_MODAPI_Error SMVM_Module_mod_init(SMVM_Module * m) __attribute__ ((nonnull(1)));
 void SMVM_Module_mod_deinit(SMVM_Module * m) __attribute__ ((nonnull(1)));
 
+const char * SMVM_Module_get_name(const SMVM_Module * m) __attribute__ ((nonnull(1)));
+uint32_t SMVM_Module_get_api_version_in_use(const SMVM_Module * m) __attribute__ ((nonnull(1)));
 void * SMVM_Module_get_handle(const SMVM_Module * m) __attribute__ ((nonnull(1)));
 
 SMVM_MODAPI * SMVM_Module_get_modapi(const SMVM_Module * m) __attribute__ ((nonnull(1)));

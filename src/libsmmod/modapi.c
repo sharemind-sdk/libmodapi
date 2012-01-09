@@ -307,6 +307,16 @@ SMVM_MODAPI * SMVM_Module_get_modapi(const SMVM_Module * m) {
     return m->modapi;
 }
 
+const char * SMVM_Module_get_name(const SMVM_Module * m) {
+    assert(m);
+    return m->name;
+}
+
+uint32_t SMVM_Module_get_api_version_in_use(const SMVM_Module * m) {
+    assert(m);
+    return m->apiVersion;
+}
+
 size_t SMVM_Module_get_num_syscalls(const SMVM_Module * m) {
     assert(m);
     return (*(apis[m->apiVersion - 1u].module_get_num_syscalls))(m);

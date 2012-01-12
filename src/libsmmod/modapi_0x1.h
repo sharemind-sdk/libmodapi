@@ -135,6 +135,12 @@ typedef enum {
 typedef struct _SMVM_MODAPI_0x1_Syscall_Context SMVM_MODAPI_0x1_Syscall_Context;
 struct _SMVM_MODAPI_0x1_Syscall_Context {
 
+    /** Internal pointer, do not use! */
+    ICONST void * ICONST internal;
+
+    /** Internal pointer, do not use! */
+    ICONST void * ICONST libsmmod_internal;
+
     /**
       A handle to the private data of the module instance. This is the same
       handle as provided to SMVM_MODAPI_0x1_Module_Context on module
@@ -172,12 +178,6 @@ struct _SMVM_MODAPI_0x1_Syscall_Context {
                                                   void ** moduleHandle);
 
     /* OTHER STUFF */
-
-    /** Internal pointer, do not use! */
-    ICONST void * ICONST internal;
-
-    /** Internal pointer, do not use! */
-    ICONST void * ICONST libsmmod_internal;
 
 };
 

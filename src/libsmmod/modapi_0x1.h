@@ -62,6 +62,9 @@ typedef enum {
 typedef struct _SMVM_MODAPI_0x1_Module_Context SMVM_MODAPI_0x1_Module_Context;
 struct _SMVM_MODAPI_0x1_Module_Context {
 
+    /** Internal pointer, do not use! */
+    ICONST void * ICONST internal;
+
     /**
       A handle for module instance data. Inside SMVM_syscall_context and others,
       this handle is also passed to facilities provided by this module.
@@ -76,9 +79,6 @@ struct _SMVM_MODAPI_0x1_Module_Context {
                name was found.
     */
     void * (* ICONST getModuleFacility)(SMVM_MODAPI_0x1_Module_Context * w, const char * name);
-
-    /** Internal pointer, do not use! */
-    ICONST void * ICONST internal;
 
 };
 
@@ -97,14 +97,14 @@ typedef void (*SMVM_MODAPI_0x1_Module_Deinitializer)(SMVM_MODAPI_0x1_Module_Cont
 typedef struct _SMVM_MODAPI_0x1_Reference SMVM_MODAPI_0x1_Reference;
 struct _SMVM_MODAPI_0x1_Reference {
 
+    /** Internal pointer, do not use! */
+    ICONST void * ICONST internal;
+
     /** Pointer to referenced data. */
     void * ICONST pData;
 
     /** Size of referenced data. */
     ICONST size_t size;
-
-    /** Internal pointer, do not use! */
-    ICONST void * ICONST internal;
 
 };
 
@@ -112,14 +112,14 @@ struct _SMVM_MODAPI_0x1_Reference {
 typedef struct _SMVM_MODAPI_0x1_CReference SMVM_MODAPI_0x1_CReference;
 struct _SMVM_MODAPI_0x1_CReference {
 
+    /** Internal pointer, do not use! */
+    ICONST void * ICONST internal;
+
     /** Pointer to referenced data. */
     const void * ICONST pData;
 
     /** Size of referenced data. */
     ICONST size_t size;
-
-    /** Internal pointer, do not use! */
-    ICONST void * ICONST internal;
 
 };
 
@@ -247,6 +247,9 @@ struct _SMVM_MODAPI_0x1_PD_Conf {
 typedef struct _SMVM_MODAPI_0x1_PD_Wrapper SMVM_MODAPI_0x1_PD_Wrapper;
 struct _SMVM_MODAPI_0x1_PD_Wrapper {
 
+    /** Internal pointer, do not use! */
+    ICONST void * ICONST internal;
+
     /** A handle for protection domain runtime data. */
     void * pdHandle;
 
@@ -271,14 +274,14 @@ struct _SMVM_MODAPI_0x1_PD_Wrapper {
 
     /* OTHER STUFF */
 
-    /** Internal pointer, do not use! */
-    ICONST void * ICONST internal;
-
 };
 
 /** Protection-domain instance process instance specific data wrapper. */
 typedef struct _SMVM_MODAPI_0x1_PDPI_Wrapper SMVM_MODAPI_0x1_PDPI_Wrapper;
 struct _SMVM_MODAPI_0x1_PDPI_Wrapper {
+
+    /** Internal pointer, do not use! */
+    ICONST void * ICONST internal;
 
     /** A handle for protection domain per-process data. */
     void * pdProcessHandle;
@@ -299,9 +302,6 @@ struct _SMVM_MODAPI_0x1_PDPI_Wrapper {
     void * (* ICONST getPdpiFacility)(SMVM_MODAPI_0x1_PDPI_Wrapper * w, const char * name);
 
     /* OTHER STUFF */
-
-    /** Internal pointer, do not use! */
-    ICONST void * ICONST internal;
 
 };
 

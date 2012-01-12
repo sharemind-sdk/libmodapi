@@ -25,11 +25,7 @@ extern "C" {
 
 struct _SMVM_Syscall {
 
-    /** Pointer to implementation function if current API, otherwise to a wrapper function. */
-    void * impl_or_wrapper;
-
-    /** NULL if current API, otherwise pointer to implementation function. */
-    void * null_or_impl;
+    SMVM_SyscallWrapper wrapper;
 
     /** Unique name of the system call. */
     char * name;
@@ -44,7 +40,7 @@ struct _SMVM_Syscall {
 int SMVM_Syscall_init(SMVM_Syscall * sc,
                       const char * name,
                       void * impl,
-                      void * wrapper,
+                      SMVM_Syscall_Callable wrapper,
                       SMVM_Module * m)
      __attribute__ ((nonnull(1, 2, 3, 5)));
 

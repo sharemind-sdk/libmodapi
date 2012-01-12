@@ -16,7 +16,7 @@
 #include <string.h>
 
 
-int SMVM_Syscall_init(SMVM_Syscall * sc, const char * name, void * impl, void * wrapper, SMVM_Module * m) {
+int SMVM_Syscall_init(SMVM_Syscall * sc, const char * name, void * impl, SMVM_Syscall_Callable wrapper, SMVM_Module * m) {
     assert(sc);
     assert(name);
     assert(impl);
@@ -33,11 +33,11 @@ int SMVM_Syscall_init(SMVM_Syscall * sc, const char * name, void * impl, void * 
     }
 
     if (wrapper) {
-        sc->impl_or_wrapper = wrapper;
-        sc->null_or_impl = impl;
+        sc->wrapper.callable = wrapper;
+        sc->wrapper.internal = impl;
     } else {
-        sc->impl_or_wrapper = impl;
-        sc->null_or_impl = NULL;
+        sc->wrapper.callable = (SMVM_Syscall_Callable) impl;
+        sc->wrapper.internal = NULL;
     }
     sc->module = m;
     return 1;
@@ -45,8 +45,9 @@ int SMVM_Syscall_init(SMVM_Syscall * sc, const char * name, void * impl, void * 
 
 void SMVM_Syscall_destroy(SMVM_Syscall * sc) {
     assert(sc);
-    assert(sc->impl_or_wrapper);
+    assert(sc->wrapper.callable);
     assert(sc->name);
+    assert(sc->module);
     SMVM_REFS_ASSERT_IF_REFERENCED(sc);
 
     free(sc->name);
@@ -55,22 +56,20 @@ void SMVM_Syscall_destroy(SMVM_Syscall * sc) {
 
 const char * SMVM_Syscall_get_name(const SMVM_Syscall * sc) {
     assert(sc);
+    assert(sc->name);
     return sc->name;
 }
 
 SMVM_Module * SMVM_Syscall_get_module(const SMVM_Syscall * sc) {
     assert(sc);
+    assert(sc->module);
     return sc->module;
 }
 
-void * SMVM_Syscall_get_impl_or_wrapper(const SMVM_Syscall * sc) {
+SMVM_SyscallWrapper SMVM_Syscall_get_wrapper(const SMVM_Syscall * sc) {
     assert(sc);
-    return sc->impl_or_wrapper;
-}
-
-void * SMVM_Syscall_get_null_or_impl(const SMVM_Syscall * sc) {
-    assert(sc);
-    return sc->null_or_impl;
+    assert(sc->wrapper.callable);
+    return sc->wrapper;
 }
 
 SMVM_REFS_DEFINE_FUNCTIONS(SMVM_Syscall)

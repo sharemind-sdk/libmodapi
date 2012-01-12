@@ -14,11 +14,20 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "../preprocessor.h"
+#include "modapi_0x1.h"
 
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+
+/*******************************************************************************
+  Most recent API aliases
+*******************************************************************************/
+
+typedef SMVM_MODAPI_0x1_Syscall SMVM_Syscall_Callable;
+
 
 /*******************************************************************************
   Forward declarations
@@ -117,8 +126,17 @@ void * SMVM_Module_get_pdpi_facility(const SMVM_Module * m, const char * name) _
 
 const char * SMVM_Syscall_get_name(const SMVM_Syscall * sc) __attribute__ ((nonnull(1)));
 SMVM_Module * SMVM_Syscall_get_module(const SMVM_Syscall * sc) __attribute__ ((nonnull(1)));
-void * SMVM_Syscall_get_impl_or_wrapper(const SMVM_Syscall * sc) __attribute__ ((nonnull(1)));
-void * SMVM_Syscall_get_null_or_impl(const SMVM_Syscall * sc) __attribute__ ((nonnull(1)));
+
+typedef struct _SMVM_SyscallWrapper {
+    SMVM_Syscall_Callable callable;
+    void * internal;
+} SMVM_SyscallWrapper;
+
+/**
+  \note According to the AMD64 ABI, returning _SMVM_SyscallWrapper should be
+        fast, because this struct will be returned in %rax and %rdx.
+*/
+SMVM_SyscallWrapper SMVM_Syscall_get_wrapper(const SMVM_Syscall * sc) __attribute__ ((nonnull(1)));
 
 
 /*******************************************************************************

@@ -174,7 +174,10 @@ struct _SMVM_MODAPI_0x1_Syscall_Context {
     /* OTHER STUFF */
 
     /** Internal pointer, do not use! */
-    const void * ICONST internal;
+    ICONST void * ICONST internal;
+
+    /** Internal pointer, do not use! */
+    ICONST void * ICONST libsmmod_internal;
 
 };
 
@@ -341,11 +344,6 @@ typedef SMVM_MODAPI_0x1_PDK_Definition SMVM_MODAPI_0x1_PDK_Definitions[];
 
 #ifdef __cplusplus
 } /* extern "C" { */
-#endif
-
-
-#ifdef SHAREMIND_INTERNAL__
-#include "modapi_0x1_internal.h"
 #endif
 
 #endif /* SHAREMIND_LIBSMMOD_MODAPI_0x1_H */

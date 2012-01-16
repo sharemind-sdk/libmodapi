@@ -30,6 +30,9 @@ struct _SMVM_Syscall {
     /** Unique name of the system call. */
     char * name;
 
+    /** Pointer to the system call facility context. */
+    void * facilityContext;
+
     /** Pointer to module providing this syscall. */
     SMVM_Module * module;
 

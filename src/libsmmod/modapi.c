@@ -72,6 +72,7 @@ SMVM_MODAPI * SMVM_MODAPI_new() {
         modapi->lastErrorDynamicString = NULL;
         modapi->lastErrorStaticString = NULL;
 
+        modapi->facilityContext = NULL;
         SMVM_FacilityMap_init(&modapi->moduleFacilityMap, NULL);
         SMVM_FacilityMap_init(&modapi->pdFacilityMap, NULL);
         SMVM_FacilityMap_init(&modapi->pdpiFacilityMap, NULL);
@@ -158,6 +159,16 @@ bool SMVM_MODAPI_setErrorWithDynamicString(SMVM_MODAPI * modapi,
 }
 
 SMVM_REFS_DEFINE_FUNCTIONS(SMVM_MODAPI)
+
+void SMVM_MODAPI_set_facility_context(SMVM_MODAPI * modapi, void * facilityContext) {
+    assert(modapi);
+    modapi->facilityContext = facilityContext;
+}
+
+void * SMVM_MODAPI_get_facility_context(const SMVM_MODAPI * modapi) {
+    assert(modapi);
+    return modapi->facilityContext;
+}
 
 int SMVM_MODAPI_set_module_facility(SMVM_MODAPI * modapi, const char * name, void * facility) {
     assert(modapi);
@@ -294,6 +305,7 @@ SMVM_Module * SMVM_Module_new(SMVM_MODAPI * modapi, const char * filename) {
         SMVM_REFS_INIT(m);
         SMVM_MODAPI_Error status = (*(apis[m->apiVersion - 1u].module_load))(m);
         if (likely(status == SMVM_MODAPI_OK)) {
+            m->facilityContext = NULL;
             SMVM_FacilityMap_init(&m->moduleFacilityMap, &modapi->moduleFacilityMap);
             SMVM_FacilityMap_init(&m->pdFacilityMap, &modapi->pdFacilityMap);
             SMVM_FacilityMap_init(&m->pdpiFacilityMap, &modapi->pdpiFacilityMap);
@@ -406,6 +418,16 @@ SMVM_PDK * SMVM_Module_get_pdk(const SMVM_Module * m, size_t index) {
 SMVM_PDK * SMVM_Module_find_pdk(const SMVM_Module * m, const char * name) {
     assert(m);
     return (*(apis[m->apiVersion - 1u].module_find_pdk))(m, name);
+}
+
+void SMVM_Module_set_facility_context(SMVM_Module * m, void * facilityContext) {
+    assert(m);
+    m->facilityContext = facilityContext;
+}
+
+void * SMVM_Module_get_facility_context(const SMVM_Module * m) {
+    assert(m);
+    return m->facilityContext;
 }
 
 int SMVM_Module_set_facility(SMVM_Module * m, const char * name, void * facility) {

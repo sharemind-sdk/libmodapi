@@ -33,6 +33,9 @@ struct _SMVM_PD {
     /** Protection domain configuration. */
     char * conf;
 
+    /** Pointer to the PD facility context. */
+    void * facilityContext;
+
     /** A handle for protection domain runtime data. */
     void * pdHandle;
 

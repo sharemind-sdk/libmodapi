@@ -60,6 +60,7 @@ SMVM_PD * SMVM_PD_new(SMVM_PDK * pdk, const char * name, const char * conf) {
 
     pd->pdk = pdk;
     pd->isStarted = false;
+    pd->facilityContext = NULL; /* Just in case */
     SMVM_REFS_INIT(pd);
     SMVM_FacilityMap_init(&pd->pdFacilityMap, &pdk->pdFacilityMap);
     SMVM_FacilityMap_init(&pd->pdpiFacilityMap, &pdk->pdpiFacilityMap);
@@ -212,6 +213,16 @@ const char * SMVM_PD_get_conf(const SMVM_PD * pd) {
 void * SMVM_PD_get_handle(const SMVM_PD * pd) {
     assert(pd);
     return pd->pdHandle;
+}
+
+void SMVM_PD_set_facility_context(SMVM_PD * pd, void * facilityContext) {
+    assert(pd);
+    pd->facilityContext = facilityContext;
+}
+
+void * SMVM_PD_get_facility_context(const SMVM_PD * pd) {
+    assert(pd);
+    return pd->facilityContext;
 }
 
 int SMVM_PD_set_facility(SMVM_PD * pd, const char * name, void * facility) {

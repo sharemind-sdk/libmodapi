@@ -22,6 +22,8 @@
 #include "pdk.h"
 
 
+static inline void SMVM_PD_stop_internal(SMVM_PD * pd);
+
 static void * SMVM_PD_get_facility_wrapper(SMVM_MODAPI_0x1_PD_Wrapper * w, const char * name) {
     assert(w);
     assert(w->internal);
@@ -83,6 +85,9 @@ void SMVM_PD_free(SMVM_PD * pd) {
     assert(pd->name);
     assert(pd->pdk);
     SMVM_REFS_ASSERT_IF_REFERENCED(pd);
+
+    if (pd->isStarted)
+        SMVM_PD_stop_internal(pd);
 
     if (likely(pd->conf))
         free(pd->conf);
@@ -151,12 +156,9 @@ bool SMVM_PD_start(SMVM_PD * pd) {
 
 }
 
-void SMVM_PD_stop(SMVM_PD * pd) {
+static inline void SMVM_PD_stop_internal(SMVM_PD * pd) {
     assert(pd);
-    assert(pd->pdk);
-
-    if (!pd->isStarted)
-        return;
+    assert(pd->isStarted);
 
     SMVM_MODAPI_0x1_PD_Conf pdConf;
     SMVM_MODAPI_0x1_PD_Wrapper pdWrapper;
@@ -166,6 +168,16 @@ void SMVM_PD_stop(SMVM_PD * pd) {
 
     (*((SMVM_MODAPI_0x1_PD_Shutdown) pdk->pd_shutdown_impl_or_wrapper))(&pdWrapper);
     pd->isStarted = false;
+}
+
+void SMVM_PD_stop(SMVM_PD * pd) {
+    assert(pd);
+    assert(pd->pdk);
+
+    if (!pd->isStarted)
+        return;
+
+    SMVM_PD_stop_internal(pd);
 }
 
 SMVM_PDK * SMVM_PD_get_pdk(const SMVM_PD * pd) {

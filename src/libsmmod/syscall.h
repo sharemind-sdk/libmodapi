@@ -40,7 +40,7 @@ struct _SMVM_Syscall {
 int SMVM_Syscall_init(SMVM_Syscall * sc,
                       const char * name,
                       void * impl,
-                      SMVM_Syscall_Callable wrapper,
+                      SMVM_SyscallCallable wrapper,
                       SMVM_Module * m)
      __attribute__ ((nonnull(1, 2, 3, 5)));
 

@@ -16,7 +16,7 @@
 #include <string.h>
 
 
-int SMVM_Syscall_init(SMVM_Syscall * sc, const char * name, void * impl, SMVM_Syscall_Callable wrapper, SMVM_Module * m) {
+int SMVM_Syscall_init(SMVM_Syscall * sc, const char * name, void * impl, SMVM_SyscallCallable wrapper, SMVM_Module * m) {
     assert(sc);
     assert(name);
     assert(impl);
@@ -36,7 +36,7 @@ int SMVM_Syscall_init(SMVM_Syscall * sc, const char * name, void * impl, SMVM_Sy
         sc->wrapper.callable = wrapper;
         sc->wrapper.internal = impl;
     } else {
-        sc->wrapper.callable = (SMVM_Syscall_Callable) impl;
+        sc->wrapper.callable = (SMVM_SyscallCallable) impl;
         sc->wrapper.internal = NULL;
     }
     sc->module = m;

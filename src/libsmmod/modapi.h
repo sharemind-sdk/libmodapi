@@ -26,7 +26,8 @@ extern "C" {
   Most recent API aliases
 *******************************************************************************/
 
-typedef SMVM_MODAPI_0x1_Syscall SMVM_Syscall_Callable;
+typedef SMVM_MODAPI_0x1_Syscall SMVM_SyscallCallable;
+typedef SMVM_MODAPI_0x1_Syscall_Context SMVM_SyscallContext;
 
 
 /*******************************************************************************
@@ -128,7 +129,7 @@ const char * SMVM_Syscall_get_name(const SMVM_Syscall * sc) __attribute__ ((nonn
 SMVM_Module * SMVM_Syscall_get_module(const SMVM_Syscall * sc) __attribute__ ((nonnull(1)));
 
 typedef struct _SMVM_SyscallWrapper {
-    SMVM_Syscall_Callable callable;
+    SMVM_SyscallCallable callable;
     void * internal;
 } SMVM_SyscallWrapper;
 

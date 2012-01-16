@@ -84,10 +84,11 @@ void SMVM_PD_free(SMVM_PD * pd) {
     assert(pd);
     assert(pd->name);
     assert(pd->pdk);
-    SMVM_REFS_ASSERT_IF_REFERENCED(pd);
 
     if (pd->isStarted)
         SMVM_PD_stop_internal(pd);
+
+    SMVM_REFS_ASSERT_IF_REFERENCED(pd);
 
     if (likely(pd->conf))
         free(pd->conf);
@@ -159,6 +160,7 @@ bool SMVM_PD_start(SMVM_PD * pd) {
 static inline void SMVM_PD_stop_internal(SMVM_PD * pd) {
     assert(pd);
     assert(pd->isStarted);
+    SMVM_REFS_ASSERT_IF_REFERENCED(pd);
 
     SMVM_MODAPI_0x1_PD_Conf pdConf;
     SMVM_MODAPI_0x1_PD_Wrapper pdWrapper;

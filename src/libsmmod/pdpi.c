@@ -35,6 +35,7 @@ SMVM_PDPI * SMVM_PDPI_new(SMVM_PD * pd, void * processHandle) {
     assert(pd->pdk);
     assert(pd->pdk->module);
     assert(pd->pdk->module->modapi);
+    assert(pd->isStarted);
 
     if (!SMVM_PD_ref(pd))
         return NULL;

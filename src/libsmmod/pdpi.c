@@ -30,7 +30,7 @@ static void * SMVM_PDPI_get_facility_wrapper(SMVM_MODAPI_0x1_PDPI_Wrapper * w, c
     return SMVM_PDPI_get_facility((SMVM_PDPI *) w->internal, name);
 }
 
-SMVM_PDPI * SMVM_PDPI_new(SMVM_PD * pd, void * processHandle) {
+SMVM_PDPI * SMVM_PDPI_new(SMVM_PD * pd, void * facilityContext) {
     assert(pd);
     assert(pd->pdk);
     assert(pd->pdk->module);
@@ -48,7 +48,7 @@ SMVM_PDPI * SMVM_PDPI_new(SMVM_PD * pd, void * processHandle) {
     }
 
     pdpi->pd = pd;
-    pdpi->processHandle = processHandle;
+    pdpi->facilityContext = facilityContext;
     SMVM_FacilityMap_init(&pdpi->pdpiFacilityMap, &pd->pdpiFacilityMap);
 
     const SMVM_PDK * const pdk = pd->pdk;
@@ -124,9 +124,9 @@ SMVM_Module * SMVM_PDPI_get_module(const SMVM_PDPI * pdpi) {
     return pdpi->pd->pdk->module;
 }
 
-void * SMVM_PDPI_get_process(const SMVM_PDPI * pdpi) {
+void * SMVM_PDPI_get_facility_context(const SMVM_PDPI * pdpi) {
     assert(pdpi);
-    return pdpi->processHandle;
+    return pdpi->facilityContext;
 }
 
 int SMVM_PDPI_set_facility(SMVM_PDPI * pdpi, const char * name, void * facility) {

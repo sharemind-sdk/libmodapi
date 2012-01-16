@@ -184,15 +184,15 @@ void * SMVM_PD_get_pdpi_facility(const SMVM_PD * pd, const char * name) __attrib
   SMVM_PDPI
 *******************************************************************************/
 
-SMVM_PDPI * SMVM_PDPI_new(SMVM_PD * pd, void * processHandle) __attribute__ ((nonnull(1)));
+SMVM_PDPI * SMVM_PDPI_new(SMVM_PD * pd, void * facilityContext) __attribute__ ((nonnull(1)));
 void SMVM_PDPI_free(SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
 
 void * SMVM_PDPI_get_handle(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
 SMVM_PD * SMVM_PDPI_get_pd(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
 SMVM_PDK * SMVM_PDPI_get_pdk(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
 SMVM_Module * SMVM_PDPI_get_module(const SMVM_PDPI * pd) __attribute__ ((nonnull(1)));
-void * SMVM_PDPI_get_process(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
 
+void * SMVM_PDPI_get_facility_context(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
 int SMVM_PDPI_set_facility(SMVM_PDPI * pdpi, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
 void * SMVM_PDPI_get_facility(const SMVM_PDPI * pdpi, const char * name) __attribute__ ((nonnull(1,2)));
 

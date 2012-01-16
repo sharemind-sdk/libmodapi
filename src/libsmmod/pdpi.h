@@ -31,8 +31,8 @@ struct _SMVM_PDPI {
     /** Pointer to the protection domain kind. */
     SMVM_PD * pd;
 
-    /** Pointer to the process data. */
-    void * processHandle;
+    /** Pointer to the facility context. */
+    void * facilityContext;
 
     /** PDPI facility name to pointer mapping: */
     SMVM_FacilityMap pdpiFacilityMap;

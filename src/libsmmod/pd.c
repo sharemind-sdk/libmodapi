@@ -17,7 +17,7 @@
 #include <string.h>
 #include "../likely.h"
 #include "modapi_0x1.h"
-#include "modapi_internal.h"
+#include "modapi.h"
 #include "pd.h"
 #include "pdk.h"
 

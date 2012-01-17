@@ -216,7 +216,7 @@ void * SMVM_PDPI_get_facility(const SMVM_PDPI * pdpi, const char * name) __attri
 
 
 #ifdef SHAREMIND_INTERNAL__
-#include "modapi_internal.h"
+#include "modapi.h"
 #endif
 
 #endif /* SHAREMIND_LIBSMMOD_MODAPI_H */

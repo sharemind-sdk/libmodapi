@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../likely.h"
-#include "modapi_internal.h"
+#include "modapi.h"
 
 
 int SMVM_PDK_init(SMVM_PDK * pdk,

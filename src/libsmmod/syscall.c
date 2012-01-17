@@ -14,6 +14,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+#include "module.h"
 
 
 int SMVM_Syscall_init(SMVM_Syscall * sc, const char * name, void * impl, SMVM_SyscallCallable wrapper, SMVM_Module * m) {
@@ -68,6 +69,13 @@ SMVM_Module * SMVM_Syscall_get_module(const SMVM_Syscall * sc) {
     assert(sc);
     assert(sc->module);
     return sc->module;
+}
+
+SMVM_MODAPI * SMVM_Syscall_get_modapi(const SMVM_Syscall * sc) {
+    assert(sc);
+    assert(sc->module);
+    assert(sc->module->modapi);
+    return sc->module->modapi;
 }
 
 /**

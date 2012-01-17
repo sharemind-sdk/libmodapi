@@ -81,12 +81,12 @@ SMVM_MODAPI_Error SMVM_MODAPI_lastError(const SMVM_MODAPI * modapi) __attribute_
 const char * SMVM_MODAPI_lastErrorString(const SMVM_MODAPI * modapi) __attribute__ ((nonnull(1)));
 void SMVM_MODAPI_clearError(SMVM_MODAPI * modapi) __attribute__ ((nonnull(1)));
 
-void SMVM_MODAPI_set_facility_context(SMVM_MODAPI * pd, void * facilityContext) __attribute__ ((nonnull(1)));
-void * SMVM_MODAPI_get_facility_context(const SMVM_MODAPI * pd) __attribute__ ((nonnull(1)));
+void SMVM_MODAPI_set_facility_context(SMVM_MODAPI * modapi, void * facilityContext) __attribute__ ((nonnull(1)));
+void * SMVM_MODAPI_get_facility_context(const SMVM_MODAPI * modapi) __attribute__ ((nonnull(1)));
 int SMVM_MODAPI_set_module_facility(SMVM_MODAPI * modapi, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
 void * SMVM_MODAPI_get_module_facility(const SMVM_MODAPI * modapi, const char * name) __attribute__ ((nonnull(1,2)));
-int SMVM_MODAPI_set_syscall_facility(SMVM_MODAPI * m, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
-void * SMVM_MODAPI_get_syscall_facility(const SMVM_MODAPI * m, const char * name) __attribute__ ((nonnull(1,2)));
+int SMVM_MODAPI_set_syscall_facility(SMVM_MODAPI * modapi, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
+void * SMVM_MODAPI_get_syscall_facility(const SMVM_MODAPI * modapi, const char * name) __attribute__ ((nonnull(1,2)));
 int SMVM_MODAPI_set_pd_facility(SMVM_MODAPI * modapi, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
 void * SMVM_MODAPI_get_pd_facility(const SMVM_MODAPI * modapi, const char * name) __attribute__ ((nonnull(1,2)));
 int SMVM_MODAPI_set_pdpi_facility(SMVM_MODAPI * modapi, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
@@ -117,8 +117,8 @@ size_t SMVM_Module_get_num_pdks(const SMVM_Module * m) __attribute__ ((nonnull(1
 SMVM_PDK * SMVM_Module_get_pdk(const SMVM_Module * m, size_t index) __attribute__ ((nonnull(1)));
 SMVM_PDK * SMVM_Module_find_pdk(const SMVM_Module * m, const char * name) __attribute__ ((nonnull(1, 2)));
 
-void SMVM_Module_set_facility_context(SMVM_Module * pd, void * facilityContext) __attribute__ ((nonnull(1)));
-void * SMVM_Module_get_facility_context(const SMVM_Module * pd) __attribute__ ((nonnull(1)));
+void SMVM_Module_set_facility_context(SMVM_Module * m, void * facilityContext) __attribute__ ((nonnull(1)));
+void * SMVM_Module_get_facility_context(const SMVM_Module * m) __attribute__ ((nonnull(1)));
 int SMVM_Module_set_facility(SMVM_Module * m, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
 void * SMVM_Module_get_facility(const SMVM_Module * m, const char * name) __attribute__ ((nonnull(1,2)));
 int SMVM_Module_set_syscall_facility(SMVM_Module * m, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
@@ -135,6 +135,7 @@ void * SMVM_Module_get_pdpi_facility(const SMVM_Module * m, const char * name) _
 
 const char * SMVM_Syscall_get_name(const SMVM_Syscall * sc) __attribute__ ((nonnull(1)));
 SMVM_Module * SMVM_Syscall_get_module(const SMVM_Syscall * sc) __attribute__ ((nonnull(1)));
+SMVM_MODAPI * SMVM_Syscall_get_modapi(const SMVM_Syscall * sc) __attribute__ ((nonnull(1)));
 
 typedef struct _SMVM_SyscallWrapper {
     SMVM_SyscallCallable callable;
@@ -143,10 +144,10 @@ typedef struct _SMVM_SyscallWrapper {
 
 SMVM_SyscallWrapper SMVM_Syscall_get_wrapper(const SMVM_Syscall * sc) __attribute__ ((nonnull(1)));
 
-void SMVM_Syscall_set_facility_context(SMVM_Syscall * pd, void * facilityContext) __attribute__ ((nonnull(1)));
-void * SMVM_Syscall_get_facility_context(const SMVM_Syscall * pd) __attribute__ ((nonnull(1)));
-int SMVM_Syscall_set_facility(SMVM_Syscall * pdk, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
-void * SMVM_Syscall_get_facility(const SMVM_Syscall * pdk, const char * name) __attribute__ ((nonnull(1,2)));
+void SMVM_Syscall_set_facility_context(SMVM_Syscall * sc, void * facilityContext) __attribute__ ((nonnull(1)));
+void * SMVM_Syscall_get_facility_context(const SMVM_Syscall * sc) __attribute__ ((nonnull(1)));
+int SMVM_Syscall_set_facility(SMVM_Syscall * sc, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
+void * SMVM_Syscall_get_facility(const SMVM_Syscall * sc, const char * name) __attribute__ ((nonnull(1,2)));
 
 
 /*******************************************************************************
@@ -154,11 +155,12 @@ void * SMVM_Syscall_get_facility(const SMVM_Syscall * pdk, const char * name) __
 *******************************************************************************/
 
 const char * SMVM_PDK_get_name(const SMVM_PDK * pdk) __attribute__ ((nonnull(1)));
-SMVM_Module * SMVM_PDK_get_module(const SMVM_PDK * sc) __attribute__ ((nonnull(1)));
-size_t SMVM_PDK_get_index(const SMVM_PDK * sc) __attribute__ ((nonnull(1)));
+SMVM_Module * SMVM_PDK_get_module(const SMVM_PDK * pdk) __attribute__ ((nonnull(1)));
+SMVM_MODAPI * SMVM_PDK_get_modapi(const SMVM_PDK * pdk) __attribute__ ((nonnull(1)));
+size_t SMVM_PDK_get_index(const SMVM_PDK * pdk) __attribute__ ((nonnull(1)));
 
-void SMVM_PDK_set_facility_context(SMVM_PDK * pd, void * facilityContext) __attribute__ ((nonnull(1)));
-void * SMVM_PDK_get_facility_context(const SMVM_PDK * pd) __attribute__ ((nonnull(1)));
+void SMVM_PDK_set_facility_context(SMVM_PDK * pdk, void * facilityContext) __attribute__ ((nonnull(1)));
+void * SMVM_PDK_get_facility_context(const SMVM_PDK * pdk) __attribute__ ((nonnull(1)));
 int SMVM_PDK_set_pd_facility(SMVM_PDK * pdk, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
 void * SMVM_PDK_get_pd_facility(const SMVM_PDK * pdk, const char * name) __attribute__ ((nonnull(1,2)));
 int SMVM_PDK_set_pdpi_facility(SMVM_PDK * pdk, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
@@ -174,6 +176,7 @@ void SMVM_PD_free(SMVM_PD * pd) __attribute__ ((nonnull(1)));
 
 SMVM_PDK * SMVM_PD_get_pdk(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
 SMVM_Module * SMVM_PD_get_module(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
+SMVM_MODAPI * SMVM_PD_get_modapi(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
 
 const char * SMVM_PD_get_name(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
 const char * SMVM_PD_get_conf(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
@@ -181,7 +184,6 @@ const char * SMVM_PD_get_conf(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
 void * SMVM_PD_get_handle(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
 
 bool SMVM_PD_is_started(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
-
 bool SMVM_PD_start(SMVM_PD * pd) __attribute__ ((nonnull(1)));
 void SMVM_PD_stop(SMVM_PD * pd) __attribute__ ((nonnull(1)));
 
@@ -203,7 +205,12 @@ void SMVM_PDPI_free(SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
 void * SMVM_PDPI_get_handle(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
 SMVM_PD * SMVM_PDPI_get_pd(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
 SMVM_PDK * SMVM_PDPI_get_pdk(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
-SMVM_Module * SMVM_PDPI_get_module(const SMVM_PDPI * pd) __attribute__ ((nonnull(1)));
+SMVM_Module * SMVM_PDPI_get_module(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
+SMVM_MODAPI * SMVM_PDPI_get_modapi(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
+
+bool SMVM_PDPI_is_started(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
+bool SMVM_PDPI_start(SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
+void SMVM_PDPI_stop(SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
 
 void SMVM_PDPI_set_facility_context(SMVM_PDPI * pdpi, void * facilityContext) __attribute__ ((nonnull(1)));
 void * SMVM_PDPI_get_facility_context(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));

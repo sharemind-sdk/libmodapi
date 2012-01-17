@@ -14,8 +14,8 @@
 #error SHAREMIND_INTERNAL__
 #endif
 
+
 #include <stdbool.h>
-#include <stdint.h>
 #include "../refs.h"
 #include "facilitymap.h"
 #include "libsmmod.h"
@@ -25,10 +25,6 @@
 extern "C" {
 #endif
 
-
-/*******************************************************************************
-  SMVM_MODAPI
-*******************************************************************************/
 
 struct _SMVM_MODAPI {
     SMVM_MODAPI_Error lastError;
@@ -65,44 +61,6 @@ bool SMVM_MODAPI_setErrorWithDynamicString(SMVM_MODAPI * modapi,
 
 SMVM_REFS_DECLARE_FUNCTIONS(SMVM_MODAPI)
 
-
-/*******************************************************************************
-  SMVM_Module
-*******************************************************************************/
-
-struct _SMVM_Module {
-    void * handle;
-    char * filename;
-    char * name;
-    uint32_t apiVersion;
-    uint32_t version;
-
-    void * apiData;
-    void * moduleHandle;
-
-    bool isInitialized;
-    SMVM_MODAPI * modapi;
-
-    /** Pointer to the module facility context. */
-    void * facilityContext;
-
-    /** Module facility name to pointer mapping: */
-    SMVM_FacilityMap moduleFacilityMap;
-
-    /** System call facility name to pointer mapping: */
-    SMVM_FacilityMap syscallFacilityMap;
-
-    /** PD facility name to pointer mapping: */
-    SMVM_FacilityMap pdFacilityMap;
-
-    /** PDPI facility name to pointer mapping: */
-    SMVM_FacilityMap pdpiFacilityMap;
-
-
-    SMVM_REFS_DECLARE_FIELDS
-};
-
-SMVM_REFS_DECLARE_FUNCTIONS(SMVM_Module)
 
 #ifdef __cplusplus
 } /* extern "C" { */

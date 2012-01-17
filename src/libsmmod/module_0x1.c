@@ -9,15 +9,12 @@
 
 #define SHAREMIND_INTERNAL__
 
-#include "api_0x1.h"
-#include "modapi_0x1.h"
+#include "module_0x1.h"
 
 #include <assert.h>
 #include <dlfcn.h>
-#include <stdlib.h>
 #include "../stringmap.h"
-#include "libsmmod.h"
-#include "pd.h"
+#include "module.h"
 #include "pdk.h"
 #include "syscall.h"
 
@@ -53,19 +50,19 @@ typedef struct {
     SMVM_MODAPI_0x1_Module_Deinitializer deinitializer;
     SMVM_SyscallMap syscalls;
     SMVM_PDKMap pdks;
-} ApiData;
+} SMVM_Module_ApiData_0x1;
 
 
-SMVM_MODAPI_Error loadModule_0x1(SMVM_Module * m) {
+SMVM_MODAPI_Error SMVM_Module_load_0x1(SMVM_Module * m) {
     assert(m);
 
     SMVM_MODAPI_Error status;
     SMVM_MODAPI_0x1_Syscall_Definitions * scs;
     SMVM_MODAPI_0x1_PDK_Definitions * pdks;
 
-    ApiData * apiData;
+    SMVM_Module_ApiData_0x1 * apiData;
 
-    apiData = (ApiData *) malloc(sizeof(ApiData));
+    apiData = (SMVM_Module_ApiData_0x1 *) malloc(sizeof(SMVM_Module_ApiData_0x1));
     if (unlikely(!apiData)) {
         status = SMVM_MODAPI_OUT_OF_MEMORY;
         goto loadModule_0x1_fail_0;
@@ -203,21 +200,22 @@ loadModule_0x1_fail_0:
     return status;
 }
 
-void unloadModule_0x1(SMVM_Module * const m) {
+void SMVM_Module_unload_0x1(SMVM_Module * const m) {
     assert(m);
     assert(m->apiData);
 
-    ApiData * const apiData = (ApiData *) m->apiData;
+    SMVM_Module_ApiData_0x1 * const apiData = (SMVM_Module_ApiData_0x1 *) m->apiData;
 
     SMVM_PDKMap_destroy_with(&apiData->pdks, &SMVM_PDKMap_destroyer);
     SMVM_SyscallMap_destroy_with(&apiData->syscalls, &SMVM_SyscallMap_destroyer);
     free(apiData);
 }
 
-SMVM_MODAPI_Error initModule_0x1(SMVM_Module * const m) {
-    ApiData * const apiData = (ApiData *) m->apiData;
+SMVM_MODAPI_Error SMVM_Module_init_0x1(SMVM_Module * const m) {
+    SMVM_Module_ApiData_0x1 * const apiData = (SMVM_Module_ApiData_0x1 *) m->apiData;
 
     SMVM_MODAPI_0x1_Module_Context context = {
+        .moduleHandle = NULL, /* Just in case */
         .getModuleFacility = &SMVM_Module_get_facility_wrapper,
         .internal = m
     };
@@ -239,8 +237,8 @@ SMVM_MODAPI_Error initModule_0x1(SMVM_Module * const m) {
     }
 }
 
-void deinitModule_0x1(SMVM_Module * const m) {
-    ApiData * const apiData = (ApiData *) m->apiData;
+void SMVM_Module_deinit_0x1(SMVM_Module * const m) {
+    SMVM_Module_ApiData_0x1 * const apiData = (SMVM_Module_ApiData_0x1 *) m->apiData;
 
     SMVM_MODAPI_0x1_Module_Context context = {
         .moduleHandle = m->moduleHandle,
@@ -250,40 +248,40 @@ void deinitModule_0x1(SMVM_Module * const m) {
     apiData->deinitializer(&context);
 }
 
-size_t getNumSyscalls_0x1(const SMVM_Module * m) {
-    ApiData * const apiData = (ApiData *) m->apiData;
+size_t SMVM_Module_get_num_syscalls_0x1(const SMVM_Module * m) {
+    SMVM_Module_ApiData_0x1 * const apiData = (SMVM_Module_ApiData_0x1 *) m->apiData;
 
     return apiData->syscalls.size;
 }
 
-SMVM_Syscall * getSyscall_0x1(const SMVM_Module * m, size_t index) {
-    ApiData * const apiData = (ApiData *) m->apiData;
+SMVM_Syscall * SMVM_Module_get_syscall_0x1(const SMVM_Module * m, size_t index) {
+    SMVM_Module_ApiData_0x1 * const apiData = (SMVM_Module_ApiData_0x1 *) m->apiData;
 
     return SMVM_SyscallMap_value_at(&apiData->syscalls, index);
 }
 
 
-SMVM_Syscall * findSyscall_0x1(const SMVM_Module * m, const char * signature) {
-    ApiData * const apiData = (ApiData *) m->apiData;
+SMVM_Syscall * SMVM_Module_find_syscall_0x1(const SMVM_Module * m, const char * signature) {
+    SMVM_Module_ApiData_0x1 * const apiData = (SMVM_Module_ApiData_0x1 *) m->apiData;
 
     return SMVM_SyscallMap_get(&apiData->syscalls, signature);
 }
 
-size_t getNumPdks_0x1(const SMVM_Module * m) {
-    ApiData * const apiData = (ApiData *) m->apiData;
+size_t SMVM_Module_get_num_pdks_0x1(const SMVM_Module * m) {
+    SMVM_Module_ApiData_0x1 * const apiData = (SMVM_Module_ApiData_0x1 *) m->apiData;
 
     return apiData->pdks.size;
 }
 
-SMVM_PDK * getPdk_0x1(const SMVM_Module * m, size_t index) {
-    ApiData * const apiData = (ApiData *) m->apiData;
+SMVM_PDK * SMVM_Module_get_pdk_0x1(const SMVM_Module * m, size_t index) {
+    SMVM_Module_ApiData_0x1 * const apiData = (SMVM_Module_ApiData_0x1 *) m->apiData;
 
     return SMVM_PDKMap_value_at(&apiData->pdks, index);
 }
 
 
-SMVM_PDK * findPdk_0x1(const SMVM_Module * m, const char * name) {
-    ApiData * const apiData = (ApiData *) m->apiData;
+SMVM_PDK * SMVM_Module_find_pdk_0x1(const SMVM_Module * m, const char * name) {
+    SMVM_Module_ApiData_0x1 * const apiData = (SMVM_Module_ApiData_0x1 *) m->apiData;
 
     return SMVM_PDKMap_get(&apiData->pdks, name);
 }

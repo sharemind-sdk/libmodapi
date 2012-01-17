@@ -11,26 +11,11 @@
 
 #include "pd.h"
 
-#include <assert.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include "../likely.h"
-#include "api_0x1.h"
-#include "modapi.h"
-#include "pd.h"
+#include "apis.h"
+#include "module.h"
 #include "pdk.h"
 
-
-static inline void SMVM_PD_stop_internal(SMVM_PD * pd);
-
-static void * SMVM_PD_get_facility_wrapper(SMVM_MODAPI_0x1_PD_Wrapper * w, const char * name) {
-    assert(w);
-    assert(w->internal);
-    assert(name);
-    assert(name[0]);
-    return SMVM_PD_get_facility((SMVM_PD *) w->internal, name);
-}
 
 SMVM_PD * SMVM_PD_new(SMVM_PDK * pdk, const char * name, const char * conf) {
     assert(pdk);
@@ -58,12 +43,13 @@ SMVM_PD * SMVM_PD_new(SMVM_PDK * pdk, const char * name, const char * conf) {
         pd->conf = NULL;
     }
 
+    pd->pdHandle = NULL; /* Just in case */
     pd->pdk = pdk;
     pd->isStarted = false;
     pd->facilityContext = NULL; /* Just in case */
-    SMVM_REFS_INIT(pd);
     SMVM_FacilityMap_init(&pd->pdFacilityMap, &pdk->pdFacilityMap);
     SMVM_FacilityMap_init(&pd->pdpiFacilityMap, &pdk->pdpiFacilityMap);
+    SMVM_REFS_INIT(pd);
     return pd;
 
 SMVM_PD_new_fail_2:
@@ -87,7 +73,7 @@ void SMVM_PD_free(SMVM_PD * pd) {
     assert(pd->pdk);
 
     if (pd->isStarted)
-        SMVM_PD_stop_internal(pd);
+        (*(pd->pdk->module->api->pd_stop))(pd);
 
     SMVM_REFS_ASSERT_IF_REFERENCED(pd);
 
@@ -101,25 +87,6 @@ void SMVM_PD_free(SMVM_PD * pd) {
     free(pd);
 }
 
-static inline void SMVM_PD_init_start_stop_wrappers(SMVM_PD * pd,
-                                                    SMVM_MODAPI_0x1_PD_Conf * pdConf,
-                                                    SMVM_MODAPI_0x1_PD_Wrapper * pdWrapper)
-{
-    assert(pd);
-    assert(pd->pdk);
-    const SMVM_PDK * const pdk = pd->pdk;
-
-    pdConf->pd_name = pd->name;
-    pdConf->pdk_index = pdk->pdk_index;
-    pdConf->pd_conf_string = pd->conf;
-
-    pdWrapper->pdHandle = pd->pdHandle;
-    pdWrapper->moduleHandle = pdk->module->moduleHandle;
-    assert(pdWrapper->moduleHandle);
-    pdWrapper->conf = pdConf;
-    pdWrapper->getPdFacility = &SMVM_PD_get_facility_wrapper;
-}
-
 bool SMVM_PD_is_started(const SMVM_PD * pd) {
     assert(pd);
     return pd->isStarted;
@@ -129,58 +96,27 @@ bool SMVM_PD_start(SMVM_PD * pd) {
     assert(pd);
     assert(pd->pdk);
     assert(pd->pdk->module);
-    assert(pd->pdk->module->modapi);
-    assert(pd->pdk->module->moduleHandle);
+    assert(pd->pdk->module->api);
+    assert(pd->pdk->module->api->pd_start);
 
     if (pd->isStarted)
         return true;
 
-    SMVM_MODAPI_0x1_PD_Conf pdConf;
-    SMVM_MODAPI_0x1_PD_Wrapper pdWrapper;
-    SMVM_PD_init_start_stop_wrappers(pd, &pdConf, &pdWrapper);
-    const SMVM_PDK * const pdk = pd->pdk;
-    pdWrapper.internal = pd;
-
-    const int r = (*((SMVM_MODAPI_0x1_PD_Startup) pdk->pd_startup_impl_or_wrapper))(&pdWrapper);
-    if (likely(r == 0)) {
-        pd->pdHandle = pdWrapper.pdHandle;
-        pd->isStarted = true;
-        return true;
-    }
-
-    const char * const errorFormatString = "PD startup failed with code %d from the module!";
-    const size_t len = strlen(errorFormatString) + sizeof(int) * 3; /* -"%d" + '\0' + '-' + 3 for each byte of int */
-    char * const errorString = (char *) malloc(len);
-    if (likely(errorString))
-        snprintf(errorString, len, errorFormatString, r);
-    SMVM_MODAPI_setErrorWithDynamicString(pdk->module->modapi, SMVM_MODAPI_PD_STARTUP_FAILED, errorString);
-    return false;
-
-}
-
-static inline void SMVM_PD_stop_internal(SMVM_PD * pd) {
-    assert(pd);
-    assert(pd->isStarted);
-    SMVM_REFS_ASSERT_IF_REFERENCED(pd);
-
-    SMVM_MODAPI_0x1_PD_Conf pdConf;
-    SMVM_MODAPI_0x1_PD_Wrapper pdWrapper;
-    SMVM_PD_init_start_stop_wrappers(pd, &pdConf, &pdWrapper);
-    const SMVM_PDK * const pdk = pd->pdk;
-    pdWrapper.internal = pd;
-
-    (*((SMVM_MODAPI_0x1_PD_Shutdown) pdk->pd_shutdown_impl_or_wrapper))(&pdWrapper);
-    pd->isStarted = false;
+    return (*(pd->pdk->module->api->pd_start))(pd);
 }
 
 void SMVM_PD_stop(SMVM_PD * pd) {
     assert(pd);
     assert(pd->pdk);
+    assert(pd->pdk->module);
+    assert(pd->pdk->module->api);
+    assert(pd->pdk->module->api->pd_start);
 
     if (!pd->isStarted)
         return;
 
-    SMVM_PD_stop_internal(pd);
+    (*(pd->pdk->module->api->pd_stop))(pd);
+    pd->isStarted = false;
 }
 
 SMVM_PDK * SMVM_PD_get_pdk(const SMVM_PD * pd) {
@@ -194,6 +130,14 @@ SMVM_Module * SMVM_PD_get_module(const SMVM_PD * pd) {
     assert(pd->pdk);
     assert(pd->pdk->module);
     return pd->pdk->module;
+}
+
+SMVM_MODAPI * SMVM_PD_get_modapi(const SMVM_PD * pd) {
+    assert(pd);
+    assert(pd->pdk);
+    assert(pd->pdk->module);
+    assert(pd->pdk->module->modapi);
+    return pd->pdk->module->modapi;
 }
 
 const char * SMVM_PD_get_name(const SMVM_PD * pd) {

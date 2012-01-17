@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../likely.h"
-#include "modapi.h"
+#include "module.h"
 
 
 int SMVM_PDK_init(SMVM_PDK * pdk,
@@ -117,6 +117,13 @@ SMVM_Module * SMVM_PDK_get_module(const SMVM_PDK * pdk) {
     assert(pdk);
     assert(pdk->module);
     return pdk->module;
+}
+
+SMVM_MODAPI * SMVM_PDK_get_modapi(const SMVM_PDK * pdk) {
+    assert(pdk);
+    assert(pdk->module);
+    assert(pdk->module->modapi);
+    return pdk->module->modapi;
 }
 
 size_t SMVM_PDK_get_index(const SMVM_PDK * pdk) {

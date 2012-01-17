@@ -14,6 +14,7 @@
 #error including an internal header!
 #endif
 
+#include <stdbool.h>
 #include "../refs.h"
 #include "facilitymap.h"
 #include "libsmmod.h"
@@ -30,6 +31,8 @@ struct _SMVM_PDPI {
 
     /** Pointer to the protection domain kind. */
     SMVM_PD * pd;
+
+    bool isStarted;
 
     /** Pointer to the PDPI facility context. */
     void * facilityContext;

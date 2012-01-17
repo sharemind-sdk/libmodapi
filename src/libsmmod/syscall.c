@@ -70,6 +70,10 @@ SMVM_Module * SMVM_Syscall_get_module(const SMVM_Syscall * sc) {
     return sc->module;
 }
 
+/**
+  \note According to the AMD64 ABI, returning _SMVM_SyscallWrapper should be
+        fast, because this struct will be returned in %rax and %rdx.
+*/
 SMVM_SyscallWrapper SMVM_Syscall_get_wrapper(const SMVM_Syscall * sc) {
     assert(sc);
     assert(sc->wrapper.callable);

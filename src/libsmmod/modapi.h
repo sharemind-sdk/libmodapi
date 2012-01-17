@@ -141,10 +141,6 @@ typedef struct _SMVM_SyscallWrapper {
     void * internal;
 } SMVM_SyscallWrapper;
 
-/**
-  \note According to the AMD64 ABI, returning _SMVM_SyscallWrapper should be
-        fast, because this struct will be returned in %rax and %rdx.
-*/
 SMVM_SyscallWrapper SMVM_Syscall_get_wrapper(const SMVM_Syscall * sc) __attribute__ ((nonnull(1)));
 
 void SMVM_Syscall_set_facility_context(SMVM_Syscall * pd, void * facilityContext) __attribute__ ((nonnull(1)));

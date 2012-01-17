@@ -7,8 +7,8 @@
  * code is subject to the appropriate license agreement.
  */
 
-#ifndef SHAREMIND_LIBSMMOD_MODAPI_INTERNAL_H
-#define SHAREMIND_LIBSMMOD_MODAPI_INTERNAL_H
+#ifndef SHAREMIND_LIBSMMOD_MODAPI_H
+#define SHAREMIND_LIBSMMOD_MODAPI_H
 
 #ifndef SHAREMIND_INTERNAL__
 #error SHAREMIND_INTERNAL__
@@ -108,5 +108,5 @@ SMVM_REFS_DECLARE_FUNCTIONS(SMVM_Module)
 } /* extern "C" { */
 #endif
 
-#endif /* SHAREMIND_LIBSMMOD_MODAPI_INTERNAL_H */
+#endif /* SHAREMIND_LIBSMMOD_MODAPI_H */
 

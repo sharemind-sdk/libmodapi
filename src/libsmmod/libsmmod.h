@@ -7,8 +7,8 @@
  * code is subject to the appropriate license agreement.
  */
 
-#ifndef SHAREMIND_LIBSMMOD_MODAPI_H
-#define SHAREMIND_LIBSMMOD_MODAPI_H
+#ifndef SHAREMIND_LIBSMMOD_LIBSMMOD_H
+#define SHAREMIND_LIBSMMOD_LIBSMMOD_H
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -219,4 +219,4 @@ void * SMVM_PDPI_get_facility(const SMVM_PDPI * pdpi, const char * name) __attri
 #include "modapi.h"
 #endif
 
-#endif /* SHAREMIND_LIBSMMOD_MODAPI_H */
+#endif /* SHAREMIND_LIBSMMOD_LIBSMMOD_H */

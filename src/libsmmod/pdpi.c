@@ -23,15 +23,16 @@ SMVM_PDPI * SMVM_PDPI_new(SMVM_PD * pd) {
     assert(pd->pdk);
     assert(pd->pdk->module);
     assert(pd->pdk->module->modapi);
-    assert(pd->isStarted);
 
-    if (!SMVM_PD_ref(pd))
+    if (!SMVM_PD_refs_ref(pd)) {
+        OOR(pd->pdk->module->modapi);
         return NULL;
+    }
 
     SMVM_PDPI * const pdpi = (SMVM_PDPI *) malloc(sizeof(SMVM_PDPI));
     if (unlikely(!pdpi)) {
         OOM(pd->pdk->module->modapi);
-        SMVM_PD_unref(pd);
+        SMVM_PD_refs_unref(pd);
         return NULL;
     }
 
@@ -41,6 +42,7 @@ SMVM_PDPI * SMVM_PDPI_new(SMVM_PD * pd) {
     pdpi->facilityContext = NULL; /* Just in case */
     SMVM_FacilityMap_init(&pdpi->pdpiFacilityMap, &pd->pdpiFacilityMap);
     SMVM_REFS_INIT(pdpi);
+    SMVM_NAMED_REFS_INIT(pdpi,startedRefs);
     return pdpi;
 }
 
@@ -50,12 +52,13 @@ void SMVM_PDPI_free(SMVM_PDPI * pdpi) {
     assert(pdpi->pd->pdk);
     assert(pdpi->pd->pdk->module);
     assert(pdpi->pd->pdk->module->modapi);
+
     SMVM_REFS_ASSERT_IF_REFERENCED(pdpi);
 
     if (pdpi->isStarted)
-        (*(pdpi->pd->pdk->module->api->pdpi_stop))(pdpi);
+        SMVM_PDPI_stop(pdpi);
 
-    SMVM_PD_unref(pdpi->pd);
+    SMVM_PD_refs_unref(pdpi->pd);
     SMVM_FacilityMap_destroy(&pdpi->pdpiFacilityMap);
     free(pdpi);
 }
@@ -71,8 +74,19 @@ bool SMVM_PDPI_start(SMVM_PDPI * pdpi) {
     assert(pdpi->pd->pdk);
     assert(pdpi->pd->pdk->module);
     assert(pdpi->pd->pdk->module->api);
+    assert(pdpi->pd->pdk->module->modapi);
 
-    bool r = (*(pdpi->pd->pdk->module->api->pdpi_start))(pdpi);
+    if (pdpi->isStarted)
+        return true;
+
+    SMVM_PD * const pd = pdpi->pd;
+    const SMVM_Module * const module = pd->pdk->module;
+    if (!SMVM_PD_startedRefs_ref(pd)) {
+        OOR(module->modapi);
+        return false;
+    }
+
+    bool r = (*(module->api->pdpi_start))(pdpi);
     pdpi->isStarted = r;
     return r;
 }
@@ -84,9 +98,12 @@ void SMVM_PDPI_stop(SMVM_PDPI * pdpi) {
     assert(pdpi->pd->pdk->module);
     assert(pdpi->pd->pdk->module->api);
 
+    SMVM_NAMED_REFS_ASSERT_IF_REFERENCED(pdpi,startedRefs);
+
     (*(pdpi->pd->pdk->module->api->pdpi_stop))(pdpi);
 
     pdpi->isStarted = false;
+    SMVM_PD_startedRefs_unref(pdpi->pd);
 }
 
 void * SMVM_PDPI_get_handle(const SMVM_PDPI * pdpi) {
@@ -147,3 +164,6 @@ void * SMVM_PDPI_get_facility(const SMVM_PDPI * pdpi, const char * name) {
     assert(name[0]);
     return SMVM_FacilityMap_get(&pdpi->pdpiFacilityMap, name);
 }
+
+SMVM_REFS_DEFINE_FUNCTIONS(SMVM_PDPI)
+SMVM_NAMED_REFS_DEFINE_FUNCTIONS(SMVM_PDPI,startedRefs)

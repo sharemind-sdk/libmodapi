@@ -38,15 +38,18 @@ int SMVM_PDK_init(SMVM_PDK * pdk,
     assert(pd_process_startup_impl);
     assert(pd_process_shutdown_impl);
     assert(module);
+    assert(module->modapi);
 
-    if (!SMVM_Module_ref(module))
+    if (!SMVM_Module_refs_ref(module)) {
+        OOR(module->modapi);
         return 0;
+    }
 
     pdk->pdk_index = pdk_index;
 
     pdk->name = strdup(name);
     if (unlikely(!pdk->name)) {
-        SMVM_Module_unref(module);
+        SMVM_Module_refs_unref(module);
         return 0;
     }
 
@@ -101,7 +104,7 @@ void SMVM_PDK_destroy(SMVM_PDK * pdk) {
     SMVM_REFS_ASSERT_IF_REFERENCED(pdk);
 
     free(pdk->name);
-    SMVM_Module_unref(pdk->module);
+    SMVM_Module_refs_unref(pdk->module);
 
     SMVM_FacilityMap_destroy(&pdk->pdFacilityMap);
     SMVM_FacilityMap_destroy(&pdk->pdpiFacilityMap);

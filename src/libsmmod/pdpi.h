@@ -41,10 +41,12 @@ struct _SMVM_PDPI {
     SMVM_FacilityMap pdpiFacilityMap;
 
     SMVM_REFS_DECLARE_FIELDS
+    SMVM_NAMED_REFS_DECLARE_FIELDS(startedRefs)
 
 };
 
 SMVM_REFS_DECLARE_FUNCTIONS(SMVM_PDPI)
+SMVM_NAMED_REFS_DECLARE_FUNCTIONS(SMVM_PDPI,startedRefs)
 
 
 #ifdef __cplusplus

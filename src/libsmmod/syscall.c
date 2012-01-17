@@ -21,15 +21,19 @@ int SMVM_Syscall_init(SMVM_Syscall * sc, const char * name, void * impl, SMVM_Sy
     assert(sc);
     assert(name);
     assert(impl);
+    assert(m);
+    assert(m->modapi);
 
-    if (!SMVM_Module_ref(m))
+    if (!SMVM_Module_refs_ref(m)) {
+        OOR(m->modapi);
         return 0;
+    }
 
     SMVM_REFS_INIT(sc);
 
     sc->name = strdup(name);
     if (!sc->name) {
-        SMVM_Module_unref(m);
+        SMVM_Module_refs_unref(m);
         return 0;
     }
 
@@ -56,7 +60,7 @@ void SMVM_Syscall_destroy(SMVM_Syscall * sc) {
     SMVM_FacilityMap_destroy(&sc->syscallFacilityMap);
 
     free(sc->name);
-    SMVM_Module_unref(sc->module);
+    SMVM_Module_refs_unref(sc->module);
 }
 
 const char * SMVM_Syscall_get_name(const SMVM_Syscall * sc) {

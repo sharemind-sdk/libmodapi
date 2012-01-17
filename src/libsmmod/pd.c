@@ -20,12 +20,15 @@
 SMVM_PD * SMVM_PD_new(SMVM_PDK * pdk, const char * name, const char * conf) {
     assert(pdk);
     assert(pdk->module);
+    assert(pdk->module->modapi);
     assert(pdk->module->moduleHandle);
     assert(name);
     assert(name[0]);
 
-    if (!SMVM_PDK_ref(pdk))
+    if (!SMVM_PDK_refs_ref(pdk)) {
+        OOR(pdk->module->modapi);
         return NULL;
+    }
 
     SMVM_PD * const pd = (SMVM_PD *) malloc(sizeof(SMVM_PD));
     if (unlikely(!pd))
@@ -50,6 +53,7 @@ SMVM_PD * SMVM_PD_new(SMVM_PDK * pdk, const char * name, const char * conf) {
     SMVM_FacilityMap_init(&pd->pdFacilityMap, &pdk->pdFacilityMap);
     SMVM_FacilityMap_init(&pd->pdpiFacilityMap, &pdk->pdpiFacilityMap);
     SMVM_REFS_INIT(pd);
+    SMVM_NAMED_REFS_INIT(pd,startedRefs);
     return pd;
 
 SMVM_PD_new_fail_2:
@@ -63,7 +67,7 @@ SMVM_PD_new_fail_1:
 SMVM_PD_new_fail_0:
 
     OOM(pdk->module->modapi);
-    SMVM_PDK_unref(pdk);
+    SMVM_PDK_refs_unref(pdk);
     return NULL;
 }
 
@@ -73,14 +77,15 @@ void SMVM_PD_free(SMVM_PD * pd) {
     assert(pd->pdk);
 
     if (pd->isStarted)
-        (*(pd->pdk->module->api->pd_stop))(pd);
+        SMVM_PD_stop(pd);
 
     SMVM_REFS_ASSERT_IF_REFERENCED(pd);
+    SMVM_NAMED_REFS_ASSERT_IF_REFERENCED(pd,startedRefs);
 
     if (likely(pd->conf))
         free(pd->conf);
     free(pd->name);
-    SMVM_PDK_unref(pd->pdk);
+    SMVM_PDK_refs_unref(pd->pdk);
 
     SMVM_FacilityMap_destroy(&pd->pdFacilityMap);
     SMVM_FacilityMap_destroy(&pd->pdpiFacilityMap);
@@ -114,6 +119,8 @@ void SMVM_PD_stop(SMVM_PD * pd) {
 
     if (!pd->isStarted)
         return;
+
+    SMVM_NAMED_REFS_ASSERT_IF_REFERENCED(pd,startedRefs);
 
     (*(pd->pdk->module->api->pd_stop))(pd);
     pd->isStarted = false;
@@ -198,3 +205,4 @@ void * SMVM_PD_get_pdpi_facility(const SMVM_PD * pd, const char * name) {
 }
 
 SMVM_REFS_DEFINE_FUNCTIONS(SMVM_PD)
+SMVM_NAMED_REFS_DEFINE_FUNCTIONS(SMVM_PD,startedRefs)

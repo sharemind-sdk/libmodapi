@@ -19,8 +19,10 @@ SMVM_Module * SMVM_Module_new(SMVM_MODAPI * modapi, const char * filename) {
     assert(filename);
     assert(filename[0]);
 
-    if (!SMVM_MODAPI_ref(modapi))
+    if (!SMVM_MODAPI_refs_ref(modapi)) {
+        OOR(modapi);
         return NULL;
+    }
 
     const uint32_t (* modApiVersions)[];
     const char ** modName;
@@ -30,7 +32,7 @@ SMVM_Module * SMVM_Module_new(SMVM_MODAPI * modapi, const char * filename) {
     SMVM_Module * m = (SMVM_Module *) malloc(sizeof(SMVM_Module));
     if (unlikely(!m)) {
         OOM(modapi);
-        SMVM_MODAPI_unref(modapi);
+        SMVM_MODAPI_refs_unref(modapi);
         return NULL;
     }
     m->apiData = NULL;
@@ -128,7 +130,7 @@ SMVM_Module_new_fail_1:
 
 SMVM_Module_new_fail_0:
 
-    SMVM_MODAPI_unref(modapi);
+    SMVM_MODAPI_refs_unref(modapi);
     free(m);
     return NULL;
 }
@@ -143,7 +145,7 @@ void SMVM_Module_free(SMVM_Module * m) {
     free(m->name);
     dlclose(m->handle);
     free(m->filename);
-    SMVM_MODAPI_unref(m->modapi);
+    SMVM_MODAPI_refs_unref(m->modapi);
 
     SMVM_FacilityMap_destroy(&m->moduleFacilityMap);
     SMVM_FacilityMap_destroy(&m->syscallFacilityMap);

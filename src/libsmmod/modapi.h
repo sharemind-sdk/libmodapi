@@ -54,6 +54,7 @@ void SMVM_MODAPI_setErrorWithStaticString(SMVM_MODAPI * modapi,
                                           const char * errorString) __attribute__ ((nonnull(1)));
 
 #define OOM(modapi) if (1) { SMVM_MODAPI_setErrorWithStaticString((modapi), SMVM_MODAPI_OUT_OF_MEMORY, "Out of memory!"); } else (void) 0
+#define OOR(modapi) if (1) { SMVM_MODAPI_setErrorWithStaticString((modapi), SMVM_MODAPI_REFERENCE_OVERFLOW, "Too many references!"); } else (void) 0
 
 bool SMVM_MODAPI_setErrorWithDynamicString(SMVM_MODAPI * modapi,
                                            SMVM_MODAPI_Error error,

@@ -17,7 +17,7 @@
 #include <string.h>
 #include "../likely.h"
 #include "api_0x1.h"
-#include "modapi_0x1_internal.h"
+#include "modapi_0x1.h"
 
 
 /*******************************************************************************

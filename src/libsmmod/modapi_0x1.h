@@ -7,8 +7,8 @@
  * code is subject to the appropriate license agreement.
  */
 
-#ifndef SHAREMIND_LIBSMVM_API_0x1_H
-#define SHAREMIND_LIBSMVM_API_0x1_H
+#ifndef SHAREMIND_LIBSMVM_MODAPI_0x1_H
+#define SHAREMIND_LIBSMVM_MODAPI_0x1_H
 
 #ifndef SHAREMIND_INTERNAL__
 #error including an internal header!
@@ -42,4 +42,4 @@ void stopPd_0x1(const SMVM_PD * pd);
 } /* extern "C" { */
 #endif
 
-#endif /* SHAREMIND_LIBSMVM_API_0x1_H */
+#endif /* SHAREMIND_LIBSMVM_MODAPI_0x1_H */

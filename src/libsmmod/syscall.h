@@ -15,6 +15,7 @@
 #endif
 
 #include "../refs.h"
+#include "facilitymap.h"
 #include "modapi.h"
 
 
@@ -30,11 +31,14 @@ struct _SMVM_Syscall {
     /** Unique name of the system call. */
     char * name;
 
+    /** Pointer to module providing this syscall. */
+    SMVM_Module * module;
+
     /** Pointer to the system call facility context. */
     void * facilityContext;
 
-    /** Pointer to module providing this syscall. */
-    SMVM_Module * module;
+    /** System call facility name to pointer mapping: */
+    SMVM_FacilityMap syscallFacilityMap;
 
     SMVM_REFS_DECLARE_FIELDS
 

@@ -41,6 +41,9 @@ struct _SMVM_MODAPI {
     /** Module facility name to pointer mapping: */
     SMVM_FacilityMap moduleFacilityMap;
 
+    /** System call facility name to pointer mapping: */
+    SMVM_FacilityMap syscallFacilityMap;
+
     /** PD facility name to pointer mapping: */
     SMVM_FacilityMap pdFacilityMap;
 
@@ -85,6 +88,9 @@ struct _SMVM_Module {
 
     /** Module facility name to pointer mapping: */
     SMVM_FacilityMap moduleFacilityMap;
+
+    /** System call facility name to pointer mapping: */
+    SMVM_FacilityMap syscallFacilityMap;
 
     /** PD facility name to pointer mapping: */
     SMVM_FacilityMap pdFacilityMap;

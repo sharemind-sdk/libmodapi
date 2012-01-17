@@ -7,8 +7,8 @@
  * code is subject to the appropriate license agreement.
  */
 
-#ifndef SHAREMIND_LIBSMMOD_MODAPI_0x1_H
-#define SHAREMIND_LIBSMMOD_MODAPI_0x1_H
+#ifndef SHAREMIND_LIBSMMOD_API_0x1_H
+#define SHAREMIND_LIBSMMOD_API_0x1_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -346,4 +346,4 @@ typedef SMVM_MODAPI_0x1_PDK_Definition SMVM_MODAPI_0x1_PDK_Definitions[];
 } /* extern "C" { */
 #endif
 
-#endif /* SHAREMIND_LIBSMMOD_MODAPI_0x1_H */
+#endif /* SHAREMIND_LIBSMMOD_API_0x1_H */

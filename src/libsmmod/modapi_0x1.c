@@ -9,7 +9,7 @@
 
 #define SHAREMIND_INTERNAL__
 
-#include "modapi_0x1.h"
+#include "api_0x1.h"
 #include "modapi_0x1_internal.h"
 
 #include <assert.h>

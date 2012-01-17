@@ -16,7 +16,7 @@
 #include <dlfcn.h>
 #include <stdlib.h>
 #include "../stringmap.h"
-#include "modapi.h"
+#include "libsmmod.h"
 #include "pd.h"
 #include "pdk.h"
 #include "syscall.h"

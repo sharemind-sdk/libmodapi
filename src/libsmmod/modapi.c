@@ -9,7 +9,7 @@
 
 #define SHAREMIND_INTERNAL__
 
-#include "modapi.h"
+#include "libsmmod.h"
 
 #include <assert.h>
 #include <dlfcn.h>

@@ -14,7 +14,7 @@
 #error including an internal header!
 #endif
 
-#include "modapi.h"
+#include "libsmmod.h"
 
 
 #ifdef __cplusplus

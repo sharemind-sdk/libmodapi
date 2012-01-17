@@ -15,7 +15,7 @@
 #endif
 
 #include "../refs.h"
-#include "modapi.h"
+#include "libsmmod.h"
 
 
 #ifdef __cplusplus

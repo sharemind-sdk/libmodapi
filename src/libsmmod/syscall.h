@@ -16,7 +16,7 @@
 
 #include "../refs.h"
 #include "facilitymap.h"
-#include "modapi.h"
+#include "libsmmod.h"
 
 
 #ifdef __cplusplus

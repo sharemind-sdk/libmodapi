@@ -46,8 +46,6 @@ int SMVM_Syscall_init(SMVM_Syscall * sc, const char * name, void * impl, SMVM_Sy
         sc->wrapper.internal = NULL;
     }
     sc->module = m;
-    sc->facilityContext = NULL; /* Just in case */
-    SMVM_FacilityMap_init(&sc->syscallFacilityMap, &m->syscallFacilityMap);
     return 1;
 }
 
@@ -57,8 +55,6 @@ void SMVM_Syscall_destroy(SMVM_Syscall * sc) {
     assert(sc->name);
     assert(sc->module);
     SMVM_REFS_ASSERT_IF_REFERENCED(sc);
-
-    SMVM_FacilityMap_destroy(&sc->syscallFacilityMap);
 
     free(sc->name);
     SMVM_Module_refs_unref(sc->module);

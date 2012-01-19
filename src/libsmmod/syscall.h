@@ -15,7 +15,6 @@
 #endif
 
 #include "../refs.h"
-#include "facilitymap.h"
 #include "libsmmod.h"
 
 
@@ -33,12 +32,6 @@ struct _SMVM_Syscall {
 
     /** Pointer to module providing this syscall. */
     SMVM_Module * module;
-
-    /** Pointer to the system call facility context. */
-    void * facilityContext;
-
-    /** System call facility name to pointer mapping: */
-    SMVM_FacilityMap syscallFacilityMap;
 
     SMVM_REFS_DECLARE_FIELDS
 

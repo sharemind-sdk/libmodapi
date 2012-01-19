@@ -86,8 +86,6 @@ void SMVM_MODAPI_set_facility_context(SMVM_MODAPI * modapi, void * facilityConte
 void * SMVM_MODAPI_get_facility_context(const SMVM_MODAPI * modapi) __attribute__ ((nonnull(1)));
 int SMVM_MODAPI_set_module_facility(SMVM_MODAPI * modapi, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
 void * SMVM_MODAPI_get_module_facility(const SMVM_MODAPI * modapi, const char * name) __attribute__ ((nonnull(1,2)));
-int SMVM_MODAPI_set_syscall_facility(SMVM_MODAPI * modapi, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
-void * SMVM_MODAPI_get_syscall_facility(const SMVM_MODAPI * modapi, const char * name) __attribute__ ((nonnull(1,2)));
 int SMVM_MODAPI_set_pd_facility(SMVM_MODAPI * modapi, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
 void * SMVM_MODAPI_get_pd_facility(const SMVM_MODAPI * modapi, const char * name) __attribute__ ((nonnull(1,2)));
 int SMVM_MODAPI_set_pdpi_facility(SMVM_MODAPI * modapi, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
@@ -122,8 +120,6 @@ void SMVM_Module_set_facility_context(SMVM_Module * m, void * facilityContext) _
 void * SMVM_Module_get_facility_context(const SMVM_Module * m) __attribute__ ((nonnull(1)));
 int SMVM_Module_set_facility(SMVM_Module * m, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
 void * SMVM_Module_get_facility(const SMVM_Module * m, const char * name) __attribute__ ((nonnull(1,2)));
-int SMVM_Module_set_syscall_facility(SMVM_Module * m, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
-void * SMVM_Module_get_syscall_facility(const SMVM_Module * m, const char * name) __attribute__ ((nonnull(1,2)));
 int SMVM_Module_set_pd_facility(SMVM_Module * m, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
 void * SMVM_Module_get_pd_facility(const SMVM_Module * m, const char * name) __attribute__ ((nonnull(1,2)));
 int SMVM_Module_set_pdpi_facility(SMVM_Module * m, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
@@ -144,11 +140,6 @@ typedef struct _SMVM_SyscallWrapper {
 } SMVM_SyscallWrapper;
 
 SMVM_SyscallWrapper SMVM_Syscall_get_wrapper(const SMVM_Syscall * sc) __attribute__ ((nonnull(1)));
-
-void SMVM_Syscall_set_facility_context(SMVM_Syscall * sc, void * facilityContext) __attribute__ ((nonnull(1)));
-void * SMVM_Syscall_get_facility_context(const SMVM_Syscall * sc) __attribute__ ((nonnull(1)));
-int SMVM_Syscall_set_facility(SMVM_Syscall * sc, const char * name, void * facility) __attribute__ ((nonnull(1,2)));
-void * SMVM_Syscall_get_facility(const SMVM_Syscall * sc, const char * name) __attribute__ ((nonnull(1,2)));
 
 
 /*******************************************************************************

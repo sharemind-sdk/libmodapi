@@ -40,7 +40,6 @@ SMVM_MODAPI * SMVM_MODAPI_new() {
 
         modapi->facilityContext = NULL;
         SMVM_FacilityMap_init(&modapi->moduleFacilityMap, NULL);
-        SMVM_FacilityMap_init(&modapi->syscallFacilityMap, NULL);
         SMVM_FacilityMap_init(&modapi->pdFacilityMap, NULL);
         SMVM_FacilityMap_init(&modapi->pdpiFacilityMap, NULL);
 
@@ -56,7 +55,6 @@ void SMVM_MODAPI_free(SMVM_MODAPI * modapi) {
         free(modapi->lastErrorDynamicString);
 
     SMVM_FacilityMap_destroy(&modapi->moduleFacilityMap);
-    SMVM_FacilityMap_destroy(&modapi->syscallFacilityMap);
     SMVM_FacilityMap_destroy(&modapi->pdFacilityMap);
     SMVM_FacilityMap_destroy(&modapi->pdpiFacilityMap);
 
@@ -150,20 +148,6 @@ void * SMVM_MODAPI_get_module_facility(const SMVM_MODAPI * modapi, const char * 
     assert(name);
     assert(name[0]);
     return SMVM_FacilityMap_get(&modapi->moduleFacilityMap, name);
-}
-
-int SMVM_MODAPI_set_syscall_facility(SMVM_MODAPI * modapi, const char * name, void * facility) {
-    assert(modapi);
-    assert(name);
-    assert(name[0]);
-    return SMVM_FacilityMap_set(&modapi->syscallFacilityMap, name, facility);
-}
-
-void * SMVM_MODAPI_get_syscall_facility(const SMVM_MODAPI * modapi, const char * name) {
-    assert(modapi);
-    assert(name);
-    assert(name[0]);
-    return SMVM_FacilityMap_get(&modapi->syscallFacilityMap, name);
 }
 
 int SMVM_MODAPI_set_pd_facility(SMVM_MODAPI * modapi, const char * name, void * facility) {

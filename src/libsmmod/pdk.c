@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../likely.h"
+#include "modapi.h"
 #include "module.h"
 
 
@@ -86,7 +87,6 @@ int SMVM_PDK_init(SMVM_PDK * pdk,
     }
 
     pdk->module = module;
-    pdk->facilityContext = NULL;
     SMVM_REFS_INIT(pdk);
     SMVM_FacilityMap_init(&pdk->pdFacilityMap, &module->pdFacilityMap);
     SMVM_FacilityMap_init(&pdk->pdpiFacilityMap, &module->pdpiFacilityMap);
@@ -134,38 +134,28 @@ size_t SMVM_PDK_get_index(const SMVM_PDK * pdk) {
     return pdk->pdk_index;
 }
 
-void SMVM_PDK_set_facility_context(SMVM_PDK * pdk, void * facilityContext) {
-    assert(pdk);
-    pdk->facilityContext = facilityContext;
-}
-
-void * SMVM_PDK_get_facility_context(const SMVM_PDK * pdk) {
-    assert(pdk);
-    return pdk->facilityContext;
-}
-
-int SMVM_PDK_set_pd_facility(SMVM_PDK * pdk, const char * name, void * facility) {
+int SMVM_PDK_set_pd_facility(SMVM_PDK * pdk, const char * name, void * facility, void * context) {
     assert(pdk);
     assert(name);
     assert(name[0]);
-    return SMVM_FacilityMap_set(&pdk->pdFacilityMap, name, facility);
+    return SMVM_FacilityMap_set(&pdk->pdFacilityMap, name, facility, context);
 }
 
-void * SMVM_PDK_get_pd_facility(const SMVM_PDK * pdk, const char * name) {
+const SMVM_Facility * SMVM_PDK_get_pd_facility(const SMVM_PDK * pdk, const char * name) {
     assert(pdk);
     assert(name);
     assert(name[0]);
     return SMVM_FacilityMap_get(&pdk->pdFacilityMap, name);
 }
 
-int SMVM_PDK_set_pdpi_facility(SMVM_PDK * pdk, const char * name, void * facility) {
+int SMVM_PDK_set_pdpi_facility(SMVM_PDK * pdk, const char * name, void * facility, void * context) {
     assert(pdk);
     assert(name);
     assert(name[0]);
-    return SMVM_FacilityMap_set(&pdk->pdpiFacilityMap, name, facility);
+    return SMVM_FacilityMap_set(&pdk->pdpiFacilityMap, name, facility, context);
 }
 
-void * SMVM_PDK_get_pdpi_facility(const SMVM_PDK * pdk, const char * name) {
+const SMVM_Facility * SMVM_PDK_get_pdpi_facility(const SMVM_PDK * pdk, const char * name) {
     assert(pdk);
     assert(name);
     assert(name[0]);

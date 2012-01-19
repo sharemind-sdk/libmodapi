@@ -31,9 +31,6 @@ struct _SMVM_MODAPI {
     const char * lastErrorStaticString;
     char * lastErrorDynamicString;
 
-    /** Pointer to the modapi facility context. */
-    void * facilityContext;
-
     /** Module facility name to pointer mapping: */
     SMVM_FacilityMap moduleFacilityMap;
 

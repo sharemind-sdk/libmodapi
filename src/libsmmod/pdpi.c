@@ -13,6 +13,7 @@
 
 #include <assert.h>
 #include <stdlib.h>
+#include "modapi.h"
 #include "module.h"
 #include "pd.h"
 #include "pdk.h"
@@ -141,24 +142,14 @@ SMVM_MODAPI * SMVM_PDPI_get_modapi(const SMVM_PDPI * pdpi) {
     return pdpi->pd->pdk->module->modapi;
 }
 
-void SMVM_PDPI_set_facility_context(SMVM_PDPI * pdpi, void * facilityContext) {
-    assert(pdpi);
-    pdpi->facilityContext = facilityContext;
-}
-
-void * SMVM_PDPI_get_facility_context(const SMVM_PDPI * pdpi) {
-    assert(pdpi);
-    return pdpi->facilityContext;
-}
-
-int SMVM_PDPI_set_facility(SMVM_PDPI * pdpi, const char * name, void * facility) {
+int SMVM_PDPI_set_facility(SMVM_PDPI * pdpi, const char * name, void * facility, void * context) {
     assert(pdpi);
     assert(name);
     assert(name[0]);
-    return SMVM_FacilityMap_set(&pdpi->pdpiFacilityMap, name, facility);
+    return SMVM_FacilityMap_set(&pdpi->pdpiFacilityMap, name, facility, context);
 }
 
-void * SMVM_PDPI_get_facility(const SMVM_PDPI * pdpi, const char * name) {
+const SMVM_Facility * SMVM_PDPI_get_facility(const SMVM_PDPI * pdpi, const char * name) {
     assert(pdpi);
     assert(name);
     assert(name[0]);

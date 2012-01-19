@@ -25,7 +25,7 @@ SM_STRINGMAP_DEFINE(SMVM_PDKMap,SMVM_PDK,malloc,free,strdup,)
 SM_MAP_DECLARE(SMVM_SyscallMap,char *,const char * const,SMVM_Syscall,)
 SM_STRINGMAP_DEFINE(SMVM_SyscallMap,SMVM_Syscall,malloc,free,strdup,)
 
-static void * SMVM_Module_get_facility_wrapper(SMVM_MODAPI_0x1_Module_Context * w, const char * name) {
+static const SMVM_Facility * SMVM_Module_get_facility_wrapper(SMVM_MODAPI_0x1_Module_Context * w, const char * name) {
     assert(w);
     assert(w->internal);
     assert(name);

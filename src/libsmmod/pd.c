@@ -13,6 +13,7 @@
 
 #include <stdlib.h>
 #include "apis.h"
+#include "modapi.h"
 #include "module.h"
 #include "pdk.h"
 
@@ -176,28 +177,28 @@ void * SMVM_PD_get_facility_context(const SMVM_PD * pd) {
     return pd->facilityContext;
 }
 
-int SMVM_PD_set_facility(SMVM_PD * pd, const char * name, void * facility) {
+int SMVM_PD_set_facility(SMVM_PD * pd, const char * name, void * facility, void * context) {
     assert(pd);
     assert(name);
     assert(name[0]);
-    return SMVM_FacilityMap_set(&pd->pdFacilityMap, name, facility);
+    return SMVM_FacilityMap_set(&pd->pdFacilityMap, name, facility, context);
 }
 
-void * SMVM_PD_get_facility(const SMVM_PD * pd, const char * name) {
+const SMVM_Facility * SMVM_PD_get_facility(const SMVM_PD * pd, const char * name) {
     assert(pd);
     assert(name);
     assert(name[0]);
     return SMVM_FacilityMap_get(&pd->pdFacilityMap, name);
 }
 
-int SMVM_PD_set_pdpi_facility(SMVM_PD * pd, const char * name, void * facility) {
+int SMVM_PD_set_pdpi_facility(SMVM_PD * pd, const char * name, void * facility, void * context) {
     assert(pd);
     assert(name);
     assert(name[0]);
-    return SMVM_FacilityMap_set(&pd->pdpiFacilityMap, name, facility);
+    return SMVM_FacilityMap_set(&pd->pdpiFacilityMap, name, facility, context);
 }
 
-void * SMVM_PD_get_pdpi_facility(const SMVM_PD * pd, const char * name) {
+const SMVM_Facility * SMVM_PD_get_pdpi_facility(const SMVM_PD * pd, const char * name) {
     assert(pd);
     assert(name);
     assert(name[0]);

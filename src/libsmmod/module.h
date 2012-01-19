@@ -41,9 +41,6 @@ struct _SMVM_Module {
     bool isInitialized;
     SMVM_MODAPI * modapi;
 
-    /** Pointer to the module facility context. */
-    void * facilityContext;
-
     /** Module facility name to pointer mapping: */
     SMVM_FacilityMap moduleFacilityMap;
 

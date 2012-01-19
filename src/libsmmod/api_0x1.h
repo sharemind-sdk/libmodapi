@@ -58,6 +58,12 @@ typedef enum {
     SMVM_MODAPI_0x1_IC_ERROR
 } SMVM_MODAPI_0x1_Initializer_Code;
 
+/** A facility with a context. */
+typedef struct {
+    void * facility;
+    void * context;
+} SMVM_MODAPI_0x1_Facility;
+
 /** Environment passed to a Sharemind module initializer and deinitializer: */
 typedef struct _SMVM_MODAPI_0x1_Module_Context SMVM_MODAPI_0x1_Module_Context;
 struct _SMVM_MODAPI_0x1_Module_Context {
@@ -75,10 +81,10 @@ struct _SMVM_MODAPI_0x1_Module_Context {
       \brief Finds a module specific system facility.
       \param wrapper Pointer to this SMVM_MODAPI_0x1_Module_Context instance.
       \param[in] name Name of the facility.
-      \returns a pointer to the facility or NULL if no facility with the given
-               name was found.
+      \returns a pointer to the facility and its context.
+      \retval NULL if no such facility is associated with this module.
     */
-    void * (* ICONST getModuleFacility)(SMVM_MODAPI_0x1_Module_Context * w, const char * name);
+    const SMVM_MODAPI_0x1_Facility * (* ICONST getModuleFacility)(SMVM_MODAPI_0x1_Module_Context * w, const char * name);
 
 };
 
@@ -267,10 +273,10 @@ struct _SMVM_MODAPI_0x1_PD_Wrapper {
       \brief Finds a protection-domain specific system facility.
       \param wrapper Pointer to this SMVM_MODAPI_0x1_PD_Wrapper instance.
       \param[in] name Name of the facility.
-      \returns a pointer to the facility or NULL if no facility with the given
-               name was found.
+      \returns a pointer to the facility and its context.
+      \retval NULL if no such facility is associated with this protection domain.
     */
-    void * (* ICONST getPdFacility)(SMVM_MODAPI_0x1_PD_Wrapper * w, const char * name);
+    const SMVM_MODAPI_0x1_Facility * (* ICONST getPdFacility)(SMVM_MODAPI_0x1_PD_Wrapper * w, const char * name);
 
     /* OTHER STUFF */
 
@@ -296,10 +302,10 @@ struct _SMVM_MODAPI_0x1_PDPI_Wrapper {
       \brief Finds a system facility specific to the protection domain and process.
       \param wrapper Pointer to this SMVM_MODAPI_0x1_PDPI_Wrapper instance.
       \param[in] name Name of the facility.
-      \returns a pointer to the facility or NULL if no facility with the given
-               name was found.
+      \returns a pointer to the facility and its context.
+      \retval NULL if no such facility is associated with this protection domain process instance.
     */
-    void * (* ICONST getPdpiFacility)(SMVM_MODAPI_0x1_PDPI_Wrapper * w, const char * name);
+    const SMVM_MODAPI_0x1_Facility * (* ICONST getPdpiFacility)(SMVM_MODAPI_0x1_PDPI_Wrapper * w, const char * name);
 
     /* OTHER STUFF */
 

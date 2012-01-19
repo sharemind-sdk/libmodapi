@@ -38,7 +38,6 @@ SMVM_MODAPI * SMVM_MODAPI_new() {
         modapi->lastErrorDynamicString = NULL;
         modapi->lastErrorStaticString = NULL;
 
-        modapi->facilityContext = NULL;
         SMVM_FacilityMap_init(&modapi->moduleFacilityMap, NULL);
         SMVM_FacilityMap_init(&modapi->pdFacilityMap, NULL);
         SMVM_FacilityMap_init(&modapi->pdpiFacilityMap, NULL);
@@ -126,52 +125,42 @@ bool SMVM_MODAPI_setErrorWithDynamicString(SMVM_MODAPI * modapi,
 
 SMVM_REFS_DEFINE_FUNCTIONS(SMVM_MODAPI)
 
-void SMVM_MODAPI_set_facility_context(SMVM_MODAPI * modapi, void * facilityContext) {
-    assert(modapi);
-    modapi->facilityContext = facilityContext;
-}
-
-void * SMVM_MODAPI_get_facility_context(const SMVM_MODAPI * modapi) {
-    assert(modapi);
-    return modapi->facilityContext;
-}
-
-int SMVM_MODAPI_set_module_facility(SMVM_MODAPI * modapi, const char * name, void * facility) {
+int SMVM_MODAPI_set_module_facility(SMVM_MODAPI * modapi, const char * name, void * facility, void * context) {
     assert(modapi);
     assert(name);
     assert(name[0]);
-    return SMVM_FacilityMap_set(&modapi->moduleFacilityMap, name, facility);
+    return SMVM_FacilityMap_set(&modapi->moduleFacilityMap, name, facility, context);
 }
 
-void * SMVM_MODAPI_get_module_facility(const SMVM_MODAPI * modapi, const char * name) {
+const SMVM_Facility * SMVM_MODAPI_get_module_facility(const SMVM_MODAPI * modapi, const char * name) {
     assert(modapi);
     assert(name);
     assert(name[0]);
     return SMVM_FacilityMap_get(&modapi->moduleFacilityMap, name);
 }
 
-int SMVM_MODAPI_set_pd_facility(SMVM_MODAPI * modapi, const char * name, void * facility) {
+int SMVM_MODAPI_set_pd_facility(SMVM_MODAPI * modapi, const char * name, void * facility, void * context) {
     assert(modapi);
     assert(name);
     assert(name[0]);
-    return SMVM_FacilityMap_set(&modapi->pdFacilityMap, name, facility);
+    return SMVM_FacilityMap_set(&modapi->pdFacilityMap, name, facility, context);
 }
 
-void * SMVM_MODAPI_get_pd_facility(const SMVM_MODAPI * modapi, const char * name) {
+const SMVM_Facility * SMVM_MODAPI_get_pd_facility(const SMVM_MODAPI * modapi, const char * name) {
     assert(modapi);
     assert(name);
     assert(name[0]);
     return SMVM_FacilityMap_get(&modapi->pdFacilityMap, name);
 }
 
-int SMVM_MODAPI_set_pdpi_facility(SMVM_MODAPI * modapi, const char * name, void * facility) {
+int SMVM_MODAPI_set_pdpi_facility(SMVM_MODAPI * modapi, const char * name, void * facility, void *context) {
     assert(modapi);
     assert(name);
     assert(name[0]);
-    return SMVM_FacilityMap_set(&modapi->pdpiFacilityMap, name, facility);
+    return SMVM_FacilityMap_set(&modapi->pdpiFacilityMap, name, facility, context);
 }
 
-void * SMVM_MODAPI_get_pdpi_facility(const SMVM_MODAPI * modapi, const char * name) {
+const SMVM_Facility * SMVM_MODAPI_get_pdpi_facility(const SMVM_MODAPI * modapi, const char * name) {
     assert(modapi);
     assert(name);
     assert(name[0]);

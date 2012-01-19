@@ -13,13 +13,14 @@
 
 #include <assert.h>
 #include <stdio.h>
+#include "modapi.h"
 #include "module.h"
 #include "pd.h"
 #include "pdk.h"
 #include "pdpi.h"
 
 
-static void * SMVM_PDPI_get_facility_wrapper(SMVM_MODAPI_0x1_PDPI_Wrapper * w, const char * name) {
+static const SMVM_Facility * SMVM_PDPI_get_facility_wrapper(SMVM_MODAPI_0x1_PDPI_Wrapper * w, const char * name) {
     assert(w);
     assert(w->internal);
     assert(name);

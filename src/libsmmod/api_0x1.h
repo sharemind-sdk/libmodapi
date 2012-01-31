@@ -189,23 +189,38 @@ struct _SMVM_MODAPI_0x1_Syscall_Context {
 
 /** System call function signature: */
 typedef SMVM_MODAPI_0x1_Syscall_Code (* SMVM_MODAPI_0x1_Syscall)(
-    /** Arguments passed to syscall: */
+    /**
+      Pointer to array of regular arguments passed to syscall.
+      \warning might be NULL if num_args is zero.
+    */
     SMVM_CodeBlock * args,
+
+    /**
+      Number of regular arguments given to syscall.
+    */
     size_t num_args,
 
-    /** Mutable references passed to syscall: */
+    /**
+      Pointer to array of mutable references passed to syscall. NULL if no
+      references were given, otherwise an array terminated by a reference with
+      the pData field set to NULL.
+    */
     const SMVM_MODAPI_0x1_Reference * refs,
 
-    /** Immutable references passed to syscall: */
+    /**
+      Pointer to array of immutable references passed to syscall. NULL if no
+      references were given, otherwise an array terminated by a reference with
+      the pData field set to NULL.
+    */
     const SMVM_MODAPI_0x1_CReference * crefs,
 
     /**
-      The pointer to where the return value of the syscall resides, or NULL if
-      no return value is expected:
+      The pointer to where the return value of the syscall should be written, or
+      NULL if no return value is expected:
     */
     SMVM_CodeBlock * returnValue,
 
-    /** Additional context: */
+    /** Additional system call context. */
     SMVM_MODAPI_0x1_Syscall_Context * c
 );
 

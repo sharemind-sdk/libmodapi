@@ -195,11 +195,9 @@ typedef SMVM_MODAPI_0x1_Syscall_Code (* SMVM_MODAPI_0x1_Syscall)(
 
     /** Mutable references passed to syscall: */
     const SMVM_MODAPI_0x1_Reference * refs,
-    size_t num_refs,
 
     /** Immutable references passed to syscall: */
     const SMVM_MODAPI_0x1_CReference * crefs,
-    size_t num_crefs,
 
     /**
       The pointer to where the return value of the syscall resides, or NULL if

@@ -203,14 +203,16 @@ typedef SMVM_MODAPI_0x1_Syscall_Code (* SMVM_MODAPI_0x1_Syscall)(
     /**
       Pointer to array of mutable references passed to syscall. NULL if no
       references were given, otherwise an array terminated by a reference with
-      the pData field set to NULL.
+      the pData field set to NULL, i.e. the array contains at minimum one item
+      and the terminator.
     */
     const SMVM_MODAPI_0x1_Reference * refs,
 
     /**
       Pointer to array of immutable references passed to syscall. NULL if no
       references were given, otherwise an array terminated by a reference with
-      the pData field set to NULL.
+      the pData field set to NULL, i.e. the array contains at minimum one item
+      and the terminator.
     */
     const SMVM_MODAPI_0x1_CReference * crefs,
 

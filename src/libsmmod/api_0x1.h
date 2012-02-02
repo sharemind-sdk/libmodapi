@@ -154,6 +154,22 @@ struct _SMVM_MODAPI_0x1_Syscall_Context {
     */
     void * ICONST moduleHandle;
 
+    /**
+      Used to get access to internal data of protection domain per-process data
+      (see below for pdProcessHandle).
+      \param[in] c context
+      \param[in] pd_index the protection domain index.
+      \param[out] processHandle Where to save the pointer to protection domain per-process data.
+      \param[out] pdk_index Where to save the index of the protection domain kind in the module.
+      \param[out] moduleHandle Where to save the pointer to protection domain module data.
+      \returns an error code or 0 on success.
+    */
+    int (* ICONST get_pd_process_instance_handle)(SMVM_MODAPI_0x1_Syscall_Context * c,
+                                                  uint64_t pd_index,
+                                                  void ** pdProcessHandle,
+                                                  size_t * pdkIndex,
+                                                  void ** moduleHandle);
+
     /** Access to public dynamic memory inside the VM process: */
     uint64_t (* ICONST publicAlloc)(SMVM_MODAPI_0x1_Syscall_Context * c, size_t nBytes);
     int (* ICONST publicFree)(SMVM_MODAPI_0x1_Syscall_Context * c, uint64_t ptr);
@@ -165,23 +181,6 @@ struct _SMVM_MODAPI_0x1_Syscall_Context {
     int (* ICONST freePrivate)(SMVM_MODAPI_0x1_Syscall_Context * c, void * ptr);
     int (* ICONST reservePrivate)(SMVM_MODAPI_0x1_Syscall_Context * c, size_t nBytes);
     int (* ICONST releasePrivate)(SMVM_MODAPI_0x1_Syscall_Context * c, size_t nBytes);
-
-    /**
-      Used to get access to internal data of protection domain per-process data
-      (see below for pdProcessHandle).
-      \param[in] c context
-      \param[in] pd_index the protection domain index.
-      \param[out] processHandle Where to save the pointer to protection domain per-process data.
-      \param[out] pdk_index Where to save the index of the protection domain kind in the module.
-      \param[out] moduleHandle Where to save the pointer to protection domain module data.
-      \retval 0 on error (protection domain not found).
-      \retval 1 on success.
-    */
-    int (* ICONST get_pd_process_instance_handle)(SMVM_MODAPI_0x1_Syscall_Context * c,
-                                                  uint64_t pd_index,
-                                                  void ** pdProcessHandle,
-                                                  size_t * pdkIndex,
-                                                  void ** moduleHandle);
 
     /* OTHER STUFF */
 

@@ -10,10 +10,10 @@
 #ifndef SHAREMIND_LIBSMMOD_LIBSMMOD_H
 #define SHAREMIND_LIBSMMOD_LIBSMMOD_H
 
+#include <sharemind/preprocessor.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "../preprocessor.h"
 #include "api_0x1.h"
 
 

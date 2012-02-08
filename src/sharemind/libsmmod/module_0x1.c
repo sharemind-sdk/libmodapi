@@ -13,7 +13,7 @@
 
 #include <assert.h>
 #include <dlfcn.h>
-#include "../stringmap.h"
+#include <sharemind/stringmap.h>
 #include "module.h"
 #include "pdk.h"
 #include "syscall.h"

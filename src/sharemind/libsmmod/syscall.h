@@ -14,7 +14,7 @@
 #error including an internal header!
 #endif
 
-#include "../refs.h"
+#include <sharemind/refs.h>
 #include "libsmmod.h"
 
 

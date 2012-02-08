@@ -14,8 +14,8 @@
 #error including an internal header!
 #endif
 
+#include <sharemind/stringmap.h>
 #include <stdlib.h>
-#include "../stringmap.h"
 #include "libsmmod.h"
 
 

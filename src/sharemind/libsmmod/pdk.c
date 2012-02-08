@@ -12,9 +12,9 @@
 #include "pdk.h"
 
 #include <assert.h>
+#include <sharemind/likely.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../likely.h"
 #include "modapi.h"
 #include "module.h"
 

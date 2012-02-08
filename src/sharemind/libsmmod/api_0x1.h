@@ -10,9 +10,9 @@
 #ifndef SHAREMIND_LIBSMMOD_API_0x1_H
 #define SHAREMIND_LIBSMMOD_API_0x1_H
 
+#include <sharemind/codeblock.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "../codeblock.h"
 
 
 #ifdef __cplusplus

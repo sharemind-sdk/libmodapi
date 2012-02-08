@@ -15,8 +15,8 @@
 #endif
 
 
+#include <sharemind/refs.h>
 #include <stdint.h>
-#include "../refs.h"
 #include "apis.h"
 #include "facilitymap.h"
 #include "libsmmod.h"

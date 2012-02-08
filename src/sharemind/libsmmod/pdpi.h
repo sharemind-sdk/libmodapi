@@ -14,8 +14,8 @@
 #error including an internal header!
 #endif
 
+#include <sharemind/refs.h>
 #include <stdbool.h>
-#include "../refs.h"
 #include "facilitymap.h"
 #include "libsmmod.h"
 

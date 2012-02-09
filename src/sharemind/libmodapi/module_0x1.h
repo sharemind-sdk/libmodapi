@@ -7,14 +7,14 @@
  * code is subject to the appropriate license agreement.
  */
 
-#ifndef SHAREMIND_LIBSMMOD_MODULE_0x1_H
-#define SHAREMIND_LIBSMMOD_MODULE_0x1_H
+#ifndef SHAREMIND_LIBMODAPI_MODULE_0x1_H
+#define SHAREMIND_LIBMODAPI_MODULE_0x1_H
 
 #ifndef SHAREMIND_INTERNAL__
 #error SHAREMIND_INTERNAL__
 #endif
 
-#include "libsmmod.h"
+#include "libmodapi.h"
 
 
 #ifdef __cplusplus
@@ -41,5 +41,5 @@ SMVM_PDK * SMVM_Module_find_pdk_0x1(const SMVM_Module * m, const char * name) __
 } /* extern "C" { */
 #endif
 
-#endif /* SHAREMIND_LIBSMMOD_MODULE_0x1_H */
+#endif /* SHAREMIND_LIBMODAPI_MODULE_0x1_H */
 

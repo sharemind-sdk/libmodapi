@@ -16,7 +16,7 @@
 
 #include <sharemind/refs.h>
 #include "facilitymap.h"
-#include "libsmmod.h"
+#include "libmodapi.h"
 
 
 #ifdef __cplusplus

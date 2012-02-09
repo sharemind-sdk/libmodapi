@@ -7,8 +7,8 @@
  * code is subject to the appropriate license agreement.
  */
 
-#ifndef SHAREMIND_LIBSMMOD_LIBSMMOD_H
-#define SHAREMIND_LIBSMMOD_LIBSMMOD_H
+#ifndef SHAREMIND_LIBMODAPI_LIBMODAPI_H
+#define SHAREMIND_LIBMODAPI_LIBMODAPI_H
 
 #include <sharemind/preprocessor.h>
 #include <stdbool.h>
@@ -205,4 +205,4 @@ const SMVM_Facility * SMVM_PDPI_get_facility(const SMVM_PDPI * pdpi, const char 
 #endif
 
 
-#endif /* SHAREMIND_LIBSMMOD_LIBSMMOD_H */
+#endif /* SHAREMIND_LIBMODAPI_LIBMODAPI_H */

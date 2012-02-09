@@ -7,8 +7,8 @@
  * code is subject to the appropriate license agreement.
  */
 
-#ifndef SHAREMIND_LIBSMMOD_APIS_H
-#define SHAREMIND_LIBSMMOD_APIS_H
+#ifndef SHAREMIND_LIBMODAPI_APIS_H
+#define SHAREMIND_LIBMODAPI_APIS_H
 
 #ifndef SHAREMIND_INTERNAL__
 #error SHAREMIND_INTERNAL__
@@ -16,7 +16,7 @@
 
 
 #include <stdbool.h>
-#include "libsmmod.h"
+#include "libmodapi.h"
 
 
 #ifdef __cplusplus
@@ -51,4 +51,4 @@ extern const SMVM_API SMVM_APIs[];
 } /* extern "C" { */
 #endif
 
-#endif /* SHAREMIND_LIBSMMOD_APIS_H */
+#endif /* SHAREMIND_LIBMODAPI_APIS_H */

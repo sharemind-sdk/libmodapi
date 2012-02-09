@@ -7,8 +7,8 @@
  * code is subject to the appropriate license agreement.
  */
 
-#ifndef SHAREMIND_LIBSMMOD_API_0x1_H
-#define SHAREMIND_LIBSMMOD_API_0x1_H
+#ifndef SHAREMIND_LIBMODAPI_API_0x1_H
+#define SHAREMIND_LIBMODAPI_API_0x1_H
 
 #include <sharemind/codeblock.h>
 #include <stddef.h>
@@ -145,7 +145,7 @@ struct _SMVM_MODAPI_0x1_Syscall_Context {
     ICONST void * ICONST internal;
 
     /** Internal pointer, do not use! */
-    ICONST void * ICONST libsmmod_internal;
+    ICONST void * ICONST libmodapi_internal;
 
     /**
       A handle to the private data of the module instance. This is the same
@@ -366,4 +366,4 @@ typedef SMVM_MODAPI_0x1_PDK_Definition SMVM_MODAPI_0x1_PDK_Definitions[];
 } /* extern "C" { */
 #endif
 
-#endif /* SHAREMIND_LIBSMMOD_API_0x1_H */
+#endif /* SHAREMIND_LIBMODAPI_API_0x1_H */

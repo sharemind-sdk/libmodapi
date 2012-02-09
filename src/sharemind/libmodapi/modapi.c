@@ -11,7 +11,7 @@
 
 #include "modapi.h"
 
-/*#include "libsmmod.h"
+/*#include "libmodapi.h"
 
 #include <assert.h>
 #include <dlfcn.h>

@@ -7,8 +7,8 @@
  * code is subject to the appropriate license agreement.
  */
 
-#ifndef SHAREMIND_LIBSMMOD_FACILITYMAP_H
-#define SHAREMIND_LIBSMMOD_FACILITYMAP_H
+#ifndef SHAREMIND_LIBMODAPI_FACILITYMAP_H
+#define SHAREMIND_LIBMODAPI_FACILITYMAP_H
 
 #ifndef SHAREMIND_INTERNAL__
 #error including an internal header!
@@ -16,7 +16,7 @@
 
 #include <sharemind/stringmap.h>
 #include <stdlib.h>
-#include "libsmmod.h"
+#include "libmodapi.h"
 
 
 SM_STRINGMAP_DECLARE(SMVM_FacilityMapInner,SMVM_Facility,inline)
@@ -80,4 +80,4 @@ inline const SMVM_Facility * SMVM_FacilityMap_get(const SMVM_FacilityMap * fm, c
 } /* extern "C" { */
 #endif
 
-#endif /* SHAREMIND_LIBSMMOD_FACILITYMAP_H */
+#endif /* SHAREMIND_LIBMODAPI_FACILITYMAP_H */

@@ -7,8 +7,8 @@
  * code is subject to the appropriate license agreement.
  */
 
-#ifndef SHAREMIND_LIBSMMOD_MODULE_H
-#define SHAREMIND_LIBSMMOD_MODULE_H
+#ifndef SHAREMIND_LIBMODAPI_MODULE_H
+#define SHAREMIND_LIBMODAPI_MODULE_H
 
 #ifndef SHAREMIND_INTERNAL__
 #error SHAREMIND_INTERNAL__
@@ -19,7 +19,7 @@
 #include <stdint.h>
 #include "apis.h"
 #include "facilitymap.h"
-#include "libsmmod.h"
+#include "libmodapi.h"
 
 
 #ifdef __cplusplus
@@ -61,5 +61,5 @@ SMVM_REFS_DECLARE_FUNCTIONS(SMVM_Module)
 } /* extern "C" { */
 #endif
 
-#endif /* SHAREMIND_LIBSMMOD_MODULE_H */
+#endif /* SHAREMIND_LIBMODAPI_MODULE_H */
 

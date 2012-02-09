@@ -15,7 +15,7 @@
 #endif
 
 #include <sharemind/refs.h>
-#include "libsmmod.h"
+#include "libmodapi.h"
 
 
 #ifdef __cplusplus

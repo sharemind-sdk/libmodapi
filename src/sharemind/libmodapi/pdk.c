@@ -87,7 +87,7 @@ int SMVM_PDK_init(SMVM_PDK * pdk,
     }
 
     pdk->module = module;
-    SMVM_REFS_INIT(pdk);
+    SHAREMIND_REFS_INIT(pdk);
     SMVM_FacilityMap_init(&pdk->pdFacilityMap, &module->pdFacilityMap);
     SMVM_FacilityMap_init(&pdk->pdpiFacilityMap, &module->pdpiFacilityMap);
     return 1;
@@ -101,7 +101,7 @@ void SMVM_PDK_destroy(SMVM_PDK * pdk) {
     assert(pdk->pdpi_startup_impl_or_wrapper);
     assert(pdk->pdpi_shutdown_impl_or_wrapper);
     assert(pdk->module);
-    SMVM_REFS_ASSERT_IF_REFERENCED(pdk);
+    SHAREMIND_REFS_ASSERT_IF_REFERENCED(pdk);
 
     free(pdk->name);
     SMVM_Module_refs_unref(pdk->module);
@@ -162,4 +162,4 @@ const SMVM_Facility * SMVM_PDK_get_pdpi_facility(const SMVM_PDK * pdk, const cha
     return SMVM_FacilityMap_get(&pdk->pdpiFacilityMap, name);
 }
 
-SMVM_REFS_DEFINE_FUNCTIONS(SMVM_PDK)
+SHAREMIND_REFS_DEFINE_FUNCTIONS(SMVM_PDK)

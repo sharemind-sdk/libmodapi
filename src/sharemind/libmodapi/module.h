@@ -51,10 +51,10 @@ struct _SMVM_Module {
     SMVM_FacilityMap pdpiFacilityMap;
 
 
-    SMVM_REFS_DECLARE_FIELDS
+    SHAREMIND_REFS_DECLARE_FIELDS
 };
 
-SMVM_REFS_DECLARE_FUNCTIONS(SMVM_Module)
+SHAREMIND_REFS_DECLARE_FUNCTIONS(SMVM_Module)
 
 
 #ifdef __cplusplus

@@ -68,7 +68,7 @@ struct _SMVM_PDK {
     /** PDPI facility name to pointer mapping: */
     SMVM_FacilityMap pdpiFacilityMap;
 
-    SMVM_REFS_DECLARE_FIELDS
+    SHAREMIND_REFS_DECLARE_FIELDS
 
 };
 
@@ -86,7 +86,7 @@ int SMVM_PDK_init(SMVM_PDK * pdk,
                   SMVM_Module * module) __attribute__ ((nonnull(1, 3, 4, 6, 8, 10, 12)));
 void SMVM_PDK_destroy(SMVM_PDK * pdk) __attribute__ ((nonnull(1)));
 
-SMVM_REFS_DECLARE_FUNCTIONS(SMVM_PDK)
+SHAREMIND_REFS_DECLARE_FUNCTIONS(SMVM_PDK)
 
 
 #ifdef __cplusplus

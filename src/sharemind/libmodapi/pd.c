@@ -53,8 +53,8 @@ SMVM_PD * SMVM_PD_new(SMVM_PDK * pdk, const char * name, const char * conf) {
     pd->facilityContext = NULL; /* Just in case */
     SMVM_FacilityMap_init(&pd->pdFacilityMap, &pdk->pdFacilityMap);
     SMVM_FacilityMap_init(&pd->pdpiFacilityMap, &pdk->pdpiFacilityMap);
-    SMVM_REFS_INIT(pd);
-    SMVM_NAMED_REFS_INIT(pd,startedRefs);
+    SHAREMIND_REFS_INIT(pd);
+    SHAREMIND_NAMED_REFS_INIT(pd,startedRefs);
     return pd;
 
 SMVM_PD_new_fail_2:
@@ -80,8 +80,8 @@ void SMVM_PD_free(SMVM_PD * pd) {
     if (pd->isStarted)
         SMVM_PD_stop(pd);
 
-    SMVM_REFS_ASSERT_IF_REFERENCED(pd);
-    SMVM_NAMED_REFS_ASSERT_IF_REFERENCED(pd,startedRefs);
+    SHAREMIND_REFS_ASSERT_IF_REFERENCED(pd);
+    SHAREMIND_NAMED_REFS_ASSERT_IF_REFERENCED(pd,startedRefs);
 
     if (likely(pd->conf))
         free(pd->conf);
@@ -121,7 +121,7 @@ void SMVM_PD_stop(SMVM_PD * pd) {
     if (!pd->isStarted)
         return;
 
-    SMVM_NAMED_REFS_ASSERT_IF_REFERENCED(pd,startedRefs);
+    SHAREMIND_NAMED_REFS_ASSERT_IF_REFERENCED(pd,startedRefs);
 
     (*(pd->pdk->module->api->pd_stop))(pd);
     pd->isStarted = false;
@@ -205,5 +205,5 @@ const SMVM_Facility * SMVM_PD_get_pdpi_facility(const SMVM_PD * pd, const char *
     return SMVM_FacilityMap_get(&pd->pdpiFacilityMap, name);
 }
 
-SMVM_REFS_DEFINE_FUNCTIONS(SMVM_PD)
-SMVM_NAMED_REFS_DEFINE_FUNCTIONS(SMVM_PD,startedRefs)
+SHAREMIND_REFS_DEFINE_FUNCTIONS(SMVM_PD)
+SHAREMIND_NAMED_REFS_DEFINE_FUNCTIONS(SMVM_PD,startedRefs)

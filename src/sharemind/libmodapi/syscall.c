@@ -30,7 +30,7 @@ int SMVM_Syscall_init(SMVM_Syscall * sc, const char * name, void * impl, SMVM_Sy
         return 0;
     }
 
-    SMVM_REFS_INIT(sc);
+    SHAREMIND_REFS_INIT(sc);
 
     sc->name = strdup(name);
     if (!sc->name) {
@@ -54,7 +54,7 @@ void SMVM_Syscall_destroy(SMVM_Syscall * sc) {
     assert(sc->wrapper.callable);
     assert(sc->name);
     assert(sc->module);
-    SMVM_REFS_ASSERT_IF_REFERENCED(sc);
+    SHAREMIND_REFS_ASSERT_IF_REFERENCED(sc);
 
     free(sc->name);
     SMVM_Module_refs_unref(sc->module);
@@ -89,4 +89,4 @@ SMVM_SyscallWrapper SMVM_Syscall_get_wrapper(const SMVM_Syscall * sc) {
     return sc->wrapper;
 }
 
-SMVM_REFS_DEFINE_FUNCTIONS(SMVM_Syscall)
+SHAREMIND_REFS_DEFINE_FUNCTIONS(SMVM_Syscall)

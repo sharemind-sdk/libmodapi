@@ -40,7 +40,7 @@ struct _SMVM_MODAPI {
     /** PDPI facility name to pointer mapping: */
     SMVM_FacilityMap pdpiFacilityMap;
 
-    SMVM_REFS_DECLARE_FIELDS
+    SHAREMIND_REFS_DECLARE_FIELDS
 };
 
 void SMVM_MODAPI_setErrorWithStaticString(SMVM_MODAPI * modapi,
@@ -54,7 +54,7 @@ bool SMVM_MODAPI_setErrorWithDynamicString(SMVM_MODAPI * modapi,
                                            SMVM_MODAPI_Error error,
                                            const char * errorString) __attribute__ ((nonnull(1)));
 
-SMVM_REFS_DECLARE_FUNCTIONS(SMVM_MODAPI)
+SHAREMIND_REFS_DECLARE_FUNCTIONS(SMVM_MODAPI)
 
 
 #ifdef __cplusplus

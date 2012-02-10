@@ -42,8 +42,8 @@ SMVM_PDPI * SMVM_PDPI_new(SMVM_PD * pd) {
     pdpi->isStarted = false;
     pdpi->facilityContext = NULL; /* Just in case */
     SMVM_FacilityMap_init(&pdpi->pdpiFacilityMap, &pd->pdpiFacilityMap);
-    SMVM_REFS_INIT(pdpi);
-    SMVM_NAMED_REFS_INIT(pdpi,startedRefs);
+    SHAREMIND_REFS_INIT(pdpi);
+    SHAREMIND_NAMED_REFS_INIT(pdpi,startedRefs);
     return pdpi;
 }
 
@@ -54,7 +54,7 @@ void SMVM_PDPI_free(SMVM_PDPI * pdpi) {
     assert(pdpi->pd->pdk->module);
     assert(pdpi->pd->pdk->module->modapi);
 
-    SMVM_REFS_ASSERT_IF_REFERENCED(pdpi);
+    SHAREMIND_REFS_ASSERT_IF_REFERENCED(pdpi);
 
     if (pdpi->isStarted)
         SMVM_PDPI_stop(pdpi);
@@ -99,7 +99,7 @@ void SMVM_PDPI_stop(SMVM_PDPI * pdpi) {
     assert(pdpi->pd->pdk->module);
     assert(pdpi->pd->pdk->module->api);
 
-    SMVM_NAMED_REFS_ASSERT_IF_REFERENCED(pdpi,startedRefs);
+    SHAREMIND_NAMED_REFS_ASSERT_IF_REFERENCED(pdpi,startedRefs);
 
     (*(pdpi->pd->pdk->module->api->pdpi_stop))(pdpi);
 
@@ -156,5 +156,5 @@ const SMVM_Facility * SMVM_PDPI_get_facility(const SMVM_PDPI * pdpi, const char 
     return SMVM_FacilityMap_get(&pdpi->pdpiFacilityMap, name);
 }
 
-SMVM_REFS_DEFINE_FUNCTIONS(SMVM_PDPI)
-SMVM_NAMED_REFS_DEFINE_FUNCTIONS(SMVM_PDPI,startedRefs)
+SHAREMIND_REFS_DEFINE_FUNCTIONS(SMVM_PDPI)
+SHAREMIND_NAMED_REFS_DEFINE_FUNCTIONS(SMVM_PDPI,startedRefs)

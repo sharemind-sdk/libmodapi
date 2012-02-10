@@ -103,7 +103,7 @@ SMVM_Module * SMVM_Module_new(SMVM_MODAPI * modapi, const char * filename) {
 
     /* Do API specific loading: */
     {
-        SMVM_REFS_INIT(m);
+        SHAREMIND_REFS_INIT(m);
         SMVM_MODAPI_Error status = (*(m->api->module_load))(m);
         if (likely(status == SMVM_MODAPI_OK)) {
             SMVM_FacilityMap_init(&m->moduleFacilityMap, &modapi->moduleFacilityMap);
@@ -140,7 +140,7 @@ void SMVM_Module_free(SMVM_Module * m) {
         SMVM_Module_mod_deinit(m);
 
     (*(m->api->module_unload))(m);
-    SMVM_REFS_ASSERT_IF_REFERENCED(m);
+    SHAREMIND_REFS_ASSERT_IF_REFERENCED(m);
     free(m->name);
     dlclose(m->handle);
     free(m->filename);
@@ -262,4 +262,4 @@ const SMVM_Facility * SMVM_Module_get_pdpi_facility(const SMVM_Module * m, const
     return SMVM_FacilityMap_get(&m->pdpiFacilityMap, name);
 }
 
-SMVM_REFS_DEFINE_FUNCTIONS(SMVM_Module)
+SHAREMIND_REFS_DEFINE_FUNCTIONS(SMVM_Module)

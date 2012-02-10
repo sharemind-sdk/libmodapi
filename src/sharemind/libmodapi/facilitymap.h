@@ -19,8 +19,8 @@
 #include "libmodapi.h"
 
 
-SM_STRINGMAP_DECLARE(SMVM_FacilityMapInner,SMVM_Facility,inline)
-SM_STRINGMAP_DEFINE(SMVM_FacilityMapInner,SMVM_Facility,malloc,free,strdup,inline)
+SHAREMIND_STRINGMAP_DECLARE(SMVM_FacilityMapInner,SMVM_Facility,inline)
+SHAREMIND_STRINGMAP_DEFINE(SMVM_FacilityMapInner,SMVM_Facility,malloc,free,strdup,inline)
 
 
 #ifdef __cplusplus

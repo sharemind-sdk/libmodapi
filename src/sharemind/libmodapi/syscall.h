@@ -33,7 +33,7 @@ struct _SMVM_Syscall {
     /** Pointer to module providing this syscall. */
     SMVM_Module * module;
 
-    SMVM_REFS_DECLARE_FIELDS
+    SHAREMIND_REFS_DECLARE_FIELDS
 
 };
 
@@ -46,7 +46,7 @@ int SMVM_Syscall_init(SMVM_Syscall * sc,
 
 void SMVM_Syscall_destroy(SMVM_Syscall * sc) __attribute__ ((nonnull(1)));
 
-SMVM_REFS_DECLARE_FUNCTIONS(SMVM_Syscall)
+SHAREMIND_REFS_DECLARE_FUNCTIONS(SMVM_Syscall)
 
 
 #ifdef __cplusplus

@@ -21,10 +21,10 @@
 #include "apis.h"*/
 
 
-SM_ENUM_CUSTOM_DEFINE_TOSTRING(SMVM_MODAPI_Error,SMVM_ENUM_MODAPI_Error)
+SHAREMIND_ENUM_CUSTOM_DEFINE_TOSTRING(SMVM_MODAPI_Error,SMVM_ENUM_MODAPI_Error)
 
 #define SMVM_MODAPI_DEFINE_ERRORSTRING(unused,unused2,e) \
-    [(int) SM_T(2,0,e)] = "Out of memory while generating error message for error with code " SM_2S(SM_T(2,0,e)) "!",
+    [(int) SHAREMIND_T(2,0,e)] = "Out of memory while generating error message for error with code " SHAREMIND_2S(SHAREMIND_T(2,0,e)) "!",
 
 const char * const SMVM_MODAPI_OomErrorStrings[SMVM_MODAPI_ERROR_COUNT + 1] = {
     BOOST_PP_SEQ_FOR_EACH(SMVM_MODAPI_DEFINE_ERRORSTRING,_,SMVM_ENUM_MODAPI_Error)
@@ -42,14 +42,14 @@ SMVM_MODAPI * SMVM_MODAPI_new() {
         SMVM_FacilityMap_init(&modapi->pdFacilityMap, NULL);
         SMVM_FacilityMap_init(&modapi->pdpiFacilityMap, NULL);
 
-        SMVM_REFS_INIT(modapi);
+        SHAREMIND_REFS_INIT(modapi);
     }
     return modapi;
 }
 
 void SMVM_MODAPI_free(SMVM_MODAPI * modapi) {
     assert(modapi);
-    SMVM_REFS_ASSERT_IF_REFERENCED(modapi);
+    SHAREMIND_REFS_ASSERT_IF_REFERENCED(modapi);
     if (modapi->lastErrorDynamicString)
         free(modapi->lastErrorDynamicString);
 
@@ -123,7 +123,7 @@ bool SMVM_MODAPI_setErrorWithDynamicString(SMVM_MODAPI * modapi,
     return !hasErrorString;
 }
 
-SMVM_REFS_DEFINE_FUNCTIONS(SMVM_MODAPI)
+SHAREMIND_REFS_DEFINE_FUNCTIONS(SMVM_MODAPI)
 
 int SMVM_MODAPI_set_module_facility(SMVM_MODAPI * modapi, const char * name, void * facility, void * context) {
     assert(modapi);

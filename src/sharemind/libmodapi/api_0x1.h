@@ -40,15 +40,15 @@ extern "C" {
 *******************************************************************************/
 
 /* Forward declarations: */
-struct _SMVM_MODAPI_0x1_Module_Context;
-struct _SMVM_MODAPI_0x1_Reference;
-struct _SMVM_MODAPI_0x1_CReference;
-struct _SMVM_MODAPI_0x1_Syscall_Context;
-struct _SMVM_MODAPI_0x1_Syscall_Definition;
-struct _SMVM_MODAPI_0x1_PD_Conf;
-struct _SMVM_MODAPI_0x1_PD_Wrapper;
-struct _SMVM_MODAPI_0x1_PDPI_Wrapper;
-struct _SMVM_MODAPI_0x1_PDK_Definition;
+struct SMVM_MODAPI_0x1_Module_Context_;
+struct SMVM_MODAPI_0x1_Reference_;
+struct SMVM_MODAPI_0x1_CReference_;
+struct SMVM_MODAPI_0x1_Syscall_Context_;
+struct SMVM_MODAPI_0x1_Syscall_Definition_;
+struct SMVM_MODAPI_0x1_PD_Conf_;
+struct SMVM_MODAPI_0x1_PD_Wrapper_;
+struct SMVM_MODAPI_0x1_PDPI_Wrapper_;
+struct SMVM_MODAPI_0x1_PDK_Definition_;
 
 
 /** Possible return codes returned by the Sharemind module initializer */
@@ -65,8 +65,8 @@ typedef struct {
 } SMVM_MODAPI_0x1_Facility;
 
 /** Environment passed to a Sharemind module initializer and deinitializer: */
-typedef struct _SMVM_MODAPI_0x1_Module_Context SMVM_MODAPI_0x1_Module_Context;
-struct _SMVM_MODAPI_0x1_Module_Context {
+typedef struct SMVM_MODAPI_0x1_Module_Context_ SMVM_MODAPI_0x1_Module_Context;
+struct SMVM_MODAPI_0x1_Module_Context_ {
 
     /** Internal pointer, do not use! */
     ICONST void * ICONST internal;
@@ -100,8 +100,8 @@ typedef void (*SMVM_MODAPI_0x1_Module_Deinitializer)(SMVM_MODAPI_0x1_Module_Cont
 *******************************************************************************/
 
 /** Mutable references */
-typedef struct _SMVM_MODAPI_0x1_Reference SMVM_MODAPI_0x1_Reference;
-struct _SMVM_MODAPI_0x1_Reference {
+typedef struct SMVM_MODAPI_0x1_Reference_ SMVM_MODAPI_0x1_Reference;
+struct SMVM_MODAPI_0x1_Reference_ {
 
     /** Internal pointer, do not use! */
     ICONST void * ICONST internal;
@@ -115,8 +115,8 @@ struct _SMVM_MODAPI_0x1_Reference {
 };
 
 /** Constant references */
-typedef struct _SMVM_MODAPI_0x1_CReference SMVM_MODAPI_0x1_CReference;
-struct _SMVM_MODAPI_0x1_CReference {
+typedef struct SMVM_MODAPI_0x1_CReference_ SMVM_MODAPI_0x1_CReference;
+struct SMVM_MODAPI_0x1_CReference_ {
 
     /** Internal pointer, do not use! */
     ICONST void * ICONST internal;
@@ -138,8 +138,8 @@ typedef enum {
 } SMVM_MODAPI_0x1_Syscall_Code;
 
 /** Additional context provided for system calls: */
-typedef struct _SMVM_MODAPI_0x1_Syscall_Context SMVM_MODAPI_0x1_Syscall_Context;
-struct _SMVM_MODAPI_0x1_Syscall_Context {
+typedef struct SMVM_MODAPI_0x1_Syscall_Context_ SMVM_MODAPI_0x1_Syscall_Context;
+struct SMVM_MODAPI_0x1_Syscall_Context_ {
 
     /** Internal pointer, do not use! */
     ICONST void * ICONST internal;
@@ -226,8 +226,8 @@ typedef SMVM_MODAPI_0x1_Syscall_Code (* SMVM_MODAPI_0x1_Syscall)(
 );
 
 /** System call list item:*/
-typedef const struct _SMVM_MODAPI_0x1_Syscall_Definition SMVM_MODAPI_0x1_Syscall_Definition;
-struct _SMVM_MODAPI_0x1_Syscall_Definition {
+typedef const struct SMVM_MODAPI_0x1_Syscall_Definition_ SMVM_MODAPI_0x1_Syscall_Definition;
+struct SMVM_MODAPI_0x1_Syscall_Definition_ {
 
     /** Unique name of the system call: */
     const char * const name;
@@ -246,8 +246,8 @@ typedef SMVM_MODAPI_0x1_Syscall_Definition SMVM_MODAPI_0x1_Syscall_Definitions[]
 *******************************************************************************/
 
 /** Protection domain configuration */
-typedef struct _SMVM_MODAPI_0x1_PD_Conf SMVM_MODAPI_0x1_PD_Conf;
-struct _SMVM_MODAPI_0x1_PD_Conf {
+typedef struct SMVM_MODAPI_0x1_PD_Conf_ SMVM_MODAPI_0x1_PD_Conf;
+struct SMVM_MODAPI_0x1_PD_Conf_ {
 
     /** The unique name of the protection domain. */
     const char * ICONST pd_name;
@@ -264,8 +264,8 @@ struct _SMVM_MODAPI_0x1_PD_Conf {
 };
 
 /** Protection-domain instance specific data wrapper. */
-typedef struct _SMVM_MODAPI_0x1_PD_Wrapper SMVM_MODAPI_0x1_PD_Wrapper;
-struct _SMVM_MODAPI_0x1_PD_Wrapper {
+typedef struct SMVM_MODAPI_0x1_PD_Wrapper_ SMVM_MODAPI_0x1_PD_Wrapper;
+struct SMVM_MODAPI_0x1_PD_Wrapper_ {
 
     /** Internal pointer, do not use! */
     ICONST void * ICONST internal;
@@ -297,8 +297,8 @@ struct _SMVM_MODAPI_0x1_PD_Wrapper {
 };
 
 /** Protection-domain instance process instance specific data wrapper. */
-typedef struct _SMVM_MODAPI_0x1_PDPI_Wrapper SMVM_MODAPI_0x1_PDPI_Wrapper;
-struct _SMVM_MODAPI_0x1_PDPI_Wrapper {
+typedef struct SMVM_MODAPI_0x1_PDPI_Wrapper_ SMVM_MODAPI_0x1_PDPI_Wrapper;
+struct SMVM_MODAPI_0x1_PDPI_Wrapper_ {
 
     /** Internal pointer, do not use! */
     ICONST void * ICONST internal;
@@ -338,8 +338,8 @@ typedef int (* SMVM_MODAPI_0x1_PDPI_Startup)(SMVM_MODAPI_0x1_PDPI_Wrapper *);
 typedef void (* SMVM_MODAPI_0x1_PDPI_Shutdown)(SMVM_MODAPI_0x1_PDPI_Wrapper *);
 
 /** Protection domain kind list item: */
-typedef const struct _SMVM_MODAPI_0x1_PDK_Definition SMVM_MODAPI_0x1_PDK_Definition;
-struct _SMVM_MODAPI_0x1_PDK_Definition {
+typedef const struct SMVM_MODAPI_0x1_PDK_Definition_ SMVM_MODAPI_0x1_PDK_Definition;
+struct SMVM_MODAPI_0x1_PDK_Definition_ {
 
     /** Unique name of the protection domain kind: */
     const char * const name;

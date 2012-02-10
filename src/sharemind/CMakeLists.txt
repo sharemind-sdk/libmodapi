@@ -79,7 +79,7 @@ ADD_LIBRARY("libmodapi" SHARED
             ${PREPARED_OTHER_FILES}) # <-- hack for Qt Creator to include other files
 
 SET_TARGET_PROPERTIES("libmodapi" PROPERTIES
-                      OUTPUT_NAME "smmod"
+                      OUTPUT_NAME "sharemind_modapi"
                       LIBRARY_OUTPUT_DIRECTORY "${SHAREMIND_LIB_DIR}"
                       VERSION "0.1.0.0"
                       SOVERSION "0.1")

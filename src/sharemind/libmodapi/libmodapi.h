@@ -38,20 +38,20 @@ typedef SMVM_MODAPI_0x1_Facility SMVM_Facility;
 struct _SMVM_MODAPI;
 typedef struct _SMVM_MODAPI SMVM_MODAPI;
 
-struct _SMVM_Module;
-typedef struct _SMVM_Module SMVM_Module;
+struct SMVM_Module_;
+typedef struct SMVM_Module_ SMVM_Module;
 
-struct _SMVM_Syscall;
-typedef struct _SMVM_Syscall SMVM_Syscall;
+struct SMVM_Syscall_;
+typedef struct SMVM_Syscall_ SMVM_Syscall;
 
-struct _SMVM_PDK;
-typedef struct _SMVM_PDK SMVM_PDK;
+struct SMVM_PDK_;
+typedef struct SMVM_PDK_ SMVM_PDK;
 
-struct _SMVM_PD;
-typedef struct _SMVM_PD SMVM_PD;
+struct SMVM_PD_;
+typedef struct SMVM_PD_ SMVM_PD;
 
-struct _SMVM_PDPI;
-typedef struct _SMVM_PDPI SMVM_PDPI;
+struct SMVM_PDPI_;
+typedef struct SMVM_PDPI_ SMVM_PDPI;
 
 /*******************************************************************************
   SMVM_MODAPI
@@ -131,7 +131,7 @@ const char * SMVM_Syscall_get_name(const SMVM_Syscall * sc) __attribute__ ((nonn
 SMVM_Module * SMVM_Syscall_get_module(const SMVM_Syscall * sc) __attribute__ ((nonnull(1)));
 SMVM_MODAPI * SMVM_Syscall_get_modapi(const SMVM_Syscall * sc) __attribute__ ((nonnull(1)));
 
-typedef struct _SMVM_SyscallWrapper {
+typedef struct {
     SMVM_SyscallCallable callable;
     void * internal;
 } SMVM_SyscallWrapper;

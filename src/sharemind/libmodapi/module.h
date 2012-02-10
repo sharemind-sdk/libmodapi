@@ -27,7 +27,7 @@ extern "C" {
 #endif
 
 
-struct _SMVM_Module {
+struct SMVM_Module_ {
     void * handle;
     char * filename;
     char * name;

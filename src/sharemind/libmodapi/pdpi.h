@@ -24,7 +24,7 @@
 extern "C" {
 #endif
 
-struct _SMVM_PDPI {
+struct SMVM_PDPI_ {
 
     /** A handle for protection domain runtime data. */
     void * pdProcessHandle;

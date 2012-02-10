@@ -25,7 +25,7 @@ extern "C" {
 #endif
 
 
-struct _SMVM_PD {
+struct SMVM_PD_ {
 
     /** Protection domain name. */
     char * name;

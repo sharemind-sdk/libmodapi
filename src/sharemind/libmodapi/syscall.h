@@ -23,7 +23,7 @@ extern "C" {
 #endif
 
 
-struct _SMVM_Syscall {
+struct SMVM_Syscall_ {
 
     SMVM_SyscallWrapper wrapper;
 

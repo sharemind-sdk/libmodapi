@@ -24,7 +24,7 @@ extern "C" {
 #endif
 
 
-struct _SMVM_PDK {
+struct SMVM_PDK_ {
 
     /**
       The index of the protection domain kind in the

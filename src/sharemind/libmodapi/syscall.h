@@ -23,30 +23,30 @@ extern "C" {
 #endif
 
 
-struct SHAREMIND_Syscall_ {
+struct SharemindSyscall_ {
 
-    SHAREMIND_SyscallWrapper wrapper;
+    SharemindSyscallWrapper wrapper;
 
     /** Unique name of the system call. */
     char * name;
 
     /** Pointer to module providing this syscall. */
-    SHAREMIND_Module * module;
+    SharemindModule * module;
 
     SHAREMIND_REFS_DECLARE_FIELDS
 
 };
 
-int SHAREMIND_Syscall_init(SHAREMIND_Syscall * sc,
+int SharemindSyscall_init(SharemindSyscall * sc,
                       const char * name,
                       void * impl,
-                      SHAREMIND_SyscallCallable wrapper,
-                      SHAREMIND_Module * m)
+                      SharemindSyscallCallable wrapper,
+                      SharemindModule * m)
      __attribute__ ((nonnull(1, 2, 3, 5)));
 
-void SHAREMIND_Syscall_destroy(SHAREMIND_Syscall * sc) __attribute__ ((nonnull(1)));
+void SharemindSyscall_destroy(SharemindSyscall * sc) __attribute__ ((nonnull(1)));
 
-SHAREMIND_REFS_DECLARE_FUNCTIONS(SHAREMIND_Syscall)
+SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindSyscall)
 
 
 #ifdef __cplusplus

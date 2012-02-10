@@ -19,7 +19,7 @@
 #include "module.h"
 
 
-int SHAREMIND_PDK_init(SHAREMIND_PDK * pdk,
+int SharemindPdk_init(SharemindPdk * pdk,
                   size_t pdk_index,
                   const char * name,
                   void * pd_startup_impl,
@@ -30,7 +30,7 @@ int SHAREMIND_PDK_init(SHAREMIND_PDK * pdk,
                   void * pd_process_startup_wrapper,
                   void * pd_process_shutdown_impl,
                   void * pd_process_shutdown_wrapper,
-                  SHAREMIND_Module * module)
+                  SharemindModule * module)
 {
     assert(pdk);
     assert(name);
@@ -41,7 +41,7 @@ int SHAREMIND_PDK_init(SHAREMIND_PDK * pdk,
     assert(module);
     assert(module->modapi);
 
-    if (!SHAREMIND_Module_refs_ref(module)) {
+    if (!SharemindModule_refs_ref(module)) {
         OOR(module->modapi);
         return 0;
     }
@@ -50,7 +50,7 @@ int SHAREMIND_PDK_init(SHAREMIND_PDK * pdk,
 
     pdk->name = strdup(name);
     if (unlikely(!pdk->name)) {
-        SHAREMIND_Module_refs_unref(module);
+        SharemindModule_refs_unref(module);
         return 0;
     }
 
@@ -88,12 +88,12 @@ int SHAREMIND_PDK_init(SHAREMIND_PDK * pdk,
 
     pdk->module = module;
     SHAREMIND_REFS_INIT(pdk);
-    SHAREMIND_FacilityMap_init(&pdk->pdFacilityMap, &module->pdFacilityMap);
-    SHAREMIND_FacilityMap_init(&pdk->pdpiFacilityMap, &module->pdpiFacilityMap);
+    SharemindFacilityMap_init(&pdk->pdFacilityMap, &module->pdFacilityMap);
+    SharemindFacilityMap_init(&pdk->pdpiFacilityMap, &module->pdpiFacilityMap);
     return 1;
 }
 
-void SHAREMIND_PDK_destroy(SHAREMIND_PDK * pdk) {
+void SharemindPdk_destroy(SharemindPdk * pdk) {
     assert(pdk);
     assert(pdk->name);
     assert(pdk->pd_startup_impl_or_wrapper);
@@ -104,62 +104,62 @@ void SHAREMIND_PDK_destroy(SHAREMIND_PDK * pdk) {
     SHAREMIND_REFS_ASSERT_IF_REFERENCED(pdk);
 
     free(pdk->name);
-    SHAREMIND_Module_refs_unref(pdk->module);
+    SharemindModule_refs_unref(pdk->module);
 
-    SHAREMIND_FacilityMap_destroy(&pdk->pdFacilityMap);
-    SHAREMIND_FacilityMap_destroy(&pdk->pdpiFacilityMap);
+    SharemindFacilityMap_destroy(&pdk->pdFacilityMap);
+    SharemindFacilityMap_destroy(&pdk->pdpiFacilityMap);
 }
 
-const char * SHAREMIND_PDK_get_name(const SHAREMIND_PDK * pdk) {
+const char * SharemindPdk_get_name(const SharemindPdk * pdk) {
     assert(pdk);
     assert(pdk->name);
     return pdk->name;
 }
 
-SHAREMIND_Module * SHAREMIND_PDK_get_module(const SHAREMIND_PDK * pdk) {
+SharemindModule * SharemindPdk_get_module(const SharemindPdk * pdk) {
     assert(pdk);
     assert(pdk->module);
     return pdk->module;
 }
 
-SHAREMIND_MODAPI * SHAREMIND_PDK_get_modapi(const SHAREMIND_PDK * pdk) {
+SharemindModuleApi * SharemindPdk_get_modapi(const SharemindPdk * pdk) {
     assert(pdk);
     assert(pdk->module);
     assert(pdk->module->modapi);
     return pdk->module->modapi;
 }
 
-size_t SHAREMIND_PDK_get_index(const SHAREMIND_PDK * pdk) {
+size_t SharemindPdk_get_index(const SharemindPdk * pdk) {
     assert(pdk);
     return pdk->pdk_index;
 }
 
-int SHAREMIND_PDK_set_pd_facility(SHAREMIND_PDK * pdk, const char * name, void * facility, void * context) {
+int SharemindPdk_set_pd_facility(SharemindPdk * pdk, const char * name, void * facility, void * context) {
     assert(pdk);
     assert(name);
     assert(name[0]);
-    return SHAREMIND_FacilityMap_set(&pdk->pdFacilityMap, name, facility, context);
+    return SharemindFacilityMap_set(&pdk->pdFacilityMap, name, facility, context);
 }
 
-const SHAREMIND_Facility * SHAREMIND_PDK_get_pd_facility(const SHAREMIND_PDK * pdk, const char * name) {
+const SharemindFacility * SharemindPdk_get_pd_facility(const SharemindPdk * pdk, const char * name) {
     assert(pdk);
     assert(name);
     assert(name[0]);
-    return SHAREMIND_FacilityMap_get(&pdk->pdFacilityMap, name);
+    return SharemindFacilityMap_get(&pdk->pdFacilityMap, name);
 }
 
-int SHAREMIND_PDK_set_pdpi_facility(SHAREMIND_PDK * pdk, const char * name, void * facility, void * context) {
+int SharemindPdk_set_pdpi_facility(SharemindPdk * pdk, const char * name, void * facility, void * context) {
     assert(pdk);
     assert(name);
     assert(name[0]);
-    return SHAREMIND_FacilityMap_set(&pdk->pdpiFacilityMap, name, facility, context);
+    return SharemindFacilityMap_set(&pdk->pdpiFacilityMap, name, facility, context);
 }
 
-const SHAREMIND_Facility * SHAREMIND_PDK_get_pdpi_facility(const SHAREMIND_PDK * pdk, const char * name) {
+const SharemindFacility * SharemindPdk_get_pdpi_facility(const SharemindPdk * pdk, const char * name) {
     assert(pdk);
     assert(name);
     assert(name[0]);
-    return SHAREMIND_FacilityMap_get(&pdk->pdpiFacilityMap, name);
+    return SharemindFacilityMap_get(&pdk->pdpiFacilityMap, name);
 }
 
-SHAREMIND_REFS_DEFINE_FUNCTIONS(SHAREMIND_PDK)
+SHAREMIND_REFS_DEFINE_FUNCTIONS(SharemindPdk)

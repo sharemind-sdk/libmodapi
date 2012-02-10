@@ -24,13 +24,13 @@
 extern "C" {
 #endif
 
-struct SHAREMIND_PDPI_ {
+struct SharemindPdpi_ {
 
     /** A handle for protection domain runtime data. */
     void * pdProcessHandle;
 
     /** Pointer to the protection domain kind. */
-    SHAREMIND_PD * pd;
+    SharemindPd * pd;
 
     bool isStarted;
 
@@ -38,15 +38,15 @@ struct SHAREMIND_PDPI_ {
     void * facilityContext;
 
     /** PDPI facility name to pointer mapping: */
-    SHAREMIND_FacilityMap pdpiFacilityMap;
+    SharemindFacilityMap pdpiFacilityMap;
 
     SHAREMIND_REFS_DECLARE_FIELDS
     SHAREMIND_NAMED_REFS_DECLARE_FIELDS(startedRefs)
 
 };
 
-SHAREMIND_REFS_DECLARE_FUNCTIONS(SHAREMIND_PDPI)
-SHAREMIND_NAMED_REFS_DECLARE_FUNCTIONS(SHAREMIND_PDPI,startedRefs)
+SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindPdpi)
+SHAREMIND_NAMED_REFS_DECLARE_FUNCTIONS(SharemindPdpi,startedRefs)
 
 
 #ifdef __cplusplus

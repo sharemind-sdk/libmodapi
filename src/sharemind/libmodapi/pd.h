@@ -25,7 +25,7 @@ extern "C" {
 #endif
 
 
-struct SHAREMIND_PD_ {
+struct SharemindPd_ {
 
     /** Protection domain name. */
     char * name;
@@ -40,24 +40,24 @@ struct SHAREMIND_PD_ {
     void * pdHandle;
 
     /** Pointer to the protection domain kind. */
-    SHAREMIND_PDK * pdk;
+    SharemindPdk * pdk;
 
     /** Whether this protection domain is started. */
     bool isStarted;
 
     /** PD facility name to pointer mapping: */
-    SHAREMIND_FacilityMap pdFacilityMap;
+    SharemindFacilityMap pdFacilityMap;
 
     /** PDPI facility name to pointer mapping: */
-    SHAREMIND_FacilityMap pdpiFacilityMap;
+    SharemindFacilityMap pdpiFacilityMap;
 
     SHAREMIND_REFS_DECLARE_FIELDS
     SHAREMIND_NAMED_REFS_DECLARE_FIELDS(startedRefs)
 
 };
 
-SHAREMIND_REFS_DECLARE_FUNCTIONS(SHAREMIND_PD)
-SHAREMIND_NAMED_REFS_DECLARE_FUNCTIONS(SHAREMIND_PD,startedRefs)
+SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindPd)
+SHAREMIND_NAMED_REFS_DECLARE_FUNCTIONS(SharemindPd,startedRefs)
 
 
 #ifdef __cplusplus

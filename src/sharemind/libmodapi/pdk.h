@@ -24,7 +24,7 @@ extern "C" {
 #endif
 
 
-struct SHAREMIND_PDK_ {
+struct SharemindPdk_ {
 
     /**
       The index of the protection domain kind in the
@@ -60,19 +60,19 @@ struct SHAREMIND_PDK_ {
     void * pdpi_shutdown_null_or_impl;
 
     /** Pointer to the module which provides this protection domain kind. */
-    SHAREMIND_Module * module;
+    SharemindModule * module;
 
     /** PD facility name to pointer mapping: */
-    SHAREMIND_FacilityMap pdFacilityMap;
+    SharemindFacilityMap pdFacilityMap;
 
     /** PDPI facility name to pointer mapping: */
-    SHAREMIND_FacilityMap pdpiFacilityMap;
+    SharemindFacilityMap pdpiFacilityMap;
 
     SHAREMIND_REFS_DECLARE_FIELDS
 
 };
 
-int SHAREMIND_PDK_init(SHAREMIND_PDK * pdk,
+int SharemindPdk_init(SharemindPdk * pdk,
                   size_t pdk_index,
                   const char * name,
                   void * pd_startup_impl,
@@ -83,10 +83,10 @@ int SHAREMIND_PDK_init(SHAREMIND_PDK * pdk,
                   void * pdpi_startup_wrapper,
                   void * pdpi_shutdown_impl,
                   void * pdpi_shutdown_wrapper,
-                  SHAREMIND_Module * module) __attribute__ ((nonnull(1, 3, 4, 6, 8, 10, 12)));
-void SHAREMIND_PDK_destroy(SHAREMIND_PDK * pdk) __attribute__ ((nonnull(1)));
+                  SharemindModule * module) __attribute__ ((nonnull(1, 3, 4, 6, 8, 10, 12)));
+void SharemindPdk_destroy(SharemindPdk * pdk) __attribute__ ((nonnull(1)));
 
-SHAREMIND_REFS_DECLARE_FUNCTIONS(SHAREMIND_PDK)
+SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindPdk)
 
 
 #ifdef __cplusplus

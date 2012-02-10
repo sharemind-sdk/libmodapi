@@ -18,14 +18,14 @@
 #include "module.h"
 
 
-int SHAREMIND_Syscall_init(SHAREMIND_Syscall * sc, const char * name, void * impl, SHAREMIND_SyscallCallable wrapper, SHAREMIND_Module * m) {
+int SharemindSyscall_init(SharemindSyscall * sc, const char * name, void * impl, SharemindSyscallCallable wrapper, SharemindModule * m) {
     assert(sc);
     assert(name);
     assert(impl);
     assert(m);
     assert(m->modapi);
 
-    if (!SHAREMIND_Module_refs_ref(m)) {
+    if (!SharemindModule_refs_ref(m)) {
         OOR(m->modapi);
         return 0;
     }
@@ -34,7 +34,7 @@ int SHAREMIND_Syscall_init(SHAREMIND_Syscall * sc, const char * name, void * imp
 
     sc->name = strdup(name);
     if (!sc->name) {
-        SHAREMIND_Module_refs_unref(m);
+        SharemindModule_refs_unref(m);
         return 0;
     }
 
@@ -42,14 +42,14 @@ int SHAREMIND_Syscall_init(SHAREMIND_Syscall * sc, const char * name, void * imp
         sc->wrapper.callable = wrapper;
         sc->wrapper.internal = impl;
     } else {
-        sc->wrapper.callable = (SHAREMIND_SyscallCallable) impl;
+        sc->wrapper.callable = (SharemindSyscallCallable) impl;
         sc->wrapper.internal = NULL;
     }
     sc->module = m;
     return 1;
 }
 
-void SHAREMIND_Syscall_destroy(SHAREMIND_Syscall * sc) {
+void SharemindSyscall_destroy(SharemindSyscall * sc) {
     assert(sc);
     assert(sc->wrapper.callable);
     assert(sc->name);
@@ -57,22 +57,22 @@ void SHAREMIND_Syscall_destroy(SHAREMIND_Syscall * sc) {
     SHAREMIND_REFS_ASSERT_IF_REFERENCED(sc);
 
     free(sc->name);
-    SHAREMIND_Module_refs_unref(sc->module);
+    SharemindModule_refs_unref(sc->module);
 }
 
-const char * SHAREMIND_Syscall_get_name(const SHAREMIND_Syscall * sc) {
+const char * SharemindSyscall_get_name(const SharemindSyscall * sc) {
     assert(sc);
     assert(sc->name);
     return sc->name;
 }
 
-SHAREMIND_Module * SHAREMIND_Syscall_get_module(const SHAREMIND_Syscall * sc) {
+SharemindModule * SharemindSyscall_get_module(const SharemindSyscall * sc) {
     assert(sc);
     assert(sc->module);
     return sc->module;
 }
 
-SHAREMIND_MODAPI * SHAREMIND_Syscall_get_modapi(const SHAREMIND_Syscall * sc) {
+SharemindModuleApi * SharemindSyscall_get_modapi(const SharemindSyscall * sc) {
     assert(sc);
     assert(sc->module);
     assert(sc->module->modapi);
@@ -83,10 +83,10 @@ SHAREMIND_MODAPI * SHAREMIND_Syscall_get_modapi(const SHAREMIND_Syscall * sc) {
   \note According to the AMD64 ABI, returning _SHAREMIND_SyscallWrapper should be
         fast, because this struct will be returned in %rax and %rdx.
 */
-SHAREMIND_SyscallWrapper SHAREMIND_Syscall_get_wrapper(const SHAREMIND_Syscall * sc) {
+SharemindSyscallWrapper SharemindSyscall_get_wrapper(const SharemindSyscall * sc) {
     assert(sc);
     assert(sc->wrapper.callable);
     return sc->wrapper;
 }
 
-SHAREMIND_REFS_DEFINE_FUNCTIONS(SHAREMIND_Syscall)
+SHAREMIND_REFS_DEFINE_FUNCTIONS(SharemindSyscall)

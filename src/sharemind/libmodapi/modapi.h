@@ -26,35 +26,37 @@ extern "C" {
 #endif
 
 
-struct _SHAREMIND_MODAPI {
-    SHAREMIND_MODAPI_Error lastError;
+struct SharemindModuleApi_ {
+    SharemindModuleApiError lastError;
     const char * lastErrorStaticString;
     char * lastErrorDynamicString;
 
     /** Module facility name to pointer mapping: */
-    SHAREMIND_FacilityMap moduleFacilityMap;
+    SharemindFacilityMap moduleFacilityMap;
 
     /** PD facility name to pointer mapping: */
-    SHAREMIND_FacilityMap pdFacilityMap;
+    SharemindFacilityMap pdFacilityMap;
 
     /** PDPI facility name to pointer mapping: */
-    SHAREMIND_FacilityMap pdpiFacilityMap;
+    SharemindFacilityMap pdpiFacilityMap;
 
     SHAREMIND_REFS_DECLARE_FIELDS
 };
 
-void SHAREMIND_MODAPI_setErrorWithStaticString(SHAREMIND_MODAPI * modapi,
-                                          SHAREMIND_MODAPI_Error error,
-                                          const char * errorString) __attribute__ ((nonnull(1)));
+void SharemindModuleApi_set_error_with_static_string(
+        SharemindModuleApi * modapi,
+        SharemindModuleApiError error,
+        const char * errorString) __attribute__ ((nonnull(1)));
 
-#define OOM(modapi) if (1) { SHAREMIND_MODAPI_setErrorWithStaticString((modapi), SHAREMIND_MODAPI_OUT_OF_MEMORY, "Out of memory!"); } else (void) 0
-#define OOR(modapi) if (1) { SHAREMIND_MODAPI_setErrorWithStaticString((modapi), SHAREMIND_MODAPI_REFERENCE_OVERFLOW, "Too many references!"); } else (void) 0
+#define OOM(modapi) if (1) { SharemindModuleApi_set_error_with_static_string((modapi), SHAREMIND_MODAPI_OUT_OF_MEMORY, "Out of memory!"); } else (void) 0
+#define OOR(modapi) if (1) { SharemindModuleApi_set_error_with_static_string((modapi), SHAREMIND_MODAPI_REFERENCE_OVERFLOW, "Too many references!"); } else (void) 0
 
-bool SHAREMIND_MODAPI_setErrorWithDynamicString(SHAREMIND_MODAPI * modapi,
-                                           SHAREMIND_MODAPI_Error error,
-                                           const char * errorString) __attribute__ ((nonnull(1)));
+bool SharemindModuleApi_set_error_with_dynamic_string(
+        SharemindModuleApi * modapi,
+        SharemindModuleApiError error,
+        const char * errorString) __attribute__ ((nonnull(1)));
 
-SHAREMIND_REFS_DECLARE_FUNCTIONS(SHAREMIND_MODAPI)
+SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindModuleApi)
 
 
 #ifdef __cplusplus

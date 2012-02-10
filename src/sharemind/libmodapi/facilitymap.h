@@ -19,41 +19,41 @@
 #include "libmodapi.h"
 
 
-SHAREMIND_STRINGMAP_DECLARE(SHAREMIND_FacilityMapInner,SHAREMIND_Facility,inline)
-SHAREMIND_STRINGMAP_DEFINE(SHAREMIND_FacilityMapInner,SHAREMIND_Facility,malloc,free,strdup,inline)
+SHAREMIND_STRINGMAP_DECLARE(SharemindFacilityMapInner,SharemindFacility,inline)
+SHAREMIND_STRINGMAP_DEFINE(SharemindFacilityMapInner,SharemindFacility,malloc,free,strdup,inline)
 
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef struct SHAREMIND_FacilityMap_ {
-    SHAREMIND_FacilityMapInner realMap;
-    struct SHAREMIND_FacilityMap_ * nextMap;
-} SHAREMIND_FacilityMap;
+typedef struct SharemindFacilityMap_ {
+    SharemindFacilityMapInner realMap;
+    struct SharemindFacilityMap_ * nextMap;
+} SharemindFacilityMap;
 
-inline void SHAREMIND_FacilityMap_init(SHAREMIND_FacilityMap * fm, SHAREMIND_FacilityMap * nextMap) __attribute__ ((nonnull(1)));
-inline void SHAREMIND_FacilityMap_destroy(SHAREMIND_FacilityMap * fm) __attribute__ ((nonnull(1)));
-inline int SHAREMIND_FacilityMap_set(SHAREMIND_FacilityMap * fm, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
-inline const SHAREMIND_Facility * SHAREMIND_FacilityMap_get(const SHAREMIND_FacilityMap * fm, const char * name) __attribute__ ((nonnull(1,2)));
+inline void SharemindFacilityMap_init(SharemindFacilityMap * fm, SharemindFacilityMap * nextMap) __attribute__ ((nonnull(1)));
+inline void SharemindFacilityMap_destroy(SharemindFacilityMap * fm) __attribute__ ((nonnull(1)));
+inline int SharemindFacilityMap_set(SharemindFacilityMap * fm, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+inline const SharemindFacility * SharemindFacilityMap_get(const SharemindFacilityMap * fm, const char * name) __attribute__ ((nonnull(1,2)));
 
 
-inline void SHAREMIND_FacilityMap_init(SHAREMIND_FacilityMap * fm, SHAREMIND_FacilityMap * nextMap) {
+inline void SharemindFacilityMap_init(SharemindFacilityMap * fm, SharemindFacilityMap * nextMap) {
     assert(fm);
     fm->nextMap = nextMap;
-    SHAREMIND_FacilityMapInner_init(&fm->realMap);
+    SharemindFacilityMapInner_init(&fm->realMap);
 }
 
-inline void SHAREMIND_FacilityMap_destroy(SHAREMIND_FacilityMap * fm) {
+inline void SharemindFacilityMap_destroy(SharemindFacilityMap * fm) {
     assert(fm);
-    SHAREMIND_FacilityMapInner_destroy(&fm->realMap);
+    SharemindFacilityMapInner_destroy(&fm->realMap);
 }
 
-inline int SHAREMIND_FacilityMap_set(SHAREMIND_FacilityMap * fm, const char * name, void * facility, void * context) {
+inline int SharemindFacilityMap_set(SharemindFacilityMap * fm, const char * name, void * facility, void * context) {
     assert(fm);
     assert(name);
     assert(name[0]);
-    SHAREMIND_Facility * value = SHAREMIND_FacilityMapInner_get_or_insert(&fm->realMap, name);
+    SharemindFacility * value = SharemindFacilityMapInner_get_or_insert(&fm->realMap, name);
     if (unlikely(!value))
         return 0;
 
@@ -62,16 +62,16 @@ inline int SHAREMIND_FacilityMap_set(SHAREMIND_FacilityMap * fm, const char * na
     return 1;
 }
 
-inline const SHAREMIND_Facility * SHAREMIND_FacilityMap_get(const SHAREMIND_FacilityMap * fm, const char * name) {
+inline const SharemindFacility * SharemindFacilityMap_get(const SharemindFacilityMap * fm, const char * name) {
     assert(fm);
     assert(name);
     assert(name[0]);
-    const SHAREMIND_Facility * value = SHAREMIND_FacilityMapInner_get_const(&fm->realMap, name);
+    const SharemindFacility * value = SharemindFacilityMapInner_get_const(&fm->realMap, name);
     if (value)
         return value;
 
     if (fm->nextMap)
-        return SHAREMIND_FacilityMap_get(fm->nextMap, name);
+        return SharemindFacilityMap_get(fm->nextMap, name);
 
     return NULL;
 }

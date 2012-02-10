@@ -27,7 +27,7 @@ extern "C" {
 #endif
 
 
-struct SHAREMIND_Module_ {
+struct SharemindModule_ {
     void * handle;
     char * filename;
     char * name;
@@ -39,22 +39,22 @@ struct SHAREMIND_Module_ {
     void * moduleHandle;
 
     bool isInitialized;
-    SHAREMIND_MODAPI * modapi;
+    SharemindModuleApi * modapi;
 
     /** Module facility name to pointer mapping: */
-    SHAREMIND_FacilityMap moduleFacilityMap;
+    SharemindFacilityMap moduleFacilityMap;
 
     /** PD facility name to pointer mapping: */
-    SHAREMIND_FacilityMap pdFacilityMap;
+    SharemindFacilityMap pdFacilityMap;
 
     /** PDPI facility name to pointer mapping: */
-    SHAREMIND_FacilityMap pdpiFacilityMap;
+    SharemindFacilityMap pdpiFacilityMap;
 
 
     SHAREMIND_REFS_DECLARE_FIELDS
 };
 
-SHAREMIND_REFS_DECLARE_FUNCTIONS(SHAREMIND_Module)
+SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindModule)
 
 
 #ifdef __cplusplus

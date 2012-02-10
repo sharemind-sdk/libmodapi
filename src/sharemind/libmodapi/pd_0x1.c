@@ -19,21 +19,21 @@
 #include "pdk.h"
 
 
-static const SHAREMIND_Facility * SHAREMIND_PD_get_facility_wrapper(SHAREMIND_MODAPI_0x1_PD_Wrapper * w, const char * name) {
+static const SharemindFacility * SHAREMIND_PD_get_facility_wrapper(SHAREMIND_MODAPI_0x1_PD_Wrapper * w, const char * name) {
     assert(w);
     assert(w->internal);
     assert(name);
     assert(name[0]);
-    return SHAREMIND_PD_get_facility((SHAREMIND_PD *) w->internal, name);
+    return SharemindPd_get_facility((SharemindPd *) w->internal, name);
 }
 
-static inline void SHAREMIND_PD_init_start_stop_wrappers(SHAREMIND_PD * pd,
+static inline void SHAREMIND_PD_init_start_stop_wrappers(SharemindPd * pd,
                                                     SHAREMIND_MODAPI_0x1_PD_Conf * pdConf,
                                                     SHAREMIND_MODAPI_0x1_PD_Wrapper * pdWrapper)
 {
     assert(pd);
     assert(pd->pdk);
-    const SHAREMIND_PDK * const pdk = pd->pdk;
+    const SharemindPdk * const pdk = pd->pdk;
 
     pdConf->pd_name = pd->name;
     pdConf->pdk_index = pdk->pdk_index;
@@ -46,14 +46,14 @@ static inline void SHAREMIND_PD_init_start_stop_wrappers(SHAREMIND_PD * pd,
     pdWrapper->getPdFacility = &SHAREMIND_PD_get_facility_wrapper;
 }
 
-bool SHAREMIND_PD_start_0x1(SHAREMIND_PD * pd) {
+bool SHAREMIND_PD_start_0x1(SharemindPd * pd) {
     assert(pd);
     assert(!pd->isStarted);
 
     SHAREMIND_MODAPI_0x1_PD_Conf pdConf;
     SHAREMIND_MODAPI_0x1_PD_Wrapper pdWrapper;
     SHAREMIND_PD_init_start_stop_wrappers(pd, &pdConf, &pdWrapper);
-    const SHAREMIND_PDK * const pdk = pd->pdk;
+    const SharemindPdk * const pdk = pd->pdk;
     pdWrapper.internal = pd;
 
     const int r = (*((SHAREMIND_MODAPI_0x1_PD_Startup) pdk->pd_startup_impl_or_wrapper))(&pdWrapper);
@@ -68,11 +68,11 @@ bool SHAREMIND_PD_start_0x1(SHAREMIND_PD * pd) {
     char * const errorString = (char *) malloc(len);
     if (likely(errorString))
         snprintf(errorString, len, errorFormatString, r);
-    SHAREMIND_MODAPI_setErrorWithDynamicString(pdk->module->modapi, SHAREMIND_MODAPI_PD_STARTUP_FAILED, errorString);
+    SharemindModuleApi_set_error_with_dynamic_string(pdk->module->modapi, SHAREMIND_MODAPI_PD_STARTUP_FAILED, errorString);
     return false;
 }
 
-void SHAREMIND_PD_stop_0x1(SHAREMIND_PD * pd) {
+void SHAREMIND_PD_stop_0x1(SharemindPd * pd) {
     assert(pd);
     assert(pd->isStarted);
     assert(pd->pdk);
@@ -82,7 +82,7 @@ void SHAREMIND_PD_stop_0x1(SHAREMIND_PD * pd) {
     SHAREMIND_MODAPI_0x1_PD_Conf pdConf;
     SHAREMIND_MODAPI_0x1_PD_Wrapper pdWrapper;
     SHAREMIND_PD_init_start_stop_wrappers(pd, &pdConf, &pdWrapper);
-    const SHAREMIND_PDK * const pdk = pd->pdk;
+    const SharemindPdk * const pdk = pd->pdk;
     pdWrapper.internal = pd;
 
     (*((SHAREMIND_MODAPI_0x1_PD_Shutdown) pdk->pd_shutdown_impl_or_wrapper))(&pdWrapper);

@@ -192,7 +192,7 @@ typedef SHAREMIND_MODAPI_0x1_Syscall_Code (* SHAREMIND_MODAPI_0x1_Syscall)(
       Pointer to array of regular arguments passed to syscall.
       \warning might be NULL if num_args is zero.
     */
-    SHAREMIND_CodeBlock * args,
+    SharemindCodeBlock * args,
 
     /**
       Number of regular arguments given to syscall.
@@ -219,7 +219,7 @@ typedef SHAREMIND_MODAPI_0x1_Syscall_Code (* SHAREMIND_MODAPI_0x1_Syscall)(
       The pointer to where the return value of the syscall should be written, or
       NULL if no return value is expected:
     */
-    SHAREMIND_CodeBlock * returnValue,
+    SharemindCodeBlock * returnValue,
 
     /** Additional system call context. */
     SHAREMIND_MODAPI_0x1_Syscall_Context * c

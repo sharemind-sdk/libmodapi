@@ -22,8 +22,8 @@ extern "C" {
 #endif
 
 
-bool SHAREMIND_PDPI_start_0x1(SHAREMIND_PDPI * pdpi) __attribute__ ((nonnull(1)));
-void SHAREMIND_PDPI_stop_0x1(SHAREMIND_PDPI * pdpi) __attribute__ ((nonnull(1)));
+bool SHAREMIND_PDPI_start_0x1(SharemindPdpi * pdpi) __attribute__ ((nonnull(1)));
+void SHAREMIND_PDPI_stop_0x1(SharemindPdpi * pdpi) __attribute__ ((nonnull(1)));
 
 
 #ifdef __cplusplus

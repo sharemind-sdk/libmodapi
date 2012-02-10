@@ -7,8 +7,8 @@
  * code is subject to the appropriate license agreement.
  */
 
-#ifndef SHAREMIND_LIBSMVM_PD_H
-#define SHAREMIND_LIBSMVM_PD_H
+#ifndef SHAREMIND_LIBSHAREMIND_PD_H
+#define SHAREMIND_LIBSHAREMIND_PD_H
 
 #ifndef SHAREMIND_INTERNAL__
 #error including an internal header!
@@ -25,7 +25,7 @@ extern "C" {
 #endif
 
 
-struct SMVM_PD_ {
+struct SHAREMIND_PD_ {
 
     /** Protection domain name. */
     char * name;
@@ -40,28 +40,28 @@ struct SMVM_PD_ {
     void * pdHandle;
 
     /** Pointer to the protection domain kind. */
-    SMVM_PDK * pdk;
+    SHAREMIND_PDK * pdk;
 
     /** Whether this protection domain is started. */
     bool isStarted;
 
     /** PD facility name to pointer mapping: */
-    SMVM_FacilityMap pdFacilityMap;
+    SHAREMIND_FacilityMap pdFacilityMap;
 
     /** PDPI facility name to pointer mapping: */
-    SMVM_FacilityMap pdpiFacilityMap;
+    SHAREMIND_FacilityMap pdpiFacilityMap;
 
     SHAREMIND_REFS_DECLARE_FIELDS
     SHAREMIND_NAMED_REFS_DECLARE_FIELDS(startedRefs)
 
 };
 
-SHAREMIND_REFS_DECLARE_FUNCTIONS(SMVM_PD)
-SHAREMIND_NAMED_REFS_DECLARE_FUNCTIONS(SMVM_PD,startedRefs)
+SHAREMIND_REFS_DECLARE_FUNCTIONS(SHAREMIND_PD)
+SHAREMIND_NAMED_REFS_DECLARE_FUNCTIONS(SHAREMIND_PD,startedRefs)
 
 
 #ifdef __cplusplus
 } /* extern "C" { */
 #endif
 
-#endif /* SHAREMIND_LIBSMVM_PD_H */
+#endif /* SHAREMIND_LIBSHAREMIND_PD_H */

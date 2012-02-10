@@ -22,8 +22,8 @@ extern "C" {
 #endif
 
 
-bool SMVM_PD_start_0x1(SMVM_PD * pd) __attribute__ ((nonnull(1)));
-void SMVM_PD_stop_0x1(SMVM_PD * pd) __attribute__ ((nonnull(1)));
+bool SHAREMIND_PD_start_0x1(SHAREMIND_PD * pd) __attribute__ ((nonnull(1)));
+void SHAREMIND_PD_stop_0x1(SHAREMIND_PD * pd) __attribute__ ((nonnull(1)));
 
 
 #ifdef __cplusplus

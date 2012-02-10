@@ -18,7 +18,7 @@
 #include "pdk.h"
 
 
-SMVM_PD * SMVM_PD_new(SMVM_PDK * pdk, const char * name, const char * conf) {
+SHAREMIND_PD * SHAREMIND_PD_new(SHAREMIND_PDK * pdk, const char * name, const char * conf) {
     assert(pdk);
     assert(pdk->module);
     assert(pdk->module->modapi);
@@ -26,23 +26,23 @@ SMVM_PD * SMVM_PD_new(SMVM_PDK * pdk, const char * name, const char * conf) {
     assert(name);
     assert(name[0]);
 
-    if (!SMVM_PDK_refs_ref(pdk)) {
+    if (!SHAREMIND_PDK_refs_ref(pdk)) {
         OOR(pdk->module->modapi);
         return NULL;
     }
 
-    SMVM_PD * const pd = (SMVM_PD *) malloc(sizeof(SMVM_PD));
+    SHAREMIND_PD * const pd = (SHAREMIND_PD *) malloc(sizeof(SHAREMIND_PD));
     if (unlikely(!pd))
-        goto SMVM_PD_new_fail_0;
+        goto SHAREMIND_PD_new_fail_0;
 
     pd->name = strdup(name);
     if (unlikely(!pd->name))
-        goto SMVM_PD_new_fail_1;
+        goto SHAREMIND_PD_new_fail_1;
 
     if (likely(conf && conf[0])) {
         pd->conf = strdup(conf);
         if (!pd->conf)
-            goto SMVM_PD_new_fail_2;
+            goto SHAREMIND_PD_new_fail_2;
     } else {
         pd->conf = NULL;
     }
@@ -51,34 +51,34 @@ SMVM_PD * SMVM_PD_new(SMVM_PDK * pdk, const char * name, const char * conf) {
     pd->pdk = pdk;
     pd->isStarted = false;
     pd->facilityContext = NULL; /* Just in case */
-    SMVM_FacilityMap_init(&pd->pdFacilityMap, &pdk->pdFacilityMap);
-    SMVM_FacilityMap_init(&pd->pdpiFacilityMap, &pdk->pdpiFacilityMap);
+    SHAREMIND_FacilityMap_init(&pd->pdFacilityMap, &pdk->pdFacilityMap);
+    SHAREMIND_FacilityMap_init(&pd->pdpiFacilityMap, &pdk->pdpiFacilityMap);
     SHAREMIND_REFS_INIT(pd);
     SHAREMIND_NAMED_REFS_INIT(pd,startedRefs);
     return pd;
 
-SMVM_PD_new_fail_2:
+SHAREMIND_PD_new_fail_2:
 
     free(pd->name);
 
-SMVM_PD_new_fail_1:
+SHAREMIND_PD_new_fail_1:
 
     free(pd);
 
-SMVM_PD_new_fail_0:
+SHAREMIND_PD_new_fail_0:
 
     OOM(pdk->module->modapi);
-    SMVM_PDK_refs_unref(pdk);
+    SHAREMIND_PDK_refs_unref(pdk);
     return NULL;
 }
 
-void SMVM_PD_free(SMVM_PD * pd) {
+void SHAREMIND_PD_free(SHAREMIND_PD * pd) {
     assert(pd);
     assert(pd->name);
     assert(pd->pdk);
 
     if (pd->isStarted)
-        SMVM_PD_stop(pd);
+        SHAREMIND_PD_stop(pd);
 
     SHAREMIND_REFS_ASSERT_IF_REFERENCED(pd);
     SHAREMIND_NAMED_REFS_ASSERT_IF_REFERENCED(pd,startedRefs);
@@ -86,19 +86,19 @@ void SMVM_PD_free(SMVM_PD * pd) {
     if (likely(pd->conf))
         free(pd->conf);
     free(pd->name);
-    SMVM_PDK_refs_unref(pd->pdk);
+    SHAREMIND_PDK_refs_unref(pd->pdk);
 
-    SMVM_FacilityMap_destroy(&pd->pdFacilityMap);
-    SMVM_FacilityMap_destroy(&pd->pdpiFacilityMap);
+    SHAREMIND_FacilityMap_destroy(&pd->pdFacilityMap);
+    SHAREMIND_FacilityMap_destroy(&pd->pdpiFacilityMap);
     free(pd);
 }
 
-bool SMVM_PD_is_started(const SMVM_PD * pd) {
+bool SHAREMIND_PD_is_started(const SHAREMIND_PD * pd) {
     assert(pd);
     return pd->isStarted;
 }
 
-bool SMVM_PD_start(SMVM_PD * pd) {
+bool SHAREMIND_PD_start(SHAREMIND_PD * pd) {
     assert(pd);
     assert(pd->pdk);
     assert(pd->pdk->module);
@@ -111,7 +111,7 @@ bool SMVM_PD_start(SMVM_PD * pd) {
     return (*(pd->pdk->module->api->pd_start))(pd);
 }
 
-void SMVM_PD_stop(SMVM_PD * pd) {
+void SHAREMIND_PD_stop(SHAREMIND_PD * pd) {
     assert(pd);
     assert(pd->pdk);
     assert(pd->pdk->module);
@@ -127,20 +127,20 @@ void SMVM_PD_stop(SMVM_PD * pd) {
     pd->isStarted = false;
 }
 
-SMVM_PDK * SMVM_PD_get_pdk(const SMVM_PD * pd) {
+SHAREMIND_PDK * SHAREMIND_PD_get_pdk(const SHAREMIND_PD * pd) {
     assert(pd);
     assert(pd->pdk);
     return pd->pdk;
 }
 
-SMVM_Module * SMVM_PD_get_module(const SMVM_PD * pd) {
+SHAREMIND_Module * SHAREMIND_PD_get_module(const SHAREMIND_PD * pd) {
     assert(pd);
     assert(pd->pdk);
     assert(pd->pdk->module);
     return pd->pdk->module;
 }
 
-SMVM_MODAPI * SMVM_PD_get_modapi(const SMVM_PD * pd) {
+SHAREMIND_MODAPI * SHAREMIND_PD_get_modapi(const SHAREMIND_PD * pd) {
     assert(pd);
     assert(pd->pdk);
     assert(pd->pdk->module);
@@ -148,62 +148,62 @@ SMVM_MODAPI * SMVM_PD_get_modapi(const SMVM_PD * pd) {
     return pd->pdk->module->modapi;
 }
 
-const char * SMVM_PD_get_name(const SMVM_PD * pd) {
+const char * SHAREMIND_PD_get_name(const SHAREMIND_PD * pd) {
     assert(pd);
     assert(pd->name);
     assert(pd->name[0]);
     return pd->name;
 }
 
-const char * SMVM_PD_get_conf(const SMVM_PD * pd) {
+const char * SHAREMIND_PD_get_conf(const SHAREMIND_PD * pd) {
     assert(pd);
     assert(pd->conf);
     assert(pd->conf[0]);
     return pd->conf;
 }
 
-void * SMVM_PD_get_handle(const SMVM_PD * pd) {
+void * SHAREMIND_PD_get_handle(const SHAREMIND_PD * pd) {
     assert(pd);
     return pd->pdHandle;
 }
 
-void SMVM_PD_set_facility_context(SMVM_PD * pd, void * facilityContext) {
+void SHAREMIND_PD_set_facility_context(SHAREMIND_PD * pd, void * facilityContext) {
     assert(pd);
     pd->facilityContext = facilityContext;
 }
 
-void * SMVM_PD_get_facility_context(const SMVM_PD * pd) {
+void * SHAREMIND_PD_get_facility_context(const SHAREMIND_PD * pd) {
     assert(pd);
     return pd->facilityContext;
 }
 
-int SMVM_PD_set_facility(SMVM_PD * pd, const char * name, void * facility, void * context) {
+int SHAREMIND_PD_set_facility(SHAREMIND_PD * pd, const char * name, void * facility, void * context) {
     assert(pd);
     assert(name);
     assert(name[0]);
-    return SMVM_FacilityMap_set(&pd->pdFacilityMap, name, facility, context);
+    return SHAREMIND_FacilityMap_set(&pd->pdFacilityMap, name, facility, context);
 }
 
-const SMVM_Facility * SMVM_PD_get_facility(const SMVM_PD * pd, const char * name) {
+const SHAREMIND_Facility * SHAREMIND_PD_get_facility(const SHAREMIND_PD * pd, const char * name) {
     assert(pd);
     assert(name);
     assert(name[0]);
-    return SMVM_FacilityMap_get(&pd->pdFacilityMap, name);
+    return SHAREMIND_FacilityMap_get(&pd->pdFacilityMap, name);
 }
 
-int SMVM_PD_set_pdpi_facility(SMVM_PD * pd, const char * name, void * facility, void * context) {
+int SHAREMIND_PD_set_pdpi_facility(SHAREMIND_PD * pd, const char * name, void * facility, void * context) {
     assert(pd);
     assert(name);
     assert(name[0]);
-    return SMVM_FacilityMap_set(&pd->pdpiFacilityMap, name, facility, context);
+    return SHAREMIND_FacilityMap_set(&pd->pdpiFacilityMap, name, facility, context);
 }
 
-const SMVM_Facility * SMVM_PD_get_pdpi_facility(const SMVM_PD * pd, const char * name) {
+const SHAREMIND_Facility * SHAREMIND_PD_get_pdpi_facility(const SHAREMIND_PD * pd, const char * name) {
     assert(pd);
     assert(name);
     assert(name[0]);
-    return SMVM_FacilityMap_get(&pd->pdpiFacilityMap, name);
+    return SHAREMIND_FacilityMap_get(&pd->pdpiFacilityMap, name);
 }
 
-SHAREMIND_REFS_DEFINE_FUNCTIONS(SMVM_PD)
-SHAREMIND_NAMED_REFS_DEFINE_FUNCTIONS(SMVM_PD,startedRefs)
+SHAREMIND_REFS_DEFINE_FUNCTIONS(SHAREMIND_PD)
+SHAREMIND_NAMED_REFS_DEFINE_FUNCTIONS(SHAREMIND_PD,startedRefs)

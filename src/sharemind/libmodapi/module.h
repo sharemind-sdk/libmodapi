@@ -27,34 +27,34 @@ extern "C" {
 #endif
 
 
-struct SMVM_Module_ {
+struct SHAREMIND_Module_ {
     void * handle;
     char * filename;
     char * name;
     uint32_t apiVersion;
     uint32_t version;
-    const SMVM_API * api;
+    const SHAREMIND_API * api;
 
     void * apiData;
     void * moduleHandle;
 
     bool isInitialized;
-    SMVM_MODAPI * modapi;
+    SHAREMIND_MODAPI * modapi;
 
     /** Module facility name to pointer mapping: */
-    SMVM_FacilityMap moduleFacilityMap;
+    SHAREMIND_FacilityMap moduleFacilityMap;
 
     /** PD facility name to pointer mapping: */
-    SMVM_FacilityMap pdFacilityMap;
+    SHAREMIND_FacilityMap pdFacilityMap;
 
     /** PDPI facility name to pointer mapping: */
-    SMVM_FacilityMap pdpiFacilityMap;
+    SHAREMIND_FacilityMap pdpiFacilityMap;
 
 
     SHAREMIND_REFS_DECLARE_FIELDS
 };
 
-SHAREMIND_REFS_DECLARE_FUNCTIONS(SMVM_Module)
+SHAREMIND_REFS_DECLARE_FUNCTIONS(SHAREMIND_Module)
 
 
 #ifdef __cplusplus

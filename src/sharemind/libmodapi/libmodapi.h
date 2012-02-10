@@ -26,179 +26,179 @@ extern "C" {
   Most recent API aliases
 *******************************************************************************/
 
-typedef SMVM_MODAPI_0x1_Syscall SMVM_SyscallCallable;
-typedef SMVM_MODAPI_0x1_Syscall_Context SMVM_SyscallContext;
-typedef SMVM_MODAPI_0x1_Facility SMVM_Facility;
+typedef SHAREMIND_MODAPI_0x1_Syscall SHAREMIND_SyscallCallable;
+typedef SHAREMIND_MODAPI_0x1_Syscall_Context SHAREMIND_SyscallContext;
+typedef SHAREMIND_MODAPI_0x1_Facility SHAREMIND_Facility;
 
 
 /*******************************************************************************
   Forward declarations
 *******************************************************************************/
 
-struct _SMVM_MODAPI;
-typedef struct _SMVM_MODAPI SMVM_MODAPI;
+struct _SHAREMIND_MODAPI;
+typedef struct _SHAREMIND_MODAPI SHAREMIND_MODAPI;
 
-struct SMVM_Module_;
-typedef struct SMVM_Module_ SMVM_Module;
+struct SHAREMIND_Module_;
+typedef struct SHAREMIND_Module_ SHAREMIND_Module;
 
-struct SMVM_Syscall_;
-typedef struct SMVM_Syscall_ SMVM_Syscall;
+struct SHAREMIND_Syscall_;
+typedef struct SHAREMIND_Syscall_ SHAREMIND_Syscall;
 
-struct SMVM_PDK_;
-typedef struct SMVM_PDK_ SMVM_PDK;
+struct SHAREMIND_PDK_;
+typedef struct SHAREMIND_PDK_ SHAREMIND_PDK;
 
-struct SMVM_PD_;
-typedef struct SMVM_PD_ SMVM_PD;
+struct SHAREMIND_PD_;
+typedef struct SHAREMIND_PD_ SHAREMIND_PD;
 
-struct SMVM_PDPI_;
-typedef struct SMVM_PDPI_ SMVM_PDPI;
-
-/*******************************************************************************
-  SMVM_MODAPI
-*******************************************************************************/
-
-#define SMVM_MODAPI_API_VERSION     1u
-#define SMVM_MODAPI_API_MIN_VERSION 1u
-
-#define SMVM_ENUM_MODAPI_Error \
-    ((SMVM_MODAPI_OK, = 0)) \
-    ((SMVM_MODAPI_OUT_OF_MEMORY,)) \
-    ((SMVM_MODAPI_REFERENCE_OVERFLOW,)) \
-    ((SMVM_MODAPI_UNABLE_TO_OPEN_MODULE,)) \
-    ((SMVM_MODAPI_INVALID_MODULE,)) \
-    ((SMVM_MODAPI_API_NOT_SUPPORTED,)) \
-    ((SMVM_MODAPI_API_ERROR,)) \
-    ((SMVM_MODAPI_DUPLICATE_SYSCALL,)) \
-    ((SMVM_MODAPI_DUPLICATE_PROTECTION_DOMAIN,)) \
-    ((SMVM_MODAPI_MODULE_ERROR,)) \
-    ((SMVM_MODAPI_PD_STARTUP_FAILED,)) \
-    ((SMVM_MODAPI_PDPI_STARTUP_FAILED,)) \
-    ((SMVM_MODAPI_ERROR_COUNT,))
-SHAREMIND_ENUM_CUSTOM_DEFINE(SMVM_MODAPI_Error, SMVM_ENUM_MODAPI_Error);
-SHAREMIND_ENUM_DECLARE_TOSTRING(SMVM_MODAPI_Error);
-
-SMVM_MODAPI * SMVM_MODAPI_new(void);
-void SMVM_MODAPI_free(SMVM_MODAPI * modapi) __attribute__ ((nonnull(1)));
-SMVM_MODAPI_Error SMVM_MODAPI_lastError(const SMVM_MODAPI * modapi) __attribute__ ((nonnull(1)));
-const char * SMVM_MODAPI_lastErrorString(const SMVM_MODAPI * modapi) __attribute__ ((nonnull(1)));
-void SMVM_MODAPI_clearError(SMVM_MODAPI * modapi) __attribute__ ((nonnull(1)));
-
-int SMVM_MODAPI_set_module_facility(SMVM_MODAPI * modapi, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
-const SMVM_Facility * SMVM_MODAPI_get_module_facility(const SMVM_MODAPI * modapi, const char * name) __attribute__ ((nonnull(1,2)));
-int SMVM_MODAPI_set_pd_facility(SMVM_MODAPI * modapi, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
-const SMVM_Facility * SMVM_MODAPI_get_pd_facility(const SMVM_MODAPI * modapi, const char * name) __attribute__ ((nonnull(1,2)));
-int SMVM_MODAPI_set_pdpi_facility(SMVM_MODAPI * modapi, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
-const SMVM_Facility * SMVM_MODAPI_get_pdpi_facility(const SMVM_MODAPI * modapi, const char * name) __attribute__ ((nonnull(1,2)));
-
+struct SHAREMIND_PDPI_;
+typedef struct SHAREMIND_PDPI_ SHAREMIND_PDPI;
 
 /*******************************************************************************
-  SMVM_Module
+  SHAREMIND_MODAPI
 *******************************************************************************/
 
-SMVM_Module * SMVM_Module_new(SMVM_MODAPI * modapi, const char * filename) __attribute__ ((nonnull(1, 2)));
-void SMVM_Module_free(SMVM_Module * m) __attribute__ ((nonnull(1)));
+#define SHAREMIND_MODAPI_API_VERSION     1u
+#define SHAREMIND_MODAPI_API_MIN_VERSION 1u
 
-SMVM_MODAPI_Error SMVM_Module_mod_init(SMVM_Module * m) __attribute__ ((nonnull(1)));
-void SMVM_Module_mod_deinit(SMVM_Module * m) __attribute__ ((nonnull(1)));
+#define SHAREMIND_ENUM_MODAPI_Error \
+    ((SHAREMIND_MODAPI_OK, = 0)) \
+    ((SHAREMIND_MODAPI_OUT_OF_MEMORY,)) \
+    ((SHAREMIND_MODAPI_REFERENCE_OVERFLOW,)) \
+    ((SHAREMIND_MODAPI_UNABLE_TO_OPEN_MODULE,)) \
+    ((SHAREMIND_MODAPI_INVALID_MODULE,)) \
+    ((SHAREMIND_MODAPI_API_NOT_SUPPORTED,)) \
+    ((SHAREMIND_MODAPI_API_ERROR,)) \
+    ((SHAREMIND_MODAPI_DUPLICATE_SYSCALL,)) \
+    ((SHAREMIND_MODAPI_DUPLICATE_PROTECTION_DOMAIN,)) \
+    ((SHAREMIND_MODAPI_MODULE_ERROR,)) \
+    ((SHAREMIND_MODAPI_PD_STARTUP_FAILED,)) \
+    ((SHAREMIND_MODAPI_PDPI_STARTUP_FAILED,)) \
+    ((SHAREMIND_MODAPI_ERROR_COUNT,))
+SHAREMIND_ENUM_CUSTOM_DEFINE(SHAREMIND_MODAPI_Error, SHAREMIND_ENUM_MODAPI_Error);
+SHAREMIND_ENUM_DECLARE_TOSTRING(SHAREMIND_MODAPI_Error);
 
-const char * SMVM_Module_get_name(const SMVM_Module * m) __attribute__ ((nonnull(1)));
-uint32_t SMVM_Module_get_api_version_in_use(const SMVM_Module * m) __attribute__ ((nonnull(1)));
-void * SMVM_Module_get_handle(const SMVM_Module * m) __attribute__ ((nonnull(1)));
+SHAREMIND_MODAPI * SHAREMIND_MODAPI_new(void);
+void SHAREMIND_MODAPI_free(SHAREMIND_MODAPI * modapi) __attribute__ ((nonnull(1)));
+SHAREMIND_MODAPI_Error SHAREMIND_MODAPI_lastError(const SHAREMIND_MODAPI * modapi) __attribute__ ((nonnull(1)));
+const char * SHAREMIND_MODAPI_lastErrorString(const SHAREMIND_MODAPI * modapi) __attribute__ ((nonnull(1)));
+void SHAREMIND_MODAPI_clearError(SHAREMIND_MODAPI * modapi) __attribute__ ((nonnull(1)));
 
-SMVM_MODAPI * SMVM_Module_get_modapi(const SMVM_Module * m) __attribute__ ((nonnull(1)));
-
-size_t SMVM_Module_get_num_syscalls(const SMVM_Module * m) __attribute__ ((nonnull(1)));
-SMVM_Syscall * SMVM_Module_get_syscall(const SMVM_Module * m, size_t index) __attribute__ ((nonnull(1)));
-SMVM_Syscall * SMVM_Module_find_syscall(const SMVM_Module * m, const char * signature) __attribute__ ((nonnull(1, 2)));
-
-size_t SMVM_Module_get_num_pdks(const SMVM_Module * m) __attribute__ ((nonnull(1)));
-SMVM_PDK * SMVM_Module_get_pdk(const SMVM_Module * m, size_t index) __attribute__ ((nonnull(1)));
-SMVM_PDK * SMVM_Module_find_pdk(const SMVM_Module * m, const char * name) __attribute__ ((nonnull(1, 2)));
-
-int SMVM_Module_set_facility(SMVM_Module * m, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
-const SMVM_Facility * SMVM_Module_get_facility(const SMVM_Module * m, const char * name) __attribute__ ((nonnull(1,2)));
-int SMVM_Module_set_pd_facility(SMVM_Module * m, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
-const SMVM_Facility * SMVM_Module_get_pd_facility(const SMVM_Module * m, const char * name) __attribute__ ((nonnull(1,2)));
-int SMVM_Module_set_pdpi_facility(SMVM_Module * m, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
-const SMVM_Facility * SMVM_Module_get_pdpi_facility(const SMVM_Module * m, const char * name) __attribute__ ((nonnull(1,2)));
+int SHAREMIND_MODAPI_set_module_facility(SHAREMIND_MODAPI * modapi, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+const SHAREMIND_Facility * SHAREMIND_MODAPI_get_module_facility(const SHAREMIND_MODAPI * modapi, const char * name) __attribute__ ((nonnull(1,2)));
+int SHAREMIND_MODAPI_set_pd_facility(SHAREMIND_MODAPI * modapi, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+const SHAREMIND_Facility * SHAREMIND_MODAPI_get_pd_facility(const SHAREMIND_MODAPI * modapi, const char * name) __attribute__ ((nonnull(1,2)));
+int SHAREMIND_MODAPI_set_pdpi_facility(SHAREMIND_MODAPI * modapi, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+const SHAREMIND_Facility * SHAREMIND_MODAPI_get_pdpi_facility(const SHAREMIND_MODAPI * modapi, const char * name) __attribute__ ((nonnull(1,2)));
 
 
 /*******************************************************************************
-  SMVM_Syscall
+  SHAREMIND_Module
 *******************************************************************************/
 
-const char * SMVM_Syscall_get_name(const SMVM_Syscall * sc) __attribute__ ((nonnull(1)));
-SMVM_Module * SMVM_Syscall_get_module(const SMVM_Syscall * sc) __attribute__ ((nonnull(1)));
-SMVM_MODAPI * SMVM_Syscall_get_modapi(const SMVM_Syscall * sc) __attribute__ ((nonnull(1)));
+SHAREMIND_Module * SHAREMIND_Module_new(SHAREMIND_MODAPI * modapi, const char * filename) __attribute__ ((nonnull(1, 2)));
+void SHAREMIND_Module_free(SHAREMIND_Module * m) __attribute__ ((nonnull(1)));
+
+SHAREMIND_MODAPI_Error SHAREMIND_Module_mod_init(SHAREMIND_Module * m) __attribute__ ((nonnull(1)));
+void SHAREMIND_Module_mod_deinit(SHAREMIND_Module * m) __attribute__ ((nonnull(1)));
+
+const char * SHAREMIND_Module_get_name(const SHAREMIND_Module * m) __attribute__ ((nonnull(1)));
+uint32_t SHAREMIND_Module_get_api_version_in_use(const SHAREMIND_Module * m) __attribute__ ((nonnull(1)));
+void * SHAREMIND_Module_get_handle(const SHAREMIND_Module * m) __attribute__ ((nonnull(1)));
+
+SHAREMIND_MODAPI * SHAREMIND_Module_get_modapi(const SHAREMIND_Module * m) __attribute__ ((nonnull(1)));
+
+size_t SHAREMIND_Module_get_num_syscalls(const SHAREMIND_Module * m) __attribute__ ((nonnull(1)));
+SHAREMIND_Syscall * SHAREMIND_Module_get_syscall(const SHAREMIND_Module * m, size_t index) __attribute__ ((nonnull(1)));
+SHAREMIND_Syscall * SHAREMIND_Module_find_syscall(const SHAREMIND_Module * m, const char * signature) __attribute__ ((nonnull(1, 2)));
+
+size_t SHAREMIND_Module_get_num_pdks(const SHAREMIND_Module * m) __attribute__ ((nonnull(1)));
+SHAREMIND_PDK * SHAREMIND_Module_get_pdk(const SHAREMIND_Module * m, size_t index) __attribute__ ((nonnull(1)));
+SHAREMIND_PDK * SHAREMIND_Module_find_pdk(const SHAREMIND_Module * m, const char * name) __attribute__ ((nonnull(1, 2)));
+
+int SHAREMIND_Module_set_facility(SHAREMIND_Module * m, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+const SHAREMIND_Facility * SHAREMIND_Module_get_facility(const SHAREMIND_Module * m, const char * name) __attribute__ ((nonnull(1,2)));
+int SHAREMIND_Module_set_pd_facility(SHAREMIND_Module * m, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+const SHAREMIND_Facility * SHAREMIND_Module_get_pd_facility(const SHAREMIND_Module * m, const char * name) __attribute__ ((nonnull(1,2)));
+int SHAREMIND_Module_set_pdpi_facility(SHAREMIND_Module * m, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+const SHAREMIND_Facility * SHAREMIND_Module_get_pdpi_facility(const SHAREMIND_Module * m, const char * name) __attribute__ ((nonnull(1,2)));
+
+
+/*******************************************************************************
+  SHAREMIND_Syscall
+*******************************************************************************/
+
+const char * SHAREMIND_Syscall_get_name(const SHAREMIND_Syscall * sc) __attribute__ ((nonnull(1)));
+SHAREMIND_Module * SHAREMIND_Syscall_get_module(const SHAREMIND_Syscall * sc) __attribute__ ((nonnull(1)));
+SHAREMIND_MODAPI * SHAREMIND_Syscall_get_modapi(const SHAREMIND_Syscall * sc) __attribute__ ((nonnull(1)));
 
 typedef struct {
-    SMVM_SyscallCallable callable;
+    SHAREMIND_SyscallCallable callable;
     void * internal;
-} SMVM_SyscallWrapper;
+} SHAREMIND_SyscallWrapper;
 
-SMVM_SyscallWrapper SMVM_Syscall_get_wrapper(const SMVM_Syscall * sc) __attribute__ ((nonnull(1)));
-
-
-/*******************************************************************************
-  SMVM_PDK
-*******************************************************************************/
-
-const char * SMVM_PDK_get_name(const SMVM_PDK * pdk) __attribute__ ((nonnull(1)));
-SMVM_Module * SMVM_PDK_get_module(const SMVM_PDK * pdk) __attribute__ ((nonnull(1)));
-SMVM_MODAPI * SMVM_PDK_get_modapi(const SMVM_PDK * pdk) __attribute__ ((nonnull(1)));
-size_t SMVM_PDK_get_index(const SMVM_PDK * pdk) __attribute__ ((nonnull(1)));
-
-int SMVM_PDK_set_pd_facility(SMVM_PDK * pdk, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
-const SMVM_Facility * SMVM_PDK_get_pd_facility(const SMVM_PDK * pdk, const char * name) __attribute__ ((nonnull(1,2)));
-int SMVM_PDK_set_pdpi_facility(SMVM_PDK * pdk, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
-const SMVM_Facility * SMVM_PDK_get_pdpi_facility(const SMVM_PDK * pdk, const char * name) __attribute__ ((nonnull(1,2)));
+SHAREMIND_SyscallWrapper SHAREMIND_Syscall_get_wrapper(const SHAREMIND_Syscall * sc) __attribute__ ((nonnull(1)));
 
 
 /*******************************************************************************
-  SMVM_PD
+  SHAREMIND_PDK
 *******************************************************************************/
 
-SMVM_PD * SMVM_PD_new(SMVM_PDK * pdk, const char * name, const char * conf) __attribute__ ((nonnull(1, 2)));
-void SMVM_PD_free(SMVM_PD * pd) __attribute__ ((nonnull(1)));
+const char * SHAREMIND_PDK_get_name(const SHAREMIND_PDK * pdk) __attribute__ ((nonnull(1)));
+SHAREMIND_Module * SHAREMIND_PDK_get_module(const SHAREMIND_PDK * pdk) __attribute__ ((nonnull(1)));
+SHAREMIND_MODAPI * SHAREMIND_PDK_get_modapi(const SHAREMIND_PDK * pdk) __attribute__ ((nonnull(1)));
+size_t SHAREMIND_PDK_get_index(const SHAREMIND_PDK * pdk) __attribute__ ((nonnull(1)));
 
-SMVM_PDK * SMVM_PD_get_pdk(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
-SMVM_Module * SMVM_PD_get_module(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
-SMVM_MODAPI * SMVM_PD_get_modapi(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
-
-const char * SMVM_PD_get_name(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
-const char * SMVM_PD_get_conf(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
-
-void * SMVM_PD_get_handle(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
-
-bool SMVM_PD_is_started(const SMVM_PD * pd) __attribute__ ((nonnull(1)));
-bool SMVM_PD_start(SMVM_PD * pd) __attribute__ ((nonnull(1)));
-void SMVM_PD_stop(SMVM_PD * pd) __attribute__ ((nonnull(1)));
-
-int SMVM_PD_set_facility(SMVM_PD * pd, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
-const SMVM_Facility * SMVM_PD_get_facility(const SMVM_PD * pd, const char * name) __attribute__ ((nonnull(1,2)));
-int SMVM_PD_set_pdpi_facility(SMVM_PD * pd, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
-const SMVM_Facility * SMVM_PD_get_pdpi_facility(const SMVM_PD * pd, const char * name) __attribute__ ((nonnull(1,2)));
+int SHAREMIND_PDK_set_pd_facility(SHAREMIND_PDK * pdk, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+const SHAREMIND_Facility * SHAREMIND_PDK_get_pd_facility(const SHAREMIND_PDK * pdk, const char * name) __attribute__ ((nonnull(1,2)));
+int SHAREMIND_PDK_set_pdpi_facility(SHAREMIND_PDK * pdk, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+const SHAREMIND_Facility * SHAREMIND_PDK_get_pdpi_facility(const SHAREMIND_PDK * pdk, const char * name) __attribute__ ((nonnull(1,2)));
 
 
 /*******************************************************************************
-  SMVM_PDPI
+  SHAREMIND_PD
 *******************************************************************************/
 
-SMVM_PDPI * SMVM_PDPI_new(SMVM_PD * pd) __attribute__ ((nonnull(1)));
-void SMVM_PDPI_free(SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
+SHAREMIND_PD * SHAREMIND_PD_new(SHAREMIND_PDK * pdk, const char * name, const char * conf) __attribute__ ((nonnull(1, 2)));
+void SHAREMIND_PD_free(SHAREMIND_PD * pd) __attribute__ ((nonnull(1)));
 
-void * SMVM_PDPI_get_handle(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
-SMVM_PD * SMVM_PDPI_get_pd(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
-SMVM_PDK * SMVM_PDPI_get_pdk(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
-SMVM_Module * SMVM_PDPI_get_module(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
-SMVM_MODAPI * SMVM_PDPI_get_modapi(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
+SHAREMIND_PDK * SHAREMIND_PD_get_pdk(const SHAREMIND_PD * pd) __attribute__ ((nonnull(1)));
+SHAREMIND_Module * SHAREMIND_PD_get_module(const SHAREMIND_PD * pd) __attribute__ ((nonnull(1)));
+SHAREMIND_MODAPI * SHAREMIND_PD_get_modapi(const SHAREMIND_PD * pd) __attribute__ ((nonnull(1)));
 
-bool SMVM_PDPI_is_started(const SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
-bool SMVM_PDPI_start(SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
-void SMVM_PDPI_stop(SMVM_PDPI * pdpi) __attribute__ ((nonnull(1)));
+const char * SHAREMIND_PD_get_name(const SHAREMIND_PD * pd) __attribute__ ((nonnull(1)));
+const char * SHAREMIND_PD_get_conf(const SHAREMIND_PD * pd) __attribute__ ((nonnull(1)));
 
-int SMVM_PDPI_set_facility(SMVM_PDPI * pdpi, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
-const SMVM_Facility * SMVM_PDPI_get_facility(const SMVM_PDPI * pdpi, const char * name) __attribute__ ((nonnull(1,2)));
+void * SHAREMIND_PD_get_handle(const SHAREMIND_PD * pd) __attribute__ ((nonnull(1)));
+
+bool SHAREMIND_PD_is_started(const SHAREMIND_PD * pd) __attribute__ ((nonnull(1)));
+bool SHAREMIND_PD_start(SHAREMIND_PD * pd) __attribute__ ((nonnull(1)));
+void SHAREMIND_PD_stop(SHAREMIND_PD * pd) __attribute__ ((nonnull(1)));
+
+int SHAREMIND_PD_set_facility(SHAREMIND_PD * pd, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+const SHAREMIND_Facility * SHAREMIND_PD_get_facility(const SHAREMIND_PD * pd, const char * name) __attribute__ ((nonnull(1,2)));
+int SHAREMIND_PD_set_pdpi_facility(SHAREMIND_PD * pd, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+const SHAREMIND_Facility * SHAREMIND_PD_get_pdpi_facility(const SHAREMIND_PD * pd, const char * name) __attribute__ ((nonnull(1,2)));
+
+
+/*******************************************************************************
+  SHAREMIND_PDPI
+*******************************************************************************/
+
+SHAREMIND_PDPI * SHAREMIND_PDPI_new(SHAREMIND_PD * pd) __attribute__ ((nonnull(1)));
+void SHAREMIND_PDPI_free(SHAREMIND_PDPI * pdpi) __attribute__ ((nonnull(1)));
+
+void * SHAREMIND_PDPI_get_handle(const SHAREMIND_PDPI * pdpi) __attribute__ ((nonnull(1)));
+SHAREMIND_PD * SHAREMIND_PDPI_get_pd(const SHAREMIND_PDPI * pdpi) __attribute__ ((nonnull(1)));
+SHAREMIND_PDK * SHAREMIND_PDPI_get_pdk(const SHAREMIND_PDPI * pdpi) __attribute__ ((nonnull(1)));
+SHAREMIND_Module * SHAREMIND_PDPI_get_module(const SHAREMIND_PDPI * pdpi) __attribute__ ((nonnull(1)));
+SHAREMIND_MODAPI * SHAREMIND_PDPI_get_modapi(const SHAREMIND_PDPI * pdpi) __attribute__ ((nonnull(1)));
+
+bool SHAREMIND_PDPI_is_started(const SHAREMIND_PDPI * pdpi) __attribute__ ((nonnull(1)));
+bool SHAREMIND_PDPI_start(SHAREMIND_PDPI * pdpi) __attribute__ ((nonnull(1)));
+void SHAREMIND_PDPI_stop(SHAREMIND_PDPI * pdpi) __attribute__ ((nonnull(1)));
+
+int SHAREMIND_PDPI_set_facility(SHAREMIND_PDPI * pdpi, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+const SHAREMIND_Facility * SHAREMIND_PDPI_get_facility(const SHAREMIND_PDPI * pdpi, const char * name) __attribute__ ((nonnull(1,2)));
 
 #ifdef __cplusplus
 } /* extern "C" { */

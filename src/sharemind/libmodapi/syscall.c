@@ -18,14 +18,14 @@
 #include "module.h"
 
 
-int SMVM_Syscall_init(SMVM_Syscall * sc, const char * name, void * impl, SMVM_SyscallCallable wrapper, SMVM_Module * m) {
+int SHAREMIND_Syscall_init(SHAREMIND_Syscall * sc, const char * name, void * impl, SHAREMIND_SyscallCallable wrapper, SHAREMIND_Module * m) {
     assert(sc);
     assert(name);
     assert(impl);
     assert(m);
     assert(m->modapi);
 
-    if (!SMVM_Module_refs_ref(m)) {
+    if (!SHAREMIND_Module_refs_ref(m)) {
         OOR(m->modapi);
         return 0;
     }
@@ -34,7 +34,7 @@ int SMVM_Syscall_init(SMVM_Syscall * sc, const char * name, void * impl, SMVM_Sy
 
     sc->name = strdup(name);
     if (!sc->name) {
-        SMVM_Module_refs_unref(m);
+        SHAREMIND_Module_refs_unref(m);
         return 0;
     }
 
@@ -42,14 +42,14 @@ int SMVM_Syscall_init(SMVM_Syscall * sc, const char * name, void * impl, SMVM_Sy
         sc->wrapper.callable = wrapper;
         sc->wrapper.internal = impl;
     } else {
-        sc->wrapper.callable = (SMVM_SyscallCallable) impl;
+        sc->wrapper.callable = (SHAREMIND_SyscallCallable) impl;
         sc->wrapper.internal = NULL;
     }
     sc->module = m;
     return 1;
 }
 
-void SMVM_Syscall_destroy(SMVM_Syscall * sc) {
+void SHAREMIND_Syscall_destroy(SHAREMIND_Syscall * sc) {
     assert(sc);
     assert(sc->wrapper.callable);
     assert(sc->name);
@@ -57,22 +57,22 @@ void SMVM_Syscall_destroy(SMVM_Syscall * sc) {
     SHAREMIND_REFS_ASSERT_IF_REFERENCED(sc);
 
     free(sc->name);
-    SMVM_Module_refs_unref(sc->module);
+    SHAREMIND_Module_refs_unref(sc->module);
 }
 
-const char * SMVM_Syscall_get_name(const SMVM_Syscall * sc) {
+const char * SHAREMIND_Syscall_get_name(const SHAREMIND_Syscall * sc) {
     assert(sc);
     assert(sc->name);
     return sc->name;
 }
 
-SMVM_Module * SMVM_Syscall_get_module(const SMVM_Syscall * sc) {
+SHAREMIND_Module * SHAREMIND_Syscall_get_module(const SHAREMIND_Syscall * sc) {
     assert(sc);
     assert(sc->module);
     return sc->module;
 }
 
-SMVM_MODAPI * SMVM_Syscall_get_modapi(const SMVM_Syscall * sc) {
+SHAREMIND_MODAPI * SHAREMIND_Syscall_get_modapi(const SHAREMIND_Syscall * sc) {
     assert(sc);
     assert(sc->module);
     assert(sc->module->modapi);
@@ -80,13 +80,13 @@ SMVM_MODAPI * SMVM_Syscall_get_modapi(const SMVM_Syscall * sc) {
 }
 
 /**
-  \note According to the AMD64 ABI, returning _SMVM_SyscallWrapper should be
+  \note According to the AMD64 ABI, returning _SHAREMIND_SyscallWrapper should be
         fast, because this struct will be returned in %rax and %rdx.
 */
-SMVM_SyscallWrapper SMVM_Syscall_get_wrapper(const SMVM_Syscall * sc) {
+SHAREMIND_SyscallWrapper SHAREMIND_Syscall_get_wrapper(const SHAREMIND_Syscall * sc) {
     assert(sc);
     assert(sc->wrapper.callable);
     return sc->wrapper;
 }
 
-SHAREMIND_REFS_DEFINE_FUNCTIONS(SMVM_Syscall)
+SHAREMIND_REFS_DEFINE_FUNCTIONS(SHAREMIND_Syscall)

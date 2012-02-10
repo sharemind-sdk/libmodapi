@@ -26,35 +26,35 @@ extern "C" {
 #endif
 
 
-struct _SMVM_MODAPI {
-    SMVM_MODAPI_Error lastError;
+struct _SHAREMIND_MODAPI {
+    SHAREMIND_MODAPI_Error lastError;
     const char * lastErrorStaticString;
     char * lastErrorDynamicString;
 
     /** Module facility name to pointer mapping: */
-    SMVM_FacilityMap moduleFacilityMap;
+    SHAREMIND_FacilityMap moduleFacilityMap;
 
     /** PD facility name to pointer mapping: */
-    SMVM_FacilityMap pdFacilityMap;
+    SHAREMIND_FacilityMap pdFacilityMap;
 
     /** PDPI facility name to pointer mapping: */
-    SMVM_FacilityMap pdpiFacilityMap;
+    SHAREMIND_FacilityMap pdpiFacilityMap;
 
     SHAREMIND_REFS_DECLARE_FIELDS
 };
 
-void SMVM_MODAPI_setErrorWithStaticString(SMVM_MODAPI * modapi,
-                                          SMVM_MODAPI_Error error,
+void SHAREMIND_MODAPI_setErrorWithStaticString(SHAREMIND_MODAPI * modapi,
+                                          SHAREMIND_MODAPI_Error error,
                                           const char * errorString) __attribute__ ((nonnull(1)));
 
-#define OOM(modapi) if (1) { SMVM_MODAPI_setErrorWithStaticString((modapi), SMVM_MODAPI_OUT_OF_MEMORY, "Out of memory!"); } else (void) 0
-#define OOR(modapi) if (1) { SMVM_MODAPI_setErrorWithStaticString((modapi), SMVM_MODAPI_REFERENCE_OVERFLOW, "Too many references!"); } else (void) 0
+#define OOM(modapi) if (1) { SHAREMIND_MODAPI_setErrorWithStaticString((modapi), SHAREMIND_MODAPI_OUT_OF_MEMORY, "Out of memory!"); } else (void) 0
+#define OOR(modapi) if (1) { SHAREMIND_MODAPI_setErrorWithStaticString((modapi), SHAREMIND_MODAPI_REFERENCE_OVERFLOW, "Too many references!"); } else (void) 0
 
-bool SMVM_MODAPI_setErrorWithDynamicString(SMVM_MODAPI * modapi,
-                                           SMVM_MODAPI_Error error,
+bool SHAREMIND_MODAPI_setErrorWithDynamicString(SHAREMIND_MODAPI * modapi,
+                                           SHAREMIND_MODAPI_Error error,
                                            const char * errorString) __attribute__ ((nonnull(1)));
 
-SHAREMIND_REFS_DECLARE_FUNCTIONS(SMVM_MODAPI)
+SHAREMIND_REFS_DECLARE_FUNCTIONS(SHAREMIND_MODAPI)
 
 
 #ifdef __cplusplus

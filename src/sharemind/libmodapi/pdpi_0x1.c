@@ -20,15 +20,15 @@
 #include "pdpi.h"
 
 
-static const SMVM_Facility * SMVM_PDPI_get_facility_wrapper(SMVM_MODAPI_0x1_PDPI_Wrapper * w, const char * name) {
+static const SHAREMIND_Facility * SHAREMIND_PDPI_get_facility_wrapper(SHAREMIND_MODAPI_0x1_PDPI_Wrapper * w, const char * name) {
     assert(w);
     assert(w->internal);
     assert(name);
     assert(name[0]);
-    return SMVM_PDPI_get_facility((SMVM_PDPI *) w->internal, name);
+    return SHAREMIND_PDPI_get_facility((SHAREMIND_PDPI *) w->internal, name);
 }
 
-bool SMVM_PDPI_start_0x1(SMVM_PDPI * pdpi) {
+bool SHAREMIND_PDPI_start_0x1(SHAREMIND_PDPI * pdpi) {
     assert(pdpi);
     assert(pdpi->pd);
     assert(pdpi->pd->pdk);
@@ -36,16 +36,16 @@ bool SMVM_PDPI_start_0x1(SMVM_PDPI * pdpi) {
     assert(pdpi->pd->pdk->module->modapi);
     assert(pdpi->pd->pdk->pdpi_startup_impl_or_wrapper);
 
-    const SMVM_PD * const pd = pdpi->pd;
-    SMVM_MODAPI_0x1_PDPI_Wrapper pdpiWrapper = {
+    const SHAREMIND_PD * const pd = pdpi->pd;
+    SHAREMIND_MODAPI_0x1_PDPI_Wrapper pdpiWrapper = {
         .pdProcessHandle = NULL, /* Just in case */
         .pdHandle = pd->pdHandle,
-        .getPdpiFacility = &SMVM_PDPI_get_facility_wrapper,
+        .getPdpiFacility = &SHAREMIND_PDPI_get_facility_wrapper,
         .internal = pdpi
     };
 
-    const SMVM_PDK * const pdk = pd->pdk;
-    const int r = (*((SMVM_MODAPI_0x1_PDPI_Startup) pdk->pdpi_startup_impl_or_wrapper))(&pdpiWrapper);
+    const SHAREMIND_PDK * const pdk = pd->pdk;
+    const int r = (*((SHAREMIND_MODAPI_0x1_PDPI_Startup) pdk->pdpi_startup_impl_or_wrapper))(&pdpiWrapper);
     if (likely(r == 0)) {
         pdpi->pdProcessHandle = pdpiWrapper.pdProcessHandle;
         return true;
@@ -56,22 +56,22 @@ bool SMVM_PDPI_start_0x1(SMVM_PDPI * pdpi) {
     char * const errorString = (char *) malloc(len);
     if (likely(errorString))
         snprintf(errorString, len, errorFormatString, r);
-    SMVM_MODAPI_setErrorWithDynamicString(pdk->module->modapi, SMVM_MODAPI_PDPI_STARTUP_FAILED, errorString);
+    SHAREMIND_MODAPI_setErrorWithDynamicString(pdk->module->modapi, SHAREMIND_MODAPI_PDPI_STARTUP_FAILED, errorString);
     return false;
 }
 
-void SMVM_PDPI_stop_0x1(SMVM_PDPI * pdpi) {
+void SHAREMIND_PDPI_stop_0x1(SHAREMIND_PDPI * pdpi) {
     assert(pdpi);
     assert(pdpi->pd);
     assert(pdpi->pd->pdk);
     assert(pdpi->pd->pdk->pdpi_shutdown_impl_or_wrapper);
 
-    const SMVM_PD * const pd = pdpi->pd;
-    SMVM_MODAPI_0x1_PDPI_Wrapper pdpiWrapper = {
+    const SHAREMIND_PD * const pd = pdpi->pd;
+    SHAREMIND_MODAPI_0x1_PDPI_Wrapper pdpiWrapper = {
         .pdProcessHandle = pdpi->pdProcessHandle,
         .pdHandle = pd->pdHandle,
-        .getPdpiFacility = &SMVM_PDPI_get_facility_wrapper,
+        .getPdpiFacility = &SHAREMIND_PDPI_get_facility_wrapper,
         .internal = pdpi
     };
-    (*((SMVM_MODAPI_0x1_PDPI_Shutdown) pd->pdk->pdpi_shutdown_impl_or_wrapper))(&pdpiWrapper);
+    (*((SHAREMIND_MODAPI_0x1_PDPI_Shutdown) pd->pdk->pdpi_shutdown_impl_or_wrapper))(&pdpiWrapper);
 }

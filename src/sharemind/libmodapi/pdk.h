@@ -7,8 +7,8 @@
  * code is subject to the appropriate license agreement.
  */
 
-#ifndef SHAREMIND_LIBSMVM_PDK_H
-#define SHAREMIND_LIBSMVM_PDK_H
+#ifndef SHAREMIND_LIBSHAREMIND_PDK_H
+#define SHAREMIND_LIBSHAREMIND_PDK_H
 
 #ifndef SHAREMIND_INTERNAL__
 #error including an internal header!
@@ -24,11 +24,11 @@ extern "C" {
 #endif
 
 
-struct SMVM_PDK_ {
+struct SHAREMIND_PDK_ {
 
     /**
       The index of the protection domain kind in the
-      SMVM_MODAPI_0x1_PDK_Definitions list of the module.
+      SHAREMIND_MODAPI_0x1_PDK_Definitions list of the module.
     */
     size_t pdk_index;
 
@@ -60,19 +60,19 @@ struct SMVM_PDK_ {
     void * pdpi_shutdown_null_or_impl;
 
     /** Pointer to the module which provides this protection domain kind. */
-    SMVM_Module * module;
+    SHAREMIND_Module * module;
 
     /** PD facility name to pointer mapping: */
-    SMVM_FacilityMap pdFacilityMap;
+    SHAREMIND_FacilityMap pdFacilityMap;
 
     /** PDPI facility name to pointer mapping: */
-    SMVM_FacilityMap pdpiFacilityMap;
+    SHAREMIND_FacilityMap pdpiFacilityMap;
 
     SHAREMIND_REFS_DECLARE_FIELDS
 
 };
 
-int SMVM_PDK_init(SMVM_PDK * pdk,
+int SHAREMIND_PDK_init(SHAREMIND_PDK * pdk,
                   size_t pdk_index,
                   const char * name,
                   void * pd_startup_impl,
@@ -83,14 +83,14 @@ int SMVM_PDK_init(SMVM_PDK * pdk,
                   void * pdpi_startup_wrapper,
                   void * pdpi_shutdown_impl,
                   void * pdpi_shutdown_wrapper,
-                  SMVM_Module * module) __attribute__ ((nonnull(1, 3, 4, 6, 8, 10, 12)));
-void SMVM_PDK_destroy(SMVM_PDK * pdk) __attribute__ ((nonnull(1)));
+                  SHAREMIND_Module * module) __attribute__ ((nonnull(1, 3, 4, 6, 8, 10, 12)));
+void SHAREMIND_PDK_destroy(SHAREMIND_PDK * pdk) __attribute__ ((nonnull(1)));
 
-SHAREMIND_REFS_DECLARE_FUNCTIONS(SMVM_PDK)
+SHAREMIND_REFS_DECLARE_FUNCTIONS(SHAREMIND_PDK)
 
 
 #ifdef __cplusplus
 } /* extern "C" { */
 #endif
 
-#endif /* SHAREMIND_LIBSMVM_PDK_H */
+#endif /* SHAREMIND_LIBSHAREMIND_PDK_H */

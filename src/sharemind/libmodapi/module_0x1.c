@@ -69,14 +69,14 @@ SharemindModuleApiError SHAREMIND_Module_load_0x1(SharemindModule * m) {
     }
 
     /* Handle loader function: */
-    apiData->initializer = (SharemindModuleApi0x1ModuleInitializer) dlsym(m->handle, "sharemindModuleApi0x1ModuleInit");
+    apiData->initializer = (SharemindModuleApi0x1ModuleInitializer) dlsym(m->handle, "sharemind_module_api_0x1_module_init");
     if (unlikely(!apiData->initializer)) {
         status = SHAREMIND_MODAPI_API_ERROR;
         goto loadModule_0x1_fail_1;
     }
 
     /* Handle unloader function: */
-    apiData->deinitializer = (SharemindModuleApi0x1ModuleDeinitializer) dlsym(m->handle, "sharemindModuleApi0x1ModuleDeinit");
+    apiData->deinitializer = (SharemindModuleApi0x1ModuleDeinitializer) dlsym(m->handle, "sharemind_module_api_0x1_module_deinit");
     if (unlikely(!apiData->deinitializer)) {
         status = SHAREMIND_MODAPI_API_ERROR;
         goto loadModule_0x1_fail_1;

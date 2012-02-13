@@ -99,12 +99,12 @@ struct SharemindModuleApi0x1ModuleContext_ {
 /** Module initializer function signature: */
 typedef SharemindModuleApi0x1InitializerCode (*SharemindModuleApi0x1ModuleInitializer)(SharemindModuleApi0x1ModuleContext * c);
 #define SHAREMIND_MODULE_API_0x1_INITIALIZER(c) \
-    SharemindModuleApi0x1InitializerCode sharemindModuleApi0x1ModuleInit(SharemindModuleApi0x1ModuleContext * c)
+    SharemindModuleApi0x1InitializerCode sharemind_module_api_0x1_module_init(SharemindModuleApi0x1ModuleContext * c)
 
 /** Module deinitializer function signature: */
 typedef void (*SharemindModuleApi0x1ModuleDeinitializer)(SharemindModuleApi0x1ModuleContext * c);
 #define SHAREMIND_MODULE_API_0x1_DEINITIALIZER(c) \
-    void sharemindModuleApi0x1ModuleDeinit(SharemindModuleApi0x1ModuleContext * c)
+    void sharemind_module_api_0x1_module_deinit(SharemindModuleApi0x1ModuleContext * c)
 
 
 /*******************************************************************************

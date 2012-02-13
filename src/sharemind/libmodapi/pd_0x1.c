@@ -19,7 +19,7 @@
 #include "pdk.h"
 
 
-static const SharemindFacility * SHAREMIND_PD_get_facility_wrapper(SHAREMIND_MODAPI_0x1_PD_Wrapper * w, const char * name) {
+static const SharemindFacility * SHAREMIND_PD_get_facility_wrapper(SharemindModuleApi0x1PdWrapper * w, const char * name) {
     assert(w);
     assert(w->internal);
     assert(name);
@@ -28,8 +28,8 @@ static const SharemindFacility * SHAREMIND_PD_get_facility_wrapper(SHAREMIND_MOD
 }
 
 static inline void SHAREMIND_PD_init_start_stop_wrappers(SharemindPd * pd,
-                                                    SHAREMIND_MODAPI_0x1_PD_Conf * pdConf,
-                                                    SHAREMIND_MODAPI_0x1_PD_Wrapper * pdWrapper)
+                                                    SharemindModuleApi0x1PdConf * pdConf,
+                                                    SharemindModuleApi0x1PdWrapper * pdWrapper)
 {
     assert(pd);
     assert(pd->pdk);
@@ -50,13 +50,13 @@ bool SHAREMIND_PD_start_0x1(SharemindPd * pd) {
     assert(pd);
     assert(!pd->isStarted);
 
-    SHAREMIND_MODAPI_0x1_PD_Conf pdConf;
-    SHAREMIND_MODAPI_0x1_PD_Wrapper pdWrapper;
+    SharemindModuleApi0x1PdConf pdConf;
+    SharemindModuleApi0x1PdWrapper pdWrapper;
     SHAREMIND_PD_init_start_stop_wrappers(pd, &pdConf, &pdWrapper);
     const SharemindPdk * const pdk = pd->pdk;
     pdWrapper.internal = pd;
 
-    const int r = (*((SHAREMIND_MODAPI_0x1_PD_Startup) pdk->pd_startup_impl_or_wrapper))(&pdWrapper);
+    const int r = (*((SharemindModuleApi0x1PdStartup) pdk->pd_startup_impl_or_wrapper))(&pdWrapper);
     if (likely(r == 0)) {
         pd->pdHandle = pdWrapper.pdHandle;
         pd->isStarted = true;
@@ -79,11 +79,11 @@ void SHAREMIND_PD_stop_0x1(SharemindPd * pd) {
     assert(pd->pdk->pd_shutdown_impl_or_wrapper);
 
 
-    SHAREMIND_MODAPI_0x1_PD_Conf pdConf;
-    SHAREMIND_MODAPI_0x1_PD_Wrapper pdWrapper;
+    SharemindModuleApi0x1PdConf pdConf;
+    SharemindModuleApi0x1PdWrapper pdWrapper;
     SHAREMIND_PD_init_start_stop_wrappers(pd, &pdConf, &pdWrapper);
     const SharemindPdk * const pdk = pd->pdk;
     pdWrapper.internal = pd;
 
-    (*((SHAREMIND_MODAPI_0x1_PD_Shutdown) pdk->pd_shutdown_impl_or_wrapper))(&pdWrapper);
+    (*((SharemindModuleApi0x1PdShutdown) pdk->pd_shutdown_impl_or_wrapper))(&pdWrapper);
 }

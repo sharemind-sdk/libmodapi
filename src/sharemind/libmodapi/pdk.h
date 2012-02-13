@@ -28,7 +28,7 @@ struct SharemindPdk_ {
 
     /**
       The index of the protection domain kind in the
-      SHAREMIND_MODAPI_0x1_PDK_Definitions list of the module.
+      SharemindModuleApi0x1PdkDefinitions list of the module.
     */
     size_t pdk_index;
 

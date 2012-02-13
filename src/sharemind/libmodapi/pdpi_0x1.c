@@ -20,7 +20,7 @@
 #include "pdpi.h"
 
 
-static const SharemindFacility * SHAREMIND_PDPI_get_facility_wrapper(SHAREMIND_MODAPI_0x1_PDPI_Wrapper * w, const char * name) {
+static const SharemindFacility * SHAREMIND_PDPI_get_facility_wrapper(SharemindModuleApi0x1PdpiWrapper * w, const char * name) {
     assert(w);
     assert(w->internal);
     assert(name);
@@ -37,7 +37,7 @@ bool SHAREMIND_PDPI_start_0x1(SharemindPdpi * pdpi) {
     assert(pdpi->pd->pdk->pdpi_startup_impl_or_wrapper);
 
     const SharemindPd * const pd = pdpi->pd;
-    SHAREMIND_MODAPI_0x1_PDPI_Wrapper pdpiWrapper = {
+    SharemindModuleApi0x1PdpiWrapper pdpiWrapper = {
         .pdProcessHandle = NULL, /* Just in case */
         .pdHandle = pd->pdHandle,
         .getPdpiFacility = &SHAREMIND_PDPI_get_facility_wrapper,
@@ -45,7 +45,7 @@ bool SHAREMIND_PDPI_start_0x1(SharemindPdpi * pdpi) {
     };
 
     const SharemindPdk * const pdk = pd->pdk;
-    const int r = (*((SHAREMIND_MODAPI_0x1_PDPI_Startup) pdk->pdpi_startup_impl_or_wrapper))(&pdpiWrapper);
+    const int r = (*((SharemindModuleApi0x1PdpiStartup) pdk->pdpi_startup_impl_or_wrapper))(&pdpiWrapper);
     if (likely(r == 0)) {
         pdpi->pdProcessHandle = pdpiWrapper.pdProcessHandle;
         return true;
@@ -67,11 +67,11 @@ void SHAREMIND_PDPI_stop_0x1(SharemindPdpi * pdpi) {
     assert(pdpi->pd->pdk->pdpi_shutdown_impl_or_wrapper);
 
     const SharemindPd * const pd = pdpi->pd;
-    SHAREMIND_MODAPI_0x1_PDPI_Wrapper pdpiWrapper = {
+    SharemindModuleApi0x1PdpiWrapper pdpiWrapper = {
         .pdProcessHandle = pdpi->pdProcessHandle,
         .pdHandle = pd->pdHandle,
         .getPdpiFacility = &SHAREMIND_PDPI_get_facility_wrapper,
         .internal = pdpi
     };
-    (*((SHAREMIND_MODAPI_0x1_PDPI_Shutdown) pd->pdk->pdpi_shutdown_impl_or_wrapper))(&pdpiWrapper);
+    (*((SharemindModuleApi0x1PdpiShutdown) pd->pdk->pdpi_shutdown_impl_or_wrapper))(&pdpiWrapper);
 }

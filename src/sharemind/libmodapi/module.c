@@ -56,7 +56,7 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
     }
 
     /* Determine API version to use: */
-    modApiVersions = (const uint32_t (*)[]) dlsym(m->handle, "SHAREMIND_MOD_api_versions");
+    modApiVersions = (const uint32_t (*)[]) dlsym(m->handle, "sharemindModuleApiSupportedVersions");
     if (unlikely(!modApiVersions || (*modApiVersions)[0] == 0u)) {
         SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODAPI_INVALID_MODULE, dlerror());
         goto SHAREMIND_Module_new_fail_2;
@@ -78,7 +78,7 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
     m->api = &SHAREMIND_APIs[m->apiVersion - 1u];
 
     /* Determine module name: */
-    modName = (const char **) dlsym(m->handle, "SHAREMIND_MOD_name");
+    modName = (const char **) dlsym(m->handle, "sharemindModuleApiModuleName");
     if (unlikely(!modName)) {
         SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODAPI_INVALID_MODULE, dlerror());
         goto SHAREMIND_Module_new_fail_2;
@@ -94,7 +94,7 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
     }
 
     /* Determine module version: */
-    modVersion = (const uint32_t *) dlsym(m->handle, "SHAREMIND_MOD_version");
+    modVersion = (const uint32_t *) dlsym(m->handle, "sharemindModuleApiModuleVersion");
     if (unlikely(!modVersion)) {
         SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODAPI_INVALID_MODULE, dlerror());
         goto SHAREMIND_Module_new_fail_3;

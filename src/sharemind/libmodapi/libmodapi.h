@@ -26,9 +26,9 @@ extern "C" {
   Most recent API aliases
 *******************************************************************************/
 
-typedef SHAREMIND_MODAPI_0x1_Syscall SharemindSyscallCallable;
-typedef SHAREMIND_MODAPI_0x1_Syscall_Context SharemindSyscallContext;
-typedef SHAREMIND_MODAPI_0x1_Facility SharemindFacility;
+typedef SharemindModuleApi0x1Syscall SharemindSyscallCallable;
+typedef SharemindModuleApi0x1SyscallContext SharemindSyscallContext;
+typedef SharemindModuleApi0x1Facility SharemindFacility;
 
 
 /*******************************************************************************

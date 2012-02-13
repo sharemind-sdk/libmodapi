@@ -20,9 +20,9 @@ extern "C" {
 #endif
 
 #ifdef SHAREMIND_INTERNAL__
-#define ICONST
+#define SHAREMIND_ICONST
 #else
-#define ICONST const
+#define SHAREMIND_ICONST const
 #endif
 
 
@@ -30,9 +30,17 @@ extern "C" {
   OVERALL MODULE LEVEL
 *******************************************************************************/
 
-#define SHAREMIND_MOD_API_VERSIONS(v) const uint32_t SHAREMIND_MOD_api_versions[] = { v, 0x0 }
-#define SHAREMIND_MOD_NAME(n) const char * const SHAREMIND_MOD_name = (n)
-#define SHAREMIND_MOD_VERSION(v) const uint32_t SHAREMIND_MOD_version = (v)
+typedef const uint32_t SharemindModuleApiSupportedVersions[];
+#define SHAREMIND_MODULE_API_SUPPORTED_VERSIONS(v) \
+    SharemindModuleApiSupportedVersions sharemindModuleApiSupportedVersions = { v, 0x0 }
+
+typedef const char * const SharemindModuleApiModuleName;
+#define SHAREMIND_MODULE_API_MODULE_NAME(n) \
+    SharemindModuleApiModuleName sharemindModuleApiModuleName = (n)
+
+typedef const uint32_t SharemindModuleApiModuleVersion;
+#define SHAREMIND_MODULE_API_MODULE_VERSION(v) \
+    SharemindModuleApiModuleVersion sharemindModuleApiModuleVersion = (v)
 
 
 /*******************************************************************************
@@ -40,36 +48,36 @@ extern "C" {
 *******************************************************************************/
 
 /* Forward declarations: */
-struct SHAREMIND_MODAPI_0x1_Module_Context_;
-struct SHAREMIND_MODAPI_0x1_Reference_;
-struct SHAREMIND_MODAPI_0x1_CReference_;
-struct SHAREMIND_MODAPI_0x1_Syscall_Context_;
-struct SHAREMIND_MODAPI_0x1_Syscall_Definition_;
-struct SHAREMIND_MODAPI_0x1_PD_Conf_;
-struct SHAREMIND_MODAPI_0x1_PD_Wrapper_;
-struct SHAREMIND_MODAPI_0x1_PDPI_Wrapper_;
-struct SHAREMIND_MODAPI_0x1_PDK_Definition_;
+struct SharemindModuleApi0x1ModuleContext_;
+struct SharemindModuleApi0x1Reference_;
+struct SharemindModuleApi0x1CReference_;
+struct SharemindModuleApi0x1SyscallContext_;
+struct SharemindModuleApi0x1SyscallDefinition_;
+struct SharemindModuleApi0x1PdConf_;
+struct SharemindModuleApi0x1PdWrapper_;
+struct SharemindModuleApi0x1PdpiWrapper_;
+struct SharemindModuleApi0x1PdkDefinition_;
 
 
 /** Possible return codes returned by the Sharemind module initializer */
 typedef enum {
-    SHAREMIND_MODAPI_0x1_IC_OK = 0,
-    SHAREMIND_MODAPI_0x1_IC_OUT_OF_MEMORY,
-    SHAREMIND_MODAPI_0x1_IC_ERROR
-} SHAREMIND_MODAPI_0x1_Initializer_Code;
+    SHAREMIND_MODULE_API_0x1_IC_OK = 0,
+    SHAREMIND_MODULE_API_0x1_IC_OUT_OF_MEMORY,
+    SHAREMIND_MODULE_API_0x1_IC_ERROR
+} SharemindModuleApi0x1InitializerCode;
 
 /** A facility with a context. */
 typedef struct {
     void * facility;
     void * context;
-} SHAREMIND_MODAPI_0x1_Facility;
+} SharemindModuleApi0x1Facility;
 
 /** Environment passed to a Sharemind module initializer and deinitializer: */
-typedef struct SHAREMIND_MODAPI_0x1_Module_Context_ SHAREMIND_MODAPI_0x1_Module_Context;
-struct SHAREMIND_MODAPI_0x1_Module_Context_ {
+typedef struct SharemindModuleApi0x1ModuleContext_ SharemindModuleApi0x1ModuleContext;
+struct SharemindModuleApi0x1ModuleContext_ {
 
     /** Internal pointer, do not use! */
-    ICONST void * ICONST internal;
+    SHAREMIND_ICONST void * SHAREMIND_ICONST internal;
 
     /**
       A handle for module instance data. Inside SHAREMIND_syscall_context and others,
@@ -79,20 +87,24 @@ struct SHAREMIND_MODAPI_0x1_Module_Context_ {
 
     /**
       \brief Finds a module specific system facility.
-      \param wrapper Pointer to this SHAREMIND_MODAPI_0x1_Module_Context instance.
+      \param wrapper Pointer to this SharemindModuleApi0x1ModuleContext instance.
       \param[in] name Name of the facility.
       \returns a pointer to the facility and its context.
       \retval NULL if no such facility is associated with this module.
     */
-    const SHAREMIND_MODAPI_0x1_Facility * (* ICONST getModuleFacility)(SHAREMIND_MODAPI_0x1_Module_Context * w, const char * name);
+    const SharemindModuleApi0x1Facility * (* SHAREMIND_ICONST getModuleFacility)(SharemindModuleApi0x1ModuleContext * w, const char * name);
 
 };
 
 /** Module initializer function signature: */
-typedef SHAREMIND_MODAPI_0x1_Initializer_Code (*SHAREMIND_MODAPI_0x1_Module_Initializer)(SHAREMIND_MODAPI_0x1_Module_Context * c);
+typedef SharemindModuleApi0x1InitializerCode (*SharemindModuleApi0x1ModuleInitializer)(SharemindModuleApi0x1ModuleContext * c);
+#define SHAREMIND_MODULE_API_0x1_INITIALIZER(c) \
+    SharemindModuleApi0x1InitializerCode sharemindModuleApi0x1ModuleInit(SharemindModuleApi0x1ModuleContext * c)
 
 /** Module deinitializer function signature: */
-typedef void (*SHAREMIND_MODAPI_0x1_Module_Deinitializer)(SHAREMIND_MODAPI_0x1_Module_Context * c);
+typedef void (*SharemindModuleApi0x1ModuleDeinitializer)(SharemindModuleApi0x1ModuleContext * c);
+#define SHAREMIND_MODULE_API_0x1_DEINITIALIZER(c) \
+    void sharemindModuleApi0x1ModuleDeinit(SharemindModuleApi0x1ModuleContext * c)
 
 
 /*******************************************************************************
@@ -100,59 +112,59 @@ typedef void (*SHAREMIND_MODAPI_0x1_Module_Deinitializer)(SHAREMIND_MODAPI_0x1_M
 *******************************************************************************/
 
 /** Mutable references */
-typedef struct SHAREMIND_MODAPI_0x1_Reference_ SHAREMIND_MODAPI_0x1_Reference;
-struct SHAREMIND_MODAPI_0x1_Reference_ {
+typedef struct SharemindModuleApi0x1Reference_ SharemindModuleApi0x1Reference;
+struct SharemindModuleApi0x1Reference_ {
 
     /** Internal pointer, do not use! */
-    ICONST void * ICONST internal;
+    SHAREMIND_ICONST void * SHAREMIND_ICONST internal;
 
     /** Pointer to referenced data. */
-    void * ICONST pData;
+    void * SHAREMIND_ICONST pData;
 
     /** Size of referenced data. */
-    ICONST size_t size;
+    SHAREMIND_ICONST size_t size;
 
 };
 
 /** Constant references */
-typedef struct SHAREMIND_MODAPI_0x1_CReference_ SHAREMIND_MODAPI_0x1_CReference;
-struct SHAREMIND_MODAPI_0x1_CReference_ {
+typedef struct SharemindModuleApi0x1CReference_ SharemindModuleApi0x1CReference;
+struct SharemindModuleApi0x1CReference_ {
 
     /** Internal pointer, do not use! */
-    ICONST void * ICONST internal;
+    SHAREMIND_ICONST void * SHAREMIND_ICONST internal;
 
     /** Pointer to referenced data. */
-    const void * ICONST pData;
+    const void * SHAREMIND_ICONST pData;
 
     /** Size of referenced data. */
-    ICONST size_t size;
+    SHAREMIND_ICONST size_t size;
 
 };
 
 /** Possible return codes returned by system calls */
 typedef enum {
-    SHAREMIND_MODAPI_0x1_SC_OK = 0x00,
-    SHAREMIND_MODAPI_0x1_SC_OUT_OF_MEMORY = 0x01,
-    SHAREMIND_MODAPI_0x1_SC_INVALID_CALL = 0x02,
-    SHAREMIND_MODAPI_0x1_SC_GENERAL_FAILURE = 0x03
-} SHAREMIND_MODAPI_0x1_Syscall_Code;
+    SHAREMIND_MODULE_API_0x1_SC_OK = 0x00,
+    SHAREMIND_MODULE_API_0x1_SC_OUT_OF_MEMORY = 0x01,
+    SHAREMIND_MODULE_API_0x1_SC_INVALID_CALL = 0x02,
+    SHAREMIND_MODULE_API_0x1_SC_GENERAL_FAILURE = 0x03
+} SharemindModuleApi0x1SyscallCode;
 
 /** Additional context provided for system calls: */
-typedef struct SHAREMIND_MODAPI_0x1_Syscall_Context_ SHAREMIND_MODAPI_0x1_Syscall_Context;
-struct SHAREMIND_MODAPI_0x1_Syscall_Context_ {
+typedef struct SharemindModuleApi0x1SyscallContext_ SharemindModuleApi0x1SyscallContext;
+struct SharemindModuleApi0x1SyscallContext_ {
 
     /** Internal pointer, do not use! */
-    ICONST void * ICONST internal;
+    SHAREMIND_ICONST void * SHAREMIND_ICONST internal;
 
     /** Internal pointer, do not use! */
-    ICONST void * ICONST libmodapi_internal;
+    SHAREMIND_ICONST void * SHAREMIND_ICONST libmodapi_internal;
 
     /**
       A handle to the private data of the module instance. This is the same
-      handle as provided to SHAREMIND_MODAPI_0x1_Module_Context on module
+      handle as provided to SharemindModuleApi0x1ModuleContext on module
       initialization.
     */
-    void * ICONST moduleHandle;
+    void * SHAREMIND_ICONST moduleHandle;
 
     /**
       Used to get access to internal data of protection domain per-process data
@@ -164,30 +176,30 @@ struct SHAREMIND_MODAPI_0x1_Syscall_Context_ {
       \param[out] moduleHandle Where to save the pointer to protection domain module data.
       \returns an error code or 0 on success.
     */
-    int (* ICONST get_pd_process_instance_handle)(SHAREMIND_MODAPI_0x1_Syscall_Context * c,
+    int (* SHAREMIND_ICONST get_pd_process_instance_handle)(SharemindModuleApi0x1SyscallContext * c,
                                                   uint64_t pd_index,
                                                   void ** pdProcessHandle,
                                                   size_t * pdkIndex,
                                                   void ** moduleHandle);
 
     /** Access to public dynamic memory inside the VM process: */
-    uint64_t (* ICONST publicAlloc)(SHAREMIND_MODAPI_0x1_Syscall_Context * c, size_t nBytes);
-    int (* ICONST publicFree)(SHAREMIND_MODAPI_0x1_Syscall_Context * c, uint64_t ptr);
-    size_t (* ICONST publicMemPtrSize)(SHAREMIND_MODAPI_0x1_Syscall_Context * c, uint64_t ptr);
-    void * (* ICONST publicMemPtrData)(SHAREMIND_MODAPI_0x1_Syscall_Context * c, uint64_t ptr);
+    uint64_t (* SHAREMIND_ICONST publicAlloc)(SharemindModuleApi0x1SyscallContext * c, size_t nBytes);
+    int (* SHAREMIND_ICONST publicFree)(SharemindModuleApi0x1SyscallContext * c, uint64_t ptr);
+    size_t (* SHAREMIND_ICONST publicMemPtrSize)(SharemindModuleApi0x1SyscallContext * c, uint64_t ptr);
+    void * (* SHAREMIND_ICONST publicMemPtrData)(SharemindModuleApi0x1SyscallContext * c, uint64_t ptr);
 
     /** Access to dynamic memory not exposed to VM instructions: */
-    void * (* ICONST allocPrivate)(SHAREMIND_MODAPI_0x1_Syscall_Context * c, size_t nBytes);
-    int (* ICONST freePrivate)(SHAREMIND_MODAPI_0x1_Syscall_Context * c, void * ptr);
-    int (* ICONST reservePrivate)(SHAREMIND_MODAPI_0x1_Syscall_Context * c, size_t nBytes);
-    int (* ICONST releasePrivate)(SHAREMIND_MODAPI_0x1_Syscall_Context * c, size_t nBytes);
+    void * (* SHAREMIND_ICONST allocPrivate)(SharemindModuleApi0x1SyscallContext * c, size_t nBytes);
+    int (* SHAREMIND_ICONST freePrivate)(SharemindModuleApi0x1SyscallContext * c, void * ptr);
+    int (* SHAREMIND_ICONST reservePrivate)(SharemindModuleApi0x1SyscallContext * c, size_t nBytes);
+    int (* SHAREMIND_ICONST releasePrivate)(SharemindModuleApi0x1SyscallContext * c, size_t nBytes);
 
     /* OTHER STUFF */
 
 };
 
 /** System call function signature: */
-typedef SHAREMIND_MODAPI_0x1_Syscall_Code (* SHAREMIND_MODAPI_0x1_Syscall)(
+typedef SharemindModuleApi0x1SyscallCode (* SharemindModuleApi0x1Syscall)(
     /**
       Pointer to array of regular arguments passed to syscall.
       \warning might be NULL if num_args is zero.
@@ -205,7 +217,7 @@ typedef SHAREMIND_MODAPI_0x1_Syscall_Code (* SHAREMIND_MODAPI_0x1_Syscall)(
       the pData field set to NULL, i.e. the array contains at minimum one item
       and the terminator.
     */
-    const SHAREMIND_MODAPI_0x1_Reference * refs,
+    const SharemindModuleApi0x1Reference * refs,
 
     /**
       Pointer to array of immutable references passed to syscall. NULL if no
@@ -213,7 +225,7 @@ typedef SHAREMIND_MODAPI_0x1_Syscall_Code (* SHAREMIND_MODAPI_0x1_Syscall)(
       the pData field set to NULL, i.e. the array contains at minimum one item
       and the terminator.
     */
-    const SHAREMIND_MODAPI_0x1_CReference * crefs,
+    const SharemindModuleApi0x1CReference * crefs,
 
     /**
       The pointer to where the return value of the syscall should be written, or
@@ -222,23 +234,38 @@ typedef SHAREMIND_MODAPI_0x1_Syscall_Code (* SHAREMIND_MODAPI_0x1_Syscall)(
     SharemindCodeBlock * returnValue,
 
     /** Additional system call context. */
-    SHAREMIND_MODAPI_0x1_Syscall_Context * c
+    SharemindModuleApi0x1SyscallContext * c
 );
+#define SHAREMIND_MODULE_API_0x1_SYSCALL(name,args,num_args,refs,crefs,returnValue,c) \
+    SharemindModuleApi0x1SyscallCode name( \
+        SharemindCodeBlock * args, \
+        size_t num_args, \
+        const SharemindModuleApi0x1Reference * refs, \
+        const SharemindModuleApi0x1CReference * crefs, \
+        SharemindCodeBlock * returnValue, \
+        SharemindModuleApi0x1SyscallContext * c)
 
 /** System call list item:*/
-typedef const struct SHAREMIND_MODAPI_0x1_Syscall_Definition_ SHAREMIND_MODAPI_0x1_Syscall_Definition;
-struct SHAREMIND_MODAPI_0x1_Syscall_Definition_ {
+typedef const struct SharemindModuleApi0x1SyscallDefinition_ SharemindModuleApi0x1SyscallDefinition;
+struct SharemindModuleApi0x1SyscallDefinition_ {
 
     /** Unique name of the system call: */
     const char * const name;
 
     /** Pointer to the system call implementation: */
-    const SHAREMIND_MODAPI_0x1_Syscall syscall_f;
+    const SharemindModuleApi0x1Syscall syscall_f;
 
 };
+#define SHAREMIND_MODULE_API_0x1_SYSCALL_DEFINITION(name,syscall) \
+    { (name), (syscall) }
 
 /** System call list: */
-typedef SHAREMIND_MODAPI_0x1_Syscall_Definition SHAREMIND_MODAPI_0x1_Syscall_Definitions[];
+typedef SharemindModuleApi0x1SyscallDefinition SharemindModuleApi0x1SyscallDefinitions[];
+#define SHAREMIND_MODULE_API_0x1_SYSCALL_DEFINITIONS(defs) \
+    SharemindModuleApi0x1SyscallDefinitions sharemindModuleApi0x1SyscallDefinitions = { \
+        defs, \
+        { NULL, NULL } \
+    }
 
 
 /*******************************************************************************
@@ -246,121 +273,135 @@ typedef SHAREMIND_MODAPI_0x1_Syscall_Definition SHAREMIND_MODAPI_0x1_Syscall_Def
 *******************************************************************************/
 
 /** Protection domain configuration */
-typedef struct SHAREMIND_MODAPI_0x1_PD_Conf_ SHAREMIND_MODAPI_0x1_PD_Conf;
-struct SHAREMIND_MODAPI_0x1_PD_Conf_ {
+typedef struct SharemindModuleApi0x1PdConf_ SharemindModuleApi0x1PdConf;
+struct SharemindModuleApi0x1PdConf_ {
 
     /** The unique name of the protection domain. */
-    const char * ICONST pd_name;
+    const char * SHAREMIND_ICONST pd_name;
 
     /**
       The index of the protection domain kind in the
-      SHAREMIND_MODAPI_0x1_PDK_Definitions list of the module.
+      SharemindModuleApi0x1PdkDefinitions list of the module.
     */
-    ICONST size_t pdk_index;
+    SHAREMIND_ICONST size_t pdk_index;
 
     /** The protection domain configuration string. */
-    const char * ICONST pd_conf_string;
+    const char * SHAREMIND_ICONST pd_conf_string;
 
 };
 
 /** Protection-domain instance specific data wrapper. */
-typedef struct SHAREMIND_MODAPI_0x1_PD_Wrapper_ SHAREMIND_MODAPI_0x1_PD_Wrapper;
-struct SHAREMIND_MODAPI_0x1_PD_Wrapper_ {
+typedef struct SharemindModuleApi0x1PdWrapper_ SharemindModuleApi0x1PdWrapper;
+struct SharemindModuleApi0x1PdWrapper_ {
 
     /** Internal pointer, do not use! */
-    ICONST void * ICONST internal;
+    SHAREMIND_ICONST void * SHAREMIND_ICONST internal;
 
     /** A handle for protection domain runtime data. */
     void * pdHandle;
 
     /**
       A handle to the private data of the module instance. This is the same
-      handle as provided to SHAREMIND_MODAPI_0x1_Module_Context on module
+      handle as provided to SharemindModuleApi0x1ModuleContext on module
       initialization.
     */
-    void * ICONST moduleHandle;
+    void * SHAREMIND_ICONST moduleHandle;
 
     /** A handle to the configuration of the protection domain. */
-    const SHAREMIND_MODAPI_0x1_PD_Conf * ICONST conf;
+    const SharemindModuleApi0x1PdConf * SHAREMIND_ICONST conf;
 
     /**
       \brief Finds a protection-domain specific system facility.
-      \param wrapper Pointer to this SHAREMIND_MODAPI_0x1_PD_Wrapper instance.
+      \param wrapper Pointer to this SharemindModuleApi0x1PdWrapper instance.
       \param[in] name Name of the facility.
       \returns a pointer to the facility and its context.
       \retval NULL if no such facility is associated with this protection domain.
     */
-    const SHAREMIND_MODAPI_0x1_Facility * (* ICONST getPdFacility)(SHAREMIND_MODAPI_0x1_PD_Wrapper * w, const char * name);
+    const SharemindModuleApi0x1Facility * (* SHAREMIND_ICONST getPdFacility)(SharemindModuleApi0x1PdWrapper * w, const char * name);
 
     /* OTHER STUFF */
 
 };
 
 /** Protection-domain instance process instance specific data wrapper. */
-typedef struct SHAREMIND_MODAPI_0x1_PDPI_Wrapper_ SHAREMIND_MODAPI_0x1_PDPI_Wrapper;
-struct SHAREMIND_MODAPI_0x1_PDPI_Wrapper_ {
+typedef struct SharemindModuleApi0x1PdpiWrapper_ SharemindModuleApi0x1PdpiWrapper;
+struct SharemindModuleApi0x1PdpiWrapper_ {
 
     /** Internal pointer, do not use! */
-    ICONST void * ICONST internal;
+    SHAREMIND_ICONST void * SHAREMIND_ICONST internal;
 
     /** A handle for protection domain per-process data. */
     void * pdProcessHandle;
 
     /**
       A handle for protection domain instance data. This is the same handle as
-      provided to SHAREMIND_MODAPI_0x1_PD_Wrapper on protection domain initialization.
+      provided to SharemindModuleApi0x1PdWrapper on protection domain initialization.
     */
-    void * ICONST pdHandle;
+    void * SHAREMIND_ICONST pdHandle;
 
     /**
       \brief Finds a system facility specific to the protection domain and process.
-      \param wrapper Pointer to this SHAREMIND_MODAPI_0x1_PDPI_Wrapper instance.
+      \param wrapper Pointer to this SharemindModuleApi0x1PdpiWrapper instance.
       \param[in] name Name of the facility.
       \returns a pointer to the facility and its context.
       \retval NULL if no such facility is associated with this protection domain process instance.
     */
-    const SHAREMIND_MODAPI_0x1_Facility * (* ICONST getPdpiFacility)(SHAREMIND_MODAPI_0x1_PDPI_Wrapper * w, const char * name);
+    const SharemindModuleApi0x1Facility * (* SHAREMIND_ICONST getPdpiFacility)(SharemindModuleApi0x1PdpiWrapper * w, const char * name);
 
     /* OTHER STUFF */
 
 };
 
 /** Protection domain initialization function signature */
-typedef int (* SHAREMIND_MODAPI_0x1_PD_Startup)(SHAREMIND_MODAPI_0x1_PD_Wrapper *);
+typedef int (* SharemindModuleApi0x1PdStartup)(SharemindModuleApi0x1PdWrapper *);
+#define SHAREMIND_MODULE_API_0x1_PD_STARTUP(name,wrapper) \
+    int name(SharemindModuleApi0x1PdWrapper * wrapper)
 
 /** Protection domain deinitialization function signature */
-typedef void (* SHAREMIND_MODAPI_0x1_PD_Shutdown)(SHAREMIND_MODAPI_0x1_PD_Wrapper *);
+typedef void (* SharemindModuleApi0x1PdShutdown)(SharemindModuleApi0x1PdWrapper *);
+#define SHAREMIND_MODULE_API_0x1_PD_SHUTDOWN(name,wrapper) \
+    void name(SharemindModuleApi0x1PdWrapper * wrapper)
 
 /** Protection domain process initialization function signature */
-typedef int (* SHAREMIND_MODAPI_0x1_PDPI_Startup)(SHAREMIND_MODAPI_0x1_PDPI_Wrapper *);
+typedef int (* SharemindModuleApi0x1PdpiStartup)(SharemindModuleApi0x1PdpiWrapper *);
+#define SHAREMIND_MODULE_API_0x1_PDPI_STARTUP(name,wrapper) \
+    int name(SharemindModuleApi0x1PdpiWrapper * wrapper)
 
 /** Protection domain process deinitialization function signature */
-typedef void (* SHAREMIND_MODAPI_0x1_PDPI_Shutdown)(SHAREMIND_MODAPI_0x1_PDPI_Wrapper *);
+typedef void (* SharemindModuleApi0x1PdpiShutdown)(SharemindModuleApi0x1PdpiWrapper *);
+#define SHAREMIND_MODULE_API_0x1_PDPI_SHUTDOWN(name,wrapper) \
+    void name(SharemindModuleApi0x1PdpiWrapper * wrapper)
 
 /** Protection domain kind list item: */
-typedef const struct SHAREMIND_MODAPI_0x1_PDK_Definition_ SHAREMIND_MODAPI_0x1_PDK_Definition;
-struct SHAREMIND_MODAPI_0x1_PDK_Definition_ {
+typedef const struct SharemindModuleApi0x1PdkDefinition_ SharemindModuleApi0x1PdkDefinition;
+struct SharemindModuleApi0x1PdkDefinition_ {
 
     /** Unique name of the protection domain kind: */
     const char * const name;
 
     /** Pointer to the protection domain initialization implementation: */
-    const SHAREMIND_MODAPI_0x1_PD_Startup pd_startup_f;
+    const SharemindModuleApi0x1PdStartup pd_startup_f;
 
     /** Pointer to the protection domain deinitialization implementation: */
-    const SHAREMIND_MODAPI_0x1_PD_Shutdown pd_shutdown_f;
+    const SharemindModuleApi0x1PdShutdown pd_shutdown_f;
 
     /** Pointer to the protection domain process initialization implementation: */
-    const SHAREMIND_MODAPI_0x1_PDPI_Startup pdpi_startup_f;
+    const SharemindModuleApi0x1PdpiStartup pdpi_startup_f;
 
     /** Pointer to the protection domain process deinitialization implementation: */
-    const SHAREMIND_MODAPI_0x1_PDPI_Shutdown pdpi_shutdown_f;
+    const SharemindModuleApi0x1PdpiShutdown pdpi_shutdown_f;
 
 };
+#define SHAREMIND_MODULE_API_0x1_PDK_DEFINITION(name,pdStartup,pdShutdown,pdpiStartup,pdpiShutdown) \
+    { (name), (pdStartup), (pdShutdown), (pdpiStartup), (pdpiShutdown) }
 
 /** Protection domain kind list: */
-typedef SHAREMIND_MODAPI_0x1_PDK_Definition SHAREMIND_MODAPI_0x1_PDK_Definitions[];
-
+typedef SharemindModuleApi0x1PdkDefinition SharemindModuleApi0x1PdkDefinitions[];
+#define SHAREMIND_MODULE_API_0x1_PDK_DEFINITIONS(defs) \
+    SharemindModuleApi0x1PdkDefinitions sharemindModuleApi0x1PdkDefinitions = { \
+        defs, \
+        { NULL, NULL, NULL, NULL, NULL } \
+    }
 
 #ifdef __cplusplus
 } /* extern "C" { */

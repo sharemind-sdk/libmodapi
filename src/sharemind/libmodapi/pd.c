@@ -33,16 +33,16 @@ SharemindPd * SharemindPd_new(SharemindPdk * pdk, const char * name, const char 
 
     SharemindPd * const pd = (SharemindPd *) malloc(sizeof(SharemindPd));
     if (unlikely(!pd))
-        goto SHAREMIND_PD_new_fail_0;
+        goto SharemindPd_new_fail_0;
 
     pd->name = strdup(name);
     if (unlikely(!pd->name))
-        goto SHAREMIND_PD_new_fail_1;
+        goto SharemindPd_new_fail_1;
 
     if (likely(conf && conf[0])) {
         pd->conf = strdup(conf);
         if (!pd->conf)
-            goto SHAREMIND_PD_new_fail_2;
+            goto SharemindPd_new_fail_2;
     } else {
         pd->conf = NULL;
     }
@@ -57,15 +57,15 @@ SharemindPd * SharemindPd_new(SharemindPdk * pdk, const char * name, const char 
     SHAREMIND_NAMED_REFS_INIT(pd,startedRefs);
     return pd;
 
-SHAREMIND_PD_new_fail_2:
+SharemindPd_new_fail_2:
 
     free(pd->name);
 
-SHAREMIND_PD_new_fail_1:
+SharemindPd_new_fail_1:
 
     free(pd);
 
-SHAREMIND_PD_new_fail_0:
+SharemindPd_new_fail_0:
 
     OOM(pdk->module->modapi);
     SharemindPdk_refs_unref(pdk);

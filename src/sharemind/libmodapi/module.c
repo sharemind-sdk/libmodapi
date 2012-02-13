@@ -44,7 +44,7 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
     m->filename = strdup(filename);
     if (unlikely(!m->filename)) {
         OOM(modapi);
-        goto SHAREMIND_Module_new_fail_0;
+        goto SharemindModule_new_fail_0;
     }
 
     /* Load module: */
@@ -52,14 +52,14 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
     m->handle = dlopen(filename, RTLD_NOW | RTLD_LOCAL | RTLD_DEEPBIND);
     if (unlikely(!m->handle)) {
         SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODAPI_UNABLE_TO_OPEN_MODULE, dlerror());
-        goto SHAREMIND_Module_new_fail_1;
+        goto SharemindModule_new_fail_1;
     }
 
     /* Determine API version to use: */
     modApiVersions = (const uint32_t (*)[]) dlsym(m->handle, "sharemindModuleApiSupportedVersions");
     if (unlikely(!modApiVersions || (*modApiVersions)[0] == 0u)) {
         SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODAPI_INVALID_MODULE, dlerror());
-        goto SHAREMIND_Module_new_fail_2;
+        goto SharemindModule_new_fail_2;
     }
     i = 0u;
     m->apiVersion = 0u;
@@ -73,7 +73,7 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
     } while ((*modApiVersions)[++i] == 0u);
     if (unlikely(m->apiVersion <= 0u)) {
         SharemindModuleApi_set_error_with_static_string(modapi, SHAREMIND_MODAPI_API_NOT_SUPPORTED, "API not supported!");
-        goto SHAREMIND_Module_new_fail_2;
+        goto SharemindModule_new_fail_2;
     }
     m->api = &SHAREMIND_APIs[m->apiVersion - 1u];
 
@@ -81,23 +81,23 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
     modName = (const char **) dlsym(m->handle, "sharemindModuleApiModuleName");
     if (unlikely(!modName)) {
         SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODAPI_INVALID_MODULE, dlerror());
-        goto SHAREMIND_Module_new_fail_2;
+        goto SharemindModule_new_fail_2;
     }
     if (unlikely(!*modName)) {
         SharemindModuleApi_set_error_with_static_string(modapi, SHAREMIND_MODAPI_INVALID_MODULE, NULL);
-        goto SHAREMIND_Module_new_fail_2;
+        goto SharemindModule_new_fail_2;
     }
     m->name = strdup(*modName);
     if (unlikely(!m->name)) {
         OOM(modapi);
-        goto SHAREMIND_Module_new_fail_2;
+        goto SharemindModule_new_fail_2;
     }
 
     /* Determine module version: */
     modVersion = (const uint32_t *) dlsym(m->handle, "sharemindModuleApiModuleVersion");
     if (unlikely(!modVersion)) {
         SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODAPI_INVALID_MODULE, dlerror());
-        goto SHAREMIND_Module_new_fail_3;
+        goto SharemindModule_new_fail_3;
     }
     m->version = *modVersion;
 
@@ -115,19 +115,19 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
         SharemindModuleApi_set_error_with_static_string(modapi, status, NULL);
     }
 
-SHAREMIND_Module_new_fail_3:
+SharemindModule_new_fail_3:
 
     free(m->name);
 
-SHAREMIND_Module_new_fail_2:
+SharemindModule_new_fail_2:
 
     dlclose(m->handle);
 
-SHAREMIND_Module_new_fail_1:
+SharemindModule_new_fail_1:
 
     free(m->filename);
 
-SHAREMIND_Module_new_fail_0:
+SharemindModule_new_fail_0:
 
     SharemindModuleApi_refs_unref(modapi);
     free(m);

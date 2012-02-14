@@ -37,7 +37,7 @@ typedef struct {
 } SharemindModuleInfo;
 
 #define SHAREMIND_MODULE_API_MODULE_INFO(name, version, ...) \
-    const SharemindModuleInfo sharemindModuleInfo = { \
+    extern const SharemindModuleInfo sharemindModuleInfo = { \
         (name), (version), { __VA_ARGS__, 0x0 } \
     }
 
@@ -245,8 +245,7 @@ typedef SharemindModuleApi0x1SyscallCode (* SharemindModuleApi0x1Syscall)(
         SharemindModuleApi0x1SyscallContext * c)
 
 /** System call list item:*/
-typedef const struct SharemindModuleApi0x1SyscallDefinition_ SharemindModuleApi0x1SyscallDefinition;
-struct SharemindModuleApi0x1SyscallDefinition_ {
+typedef struct {
 
     /** Unique name of the system call: */
     const char * const name;
@@ -254,15 +253,15 @@ struct SharemindModuleApi0x1SyscallDefinition_ {
     /** Pointer to the system call implementation: */
     const SharemindModuleApi0x1Syscall syscall_f;
 
-};
+} const SharemindModuleApi0x1SyscallDefinition;
 #define SHAREMIND_MODULE_API_0x1_SYSCALL_DEFINITION(name,syscall) \
     { (name), (syscall) }
 
 /** System call list: */
-typedef SharemindModuleApi0x1SyscallDefinition SharemindModuleApi0x1SyscallDefinitions[];
-#define SHAREMIND_MODULE_API_0x1_SYSCALL_DEFINITIONS(defs) \
-    SharemindModuleApi0x1SyscallDefinitions sharemindModuleApi0x1SyscallDefinitions = { \
-        defs, \
+typedef SharemindModuleApi0x1SyscallDefinition const SharemindModuleApi0x1SyscallDefinitions[];
+#define SHAREMIND_MODULE_API_0x1_SYSCALL_DEFINITIONS(...) \
+    extern const SharemindModuleApi0x1SyscallDefinitions sharemindModuleApi0x1SyscallDefinitions = { \
+        __VA_ARGS__ , \
         { NULL, NULL } \
     }
 
@@ -372,8 +371,7 @@ typedef void (* SharemindModuleApi0x1PdpiShutdown)(SharemindModuleApi0x1PdpiWrap
     void name(SharemindModuleApi0x1PdpiWrapper * wrapper)
 
 /** Protection domain kind list item: */
-typedef const struct SharemindModuleApi0x1PdkDefinition_ SharemindModuleApi0x1PdkDefinition;
-struct SharemindModuleApi0x1PdkDefinition_ {
+typedef struct {
 
     /** Unique name of the protection domain kind: */
     const char * const name;
@@ -390,15 +388,15 @@ struct SharemindModuleApi0x1PdkDefinition_ {
     /** Pointer to the protection domain process deinitialization implementation: */
     const SharemindModuleApi0x1PdpiShutdown pdpi_shutdown_f;
 
-};
+} const SharemindModuleApi0x1PdkDefinition;
 #define SHAREMIND_MODULE_API_0x1_PDK_DEFINITION(name,pdStartup,pdShutdown,pdpiStartup,pdpiShutdown) \
     { (name), (pdStartup), (pdShutdown), (pdpiStartup), (pdpiShutdown) }
 
 /** Protection domain kind list: */
-typedef SharemindModuleApi0x1PdkDefinition SharemindModuleApi0x1PdkDefinitions[];
-#define SHAREMIND_MODULE_API_0x1_PDK_DEFINITIONS(defs) \
-    SharemindModuleApi0x1PdkDefinitions sharemindModuleApi0x1PdkDefinitions = { \
-        defs, \
+typedef SharemindModuleApi0x1PdkDefinition const SharemindModuleApi0x1PdkDefinitions[];
+#define SHAREMIND_MODULE_API_0x1_PDK_DEFINITIONS(...) \
+    extern const SharemindModuleApi0x1PdkDefinitions sharemindModuleApi0x1PdkDefinitions = { \
+        __VA_ARGS__, \
         { NULL, NULL, NULL, NULL, NULL } \
     }
 

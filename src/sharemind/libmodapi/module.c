@@ -185,6 +185,11 @@ SharemindModuleApi * SharemindModule_get_modapi(const SharemindModule * m) {
     return m->modapi;
 }
 
+const char * SharemindModule_get_filename(const SharemindModule * m) {
+    assert(m);
+    return m->filename;
+}
+
 const char * SharemindModule_get_name(const SharemindModule * m) {
     assert(m);
     return m->name;

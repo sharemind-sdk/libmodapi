@@ -100,6 +100,7 @@ void SharemindModule_free(SharemindModule * m) __attribute__ ((nonnull(1)));
 
 SharemindModuleApiError SharemindModule_mod_init(SharemindModule * m) __attribute__ ((nonnull(1)));
 void SharemindModule_mod_deinit(SharemindModule * m) __attribute__ ((nonnull(1)));
+bool SharemindModule_mod_is_initialized(const SharemindModule * m) __attribute__ ((nonnull(1)));
 
 const char * SharemindModule_get_name(const SharemindModule * m) __attribute__ ((nonnull(1)));
 uint32_t SharemindModule_get_api_version_in_use(const SharemindModule * m) __attribute__ ((nonnull(1)));

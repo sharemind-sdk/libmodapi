@@ -170,6 +170,11 @@ void SharemindModule_mod_deinit(SharemindModule * m) {
     m->isInitialized = false;
 }
 
+bool SharemindModule_mod_is_initialized(const SharemindModule * m) {
+    assert(m);
+    return m->isInitialized;
+}
+
 void * SharemindModule_get_handle(const SharemindModule * m) {
     assert(m);
     return m->moduleHandle;

@@ -34,7 +34,7 @@ typedef struct {
     const char * moduleName;
     const uint32_t moduleVersion;
     const uint32_t supportedVersions[10];
-} SharemindModuleInfo;
+} const SharemindModuleInfo;
 
 #define SHAREMIND_MODULE_API_MODULE_INFO(name, version, ...) \
     extern const SharemindModuleInfo sharemindModuleInfo = { \

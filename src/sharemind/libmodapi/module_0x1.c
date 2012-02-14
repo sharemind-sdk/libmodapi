@@ -87,17 +87,17 @@ SharemindModuleApiError SHAREMIND_Module_load_0x1(SharemindModule * m) {
     scs = (SharemindModuleApi0x1SyscallDefinitions *) dlsym(m->libHandle, "sharemindModuleApi0x1SyscallDefinitions");
     if (likely(scs)) {
         size_t i = 0u;
-        while ((*scs)[i].name) {
+        while ((*scs)[i].signature) {
             SharemindSyscall * sc;
             size_t oldSize;
 
-            if (unlikely(!(*scs)[i].syscall_f)) {
+            if (unlikely(!(*scs)[i].fptr)) {
                 status = SHAREMIND_MODULE_API_API_ERROR;
                 goto loadModule_0x1_fail_2;
             }
 
             oldSize = apiData->syscalls.size;
-            sc = SharemindSyscallMap_get_or_insert(&apiData->syscalls, (*scs)[i].name);
+            sc = SharemindSyscallMap_get_or_insert(&apiData->syscalls, (*scs)[i].signature);
             assert(oldSize <= apiData->syscalls.size);
             if (unlikely(!sc)) {
                 status = SHAREMIND_MODULE_API_OUT_OF_MEMORY;
@@ -107,16 +107,16 @@ SharemindModuleApiError SHAREMIND_Module_load_0x1(SharemindModule * m) {
                 status = SHAREMIND_MODULE_API_DUPLICATE_SYSCALL;
                 goto loadModule_0x1_fail_2;
             }
-            if (unlikely(!SharemindSyscall_init(sc, (*scs)[i].name, (*scs)[i].syscall_f, NULL, m))) {
+            if (unlikely(!SharemindSyscall_init(sc, (*scs)[i].signature, (*scs)[i].fptr, NULL, m))) {
                 status = SHAREMIND_MODULE_API_OUT_OF_MEMORY;
-                int r = SharemindSyscallMap_remove(&apiData->syscalls, (*scs)[i].name);
+                int r = SharemindSyscallMap_remove(&apiData->syscalls, (*scs)[i].signature);
                 assert(r == 1); (void) r;
                 goto loadModule_0x1_fail_2;
             }
 
             i++;
         }
-        if (unlikely((*scs)[i].syscall_f)) {
+        if (unlikely((*scs)[i].fptr)) {
             status = SHAREMIND_MODULE_API_API_ERROR;
             goto loadModule_0x1_fail_2;
         }
@@ -161,7 +161,7 @@ SharemindModuleApiError SHAREMIND_Module_load_0x1(SharemindModule * m) {
                                         m)))
             {
                 status = SHAREMIND_MODULE_API_OUT_OF_MEMORY;
-                int r = SharemindPdkMap_remove(&apiData->pdks, (*scs)[i].name);
+                int r = SharemindPdkMap_remove(&apiData->pdks, (*scs)[i].signature);
                 assert(r == 1); (void) r;
                 goto loadModule_0x1_fail_3;
             }

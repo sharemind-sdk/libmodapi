@@ -248,14 +248,14 @@ typedef SharemindModuleApi0x1SyscallCode (* SharemindModuleApi0x1Syscall)(
 typedef struct {
 
     /** Unique name of the system call: */
-    const char * const name;
+    const char * const signature;
 
     /** Pointer to the system call implementation: */
-    const SharemindModuleApi0x1Syscall syscall_f;
+    const SharemindModuleApi0x1Syscall fptr;
 
 } const SharemindModuleApi0x1SyscallDefinition;
-#define SHAREMIND_MODULE_API_0x1_SYSCALL_DEFINITION(name,syscall) \
-    { (name), (syscall) }
+#define SHAREMIND_MODULE_API_0x1_SYSCALL_DEFINITION(signature,fptr) \
+    { (signature), (fptr) }
 
 /** System call list: */
 typedef SharemindModuleApi0x1SyscallDefinition const SharemindModuleApi0x1SyscallDefinitions[];

@@ -129,7 +129,7 @@ const SharemindFacility * SharemindModule_get_pdpi_facility(const SharemindModul
   SHAREMIND_Syscall
 *******************************************************************************/
 
-const char * SharemindSyscall_get_name(const SharemindSyscall * sc) __attribute__ ((nonnull(1)));
+const char * SharemindSyscall_get_signature(const SharemindSyscall * sc) __attribute__ ((nonnull(1)));
 SharemindModule * SharemindSyscall_get_module(const SharemindSyscall * sc) __attribute__ ((nonnull(1)));
 SharemindModuleApi * SharemindSyscall_get_modapi(const SharemindSyscall * sc) __attribute__ ((nonnull(1)));
 

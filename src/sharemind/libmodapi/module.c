@@ -25,9 +25,7 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
         return NULL;
     }
 
-    const uint32_t (* modApiVersions)[];
-    const char ** modName;
-    const uint32_t * modVersion;
+    const SharemindModuleInfo * moduleInfo;
     size_t i;
 
     SharemindModule * m = (SharemindModule *) malloc(sizeof(SharemindModule));
@@ -55,64 +53,56 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
         goto SharemindModule_new_fail_1;
     }
 
-    /* Determine API version to use: */
-    modApiVersions = (const uint32_t (*)[]) dlsym(m->libHandle, "sharemindModuleApiSupportedVersions");
-    if (unlikely(!modApiVersions || (*modApiVersions)[0] == 0u)) {
+    /* Read module info: */
+    moduleInfo = (const SharemindModuleInfo *) dlsym(m->libHandle, "sharemindModuleInfo");
+    if (unlikely(!moduleInfo
+                 || moduleInfo->moduleName == NULL
+                 || moduleInfo->supportedVersions[0] == 0u))
+    {
         SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODULE_API_INVALID_MODULE, dlerror());
         goto SharemindModule_new_fail_2;
     }
+
+    /* Determine API version compatibility and API version to use: */
     i = 0u;
     m->apiVersion = 0u;
     do {
-        if ((*modApiVersions)[i] > m->apiVersion
-            && (*modApiVersions)[i] >= SHAREMIND_MODULE_API_API_MIN_VERSION
-            && (*modApiVersions)[i] <= SHAREMIND_MODULE_API_API_VERSION)
+        if (moduleInfo->supportedVersions[i] > m->apiVersion
+            && moduleInfo->supportedVersions[i] >= SHAREMIND_MODULE_API_API_MIN_VERSION
+            && moduleInfo->supportedVersions[i] <= SHAREMIND_MODULE_API_API_VERSION)
         {
-            m->apiVersion = (*modApiVersions)[i];
+            m->apiVersion = moduleInfo->supportedVersions[i];
         }
-    } while ((*modApiVersions)[++i] == 0u);
+    } while (moduleInfo->supportedVersions[++i] == 0u);
     if (unlikely(m->apiVersion <= 0u)) {
         SharemindModuleApi_set_error_with_static_string(modapi, SHAREMIND_MODULE_API_API_NOT_SUPPORTED, "API not supported!");
         goto SharemindModule_new_fail_2;
     }
     m->api = &SHAREMIND_APIs[m->apiVersion - 1u];
 
-    /* Determine module name: */
-    modName = (const char **) dlsym(m->libHandle, "sharemindModuleApiModuleName");
-    if (unlikely(!modName)) {
-        SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODULE_API_INVALID_MODULE, dlerror());
-        goto SharemindModule_new_fail_2;
-    }
-    if (unlikely(!*modName)) {
-        SharemindModuleApi_set_error_with_static_string(modapi, SHAREMIND_MODULE_API_INVALID_MODULE, NULL);
-        goto SharemindModule_new_fail_2;
-    }
-    m->name = strdup(*modName);
+    /* Read module name: */
+    m->name = strdup(moduleInfo->moduleName);
     if (unlikely(!m->name)) {
         OOM(modapi);
         goto SharemindModule_new_fail_2;
     }
 
-    /* Determine module version: */
-    modVersion = (const uint32_t *) dlsym(m->libHandle, "sharemindModuleApiModuleVersion");
-    if (unlikely(!modVersion)) {
-        SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODULE_API_INVALID_MODULE, dlerror());
-        goto SharemindModule_new_fail_3;
-    }
-    m->version = *modVersion;
+    /* Read module version: */
+    m->version = moduleInfo->moduleVersion;
 
     /* Do API specific loading: */
     {
         SHAREMIND_REFS_INIT(m);
         SharemindModuleApiError status = (*(m->api->module_load))(m);
-        if (likely(status == SHAREMIND_MODULE_API_OK)) {
-            SharemindFacilityMap_init(&m->moduleFacilityMap, &modapi->moduleFacilityMap);
-            SharemindFacilityMap_init(&m->pdFacilityMap, &modapi->pdFacilityMap);
-            SharemindFacilityMap_init(&m->pdpiFacilityMap, &modapi->pdpiFacilityMap);
-            return m;
+        if (unlikely(status != SHAREMIND_MODULE_API_OK)) {
+            SharemindModuleApi_set_error_with_static_string(modapi, status, NULL);
+            goto SharemindModule_new_fail_3;
         }
 
-        SharemindModuleApi_set_error_with_static_string(modapi, status, NULL);
+        SharemindFacilityMap_init(&m->moduleFacilityMap, &modapi->moduleFacilityMap);
+        SharemindFacilityMap_init(&m->pdFacilityMap, &modapi->pdFacilityMap);
+        SharemindFacilityMap_init(&m->pdpiFacilityMap, &modapi->pdpiFacilityMap);
+        return m;
     }
 
 SharemindModule_new_fail_3:

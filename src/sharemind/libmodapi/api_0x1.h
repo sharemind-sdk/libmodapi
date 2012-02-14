@@ -30,17 +30,16 @@ extern "C" {
   OVERALL MODULE LEVEL
 *******************************************************************************/
 
-typedef const uint32_t SharemindModuleApiSupportedVersions[];
-#define SHAREMIND_MODULE_API_SUPPORTED_VERSIONS(v) \
-    SharemindModuleApiSupportedVersions sharemindModuleApiSupportedVersions = { v, 0x0 }
+typedef struct {
+    const char * moduleName;
+    const uint32_t moduleVersion;
+    const uint32_t supportedVersions[10];
+} SharemindModuleInfo;
 
-typedef const char * const SharemindModuleApiModuleName;
-#define SHAREMIND_MODULE_API_MODULE_NAME(n) \
-    SharemindModuleApiModuleName sharemindModuleApiModuleName = (n)
-
-typedef const uint32_t SharemindModuleApiModuleVersion;
-#define SHAREMIND_MODULE_API_MODULE_VERSION(v) \
-    SharemindModuleApiModuleVersion sharemindModuleApiModuleVersion = (v)
+#define SHAREMIND_MODULE_API_MODULE_INFO(name, version, ...) \
+    const SharemindModuleInfo sharemindModuleInfo = { \
+        (name), (version), { __VA_ARGS__, 0x0 } \
+    }
 
 
 /*******************************************************************************

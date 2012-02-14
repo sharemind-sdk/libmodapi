@@ -49,14 +49,14 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
 
     /* Load module: */
     (void) dlerror();
-    m->handle = dlopen(filename, RTLD_NOW | RTLD_LOCAL | RTLD_DEEPBIND);
-    if (unlikely(!m->handle)) {
+    m->libHandle = dlopen(filename, RTLD_NOW | RTLD_LOCAL | RTLD_DEEPBIND);
+    if (unlikely(!m->libHandle)) {
         SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODAPI_UNABLE_TO_OPEN_MODULE, dlerror());
         goto SharemindModule_new_fail_1;
     }
 
     /* Determine API version to use: */
-    modApiVersions = (const uint32_t (*)[]) dlsym(m->handle, "sharemindModuleApiSupportedVersions");
+    modApiVersions = (const uint32_t (*)[]) dlsym(m->libHandle, "sharemindModuleApiSupportedVersions");
     if (unlikely(!modApiVersions || (*modApiVersions)[0] == 0u)) {
         SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODAPI_INVALID_MODULE, dlerror());
         goto SharemindModule_new_fail_2;
@@ -78,7 +78,7 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
     m->api = &SHAREMIND_APIs[m->apiVersion - 1u];
 
     /* Determine module name: */
-    modName = (const char **) dlsym(m->handle, "sharemindModuleApiModuleName");
+    modName = (const char **) dlsym(m->libHandle, "sharemindModuleApiModuleName");
     if (unlikely(!modName)) {
         SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODAPI_INVALID_MODULE, dlerror());
         goto SharemindModule_new_fail_2;
@@ -94,7 +94,7 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
     }
 
     /* Determine module version: */
-    modVersion = (const uint32_t *) dlsym(m->handle, "sharemindModuleApiModuleVersion");
+    modVersion = (const uint32_t *) dlsym(m->libHandle, "sharemindModuleApiModuleVersion");
     if (unlikely(!modVersion)) {
         SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODAPI_INVALID_MODULE, dlerror());
         goto SharemindModule_new_fail_3;
@@ -121,7 +121,7 @@ SharemindModule_new_fail_3:
 
 SharemindModule_new_fail_2:
 
-    dlclose(m->handle);
+    dlclose(m->libHandle);
 
 SharemindModule_new_fail_1:
 
@@ -142,7 +142,7 @@ void SharemindModule_free(SharemindModule * m) {
     (*(m->api->module_unload))(m);
     SHAREMIND_REFS_ASSERT_IF_REFERENCED(m);
     free(m->name);
-    dlclose(m->handle);
+    dlclose(m->libHandle);
     free(m->filename);
     SharemindModuleApi_refs_unref(m->modapi);
 

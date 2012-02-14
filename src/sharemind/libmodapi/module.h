@@ -28,7 +28,7 @@ extern "C" {
 
 
 struct SharemindModule_ {
-    void * handle;
+    void * libHandle;
     char * filename;
     char * name;
     uint32_t apiVersion;

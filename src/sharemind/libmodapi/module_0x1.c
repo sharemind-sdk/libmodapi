@@ -69,14 +69,14 @@ SharemindModuleApiError SHAREMIND_Module_load_0x1(SharemindModule * m) {
     }
 
     /* Handle loader function: */
-    apiData->initializer = (SharemindModuleApi0x1ModuleInitializer) dlsym(m->handle, "sharemind_module_api_0x1_module_init");
+    apiData->initializer = (SharemindModuleApi0x1ModuleInitializer) dlsym(m->libHandle, "sharemind_module_api_0x1_module_init");
     if (unlikely(!apiData->initializer)) {
         status = SHAREMIND_MODAPI_API_ERROR;
         goto loadModule_0x1_fail_1;
     }
 
     /* Handle unloader function: */
-    apiData->deinitializer = (SharemindModuleApi0x1ModuleDeinitializer) dlsym(m->handle, "sharemind_module_api_0x1_module_deinit");
+    apiData->deinitializer = (SharemindModuleApi0x1ModuleDeinitializer) dlsym(m->libHandle, "sharemind_module_api_0x1_module_deinit");
     if (unlikely(!apiData->deinitializer)) {
         status = SHAREMIND_MODAPI_API_ERROR;
         goto loadModule_0x1_fail_1;
@@ -84,7 +84,7 @@ SharemindModuleApiError SHAREMIND_Module_load_0x1(SharemindModule * m) {
 
     /* Handle system call definitions: */
     SharemindSyscallMap_init(&apiData->syscalls);
-    scs = (SharemindModuleApi0x1SyscallDefinitions *) dlsym(m->handle, "sharemindModuleApi0x1SyscallDefinitions");
+    scs = (SharemindModuleApi0x1SyscallDefinitions *) dlsym(m->libHandle, "sharemindModuleApi0x1SyscallDefinitions");
     if (likely(scs)) {
         size_t i = 0u;
         while ((*scs)[i].name) {
@@ -124,7 +124,7 @@ SharemindModuleApiError SHAREMIND_Module_load_0x1(SharemindModule * m) {
 
     /* Handle protection domain kind definitions: */
     SharemindPdkMap_init(&apiData->pdks);
-    pdks = (SharemindModuleApi0x1PdkDefinitions *) dlsym(m->handle, "sharemindModuleApi0x1PdkDefinitions");
+    pdks = (SharemindModuleApi0x1PdkDefinitions *) dlsym(m->libHandle, "sharemindModuleApi0x1PdkDefinitions");
     if (pdks) {
         size_t i = 0u;
         while ((*pdks)[i].name) {

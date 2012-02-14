@@ -60,7 +60,7 @@ void SharemindSyscall_destroy(SharemindSyscall * sc) {
     SharemindModule_refs_unref(sc->module);
 }
 
-const char * SharemindSyscall_get_name(const SharemindSyscall * sc) {
+const char * SharemindSyscall_get_signature(const SharemindSyscall * sc) {
     assert(sc);
     assert(sc->name);
     return sc->name;

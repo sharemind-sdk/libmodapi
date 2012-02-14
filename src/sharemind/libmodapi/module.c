@@ -55,15 +55,25 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
 
     /* Read module info: */
     moduleInfo = (const SharemindModuleInfo *) dlsym(m->libHandle, "sharemindModuleInfo");
-    if (unlikely(!moduleInfo
-                 || moduleInfo->moduleName == NULL
-                 || moduleInfo->supportedVersions[0] == 0u))
-    {
+    if (unlikely(!moduleInfo)) {
         SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODULE_API_INVALID_MODULE, dlerror());
         goto SharemindModule_new_fail_2;
     }
 
-    /* Determine API version compatibility and API version to use: */
+    /* Verify module name: */
+    if (unlikely(moduleInfo->moduleName == NULL)) {
+        SharemindModuleApi_set_error_with_static_string(modapi, SHAREMIND_MODULE_API_API_NOT_SUPPORTED, "Invalid module name pointer!");
+        goto SharemindModule_new_fail_2;
+    }
+
+    /*
+      Verify module supported versions, determine API version compatibility and
+      select API version to use:
+    */
+    if (unlikely(moduleInfo->supportedVersions[0] == 0u)) {
+        SharemindModuleApi_set_error_with_static_string(modapi, SHAREMIND_MODULE_API_API_NOT_SUPPORTED, "Invalid supported API list!");
+        goto SharemindModule_new_fail_2;
+    }
     i = 0u;
     m->apiVersion = 0u;
     do {

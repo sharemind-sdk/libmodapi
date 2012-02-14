@@ -56,7 +56,7 @@ bool SHAREMIND_PDPI_start_0x1(SharemindPdpi * pdpi) {
     char * const errorString = (char *) malloc(len);
     if (likely(errorString))
         snprintf(errorString, len, errorFormatString, r);
-    SharemindModuleApi_set_error_with_dynamic_string(pdk->module->modapi, SHAREMIND_MODAPI_PDPI_STARTUP_FAILED, errorString);
+    SharemindModuleApi_set_error_with_dynamic_string(pdk->module->modapi, SHAREMIND_MODULE_API_PDPI_STARTUP_FAILED, errorString);
     return false;
 }
 

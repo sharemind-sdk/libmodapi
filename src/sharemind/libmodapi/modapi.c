@@ -17,7 +17,7 @@ SHAREMIND_ENUM_CUSTOM_DEFINE_TOSTRING(SharemindModuleApiError,SHAREMIND_MODULE_A
 #define SHAREMIND_MODULE_API_DEFINE_ERRORSTRING(unused,unused2,e) \
     [(int) SHAREMIND_T(2,0,e)] = "Out of memory while generating error message for error with code " SHAREMIND_2S(SHAREMIND_T(2,0,e)) "!",
 
-const char * const SHAREMIND_MODAPI_OomErrorStrings[SHAREMIND_MODAPI_ERROR_COUNT + 1] = {
+const char * const SHAREMIND_MODULE_API_OomErrorStrings[SHAREMIND_MODULE_API_ERROR_COUNT + 1] = {
     BOOST_PP_SEQ_FOR_EACH(SHAREMIND_MODULE_API_DEFINE_ERRORSTRING,_,SHAREMIND_MODULE_API_ERROR_ENUM)
 };
 
@@ -25,7 +25,7 @@ const char * const SHAREMIND_MODAPI_OomErrorStrings[SHAREMIND_MODAPI_ERROR_COUNT
 SharemindModuleApi * SharemindModuleApi_new() {
     SharemindModuleApi * const modapi = (SharemindModuleApi *) malloc(sizeof(SharemindModuleApi));
     if (likely(modapi)) {
-        modapi->lastError = SHAREMIND_MODAPI_OK;
+        modapi->lastError = SHAREMIND_MODULE_API_OK;
         modapi->lastErrorDynamicString = NULL;
         modapi->lastErrorStaticString = NULL;
 
@@ -58,7 +58,7 @@ SharemindModuleApiError SharemindModuleApi_get_last_error(const SharemindModuleA
 
 const char * SharemindModuleApi_get_last_error_string(const SharemindModuleApi * modapi) {
     assert(modapi);
-    if (unlikely(modapi->lastError == SHAREMIND_MODAPI_OK)) {
+    if (unlikely(modapi->lastError == SHAREMIND_MODULE_API_OK)) {
         return NULL;
     } else if (modapi->lastErrorStaticString) {
         return modapi->lastErrorStaticString;
@@ -69,7 +69,7 @@ const char * SharemindModuleApi_get_last_error_string(const SharemindModuleApi *
 
 void SharemindModuleApi_clear_error(SharemindModuleApi * modapi) {
     assert(modapi);
-    modapi->lastError = SHAREMIND_MODAPI_OK;
+    modapi->lastError = SHAREMIND_MODULE_API_OK;
 }
 
 void SharemindModuleApi_set_error_with_static_string(SharemindModuleApi * modapi,
@@ -77,7 +77,7 @@ void SharemindModuleApi_set_error_with_static_string(SharemindModuleApi * modapi
                                           const char * errorString)
 {
     assert(modapi);
-    assert(error != SHAREMIND_MODAPI_OK);
+    assert(error != SHAREMIND_MODULE_API_OK);
 
     if (unlikely(!errorString && !errorString[0]))
         errorString = SharemindModuleApiError_toString(error);
@@ -94,7 +94,7 @@ bool SharemindModuleApi_set_error_with_dynamic_string(SharemindModuleApi * modap
                                            const char * errorString)
 {
     assert(modapi);
-    assert(error != SHAREMIND_MODAPI_OK);
+    assert(error != SHAREMIND_MODULE_API_OK);
 
     const bool hasErrorString = errorString && errorString[0];
     if (likely(hasErrorString)) {
@@ -110,7 +110,7 @@ bool SharemindModuleApi_set_error_with_dynamic_string(SharemindModuleApi * modap
             return true;
         }
     }
-    modapi->lastErrorStaticString = SHAREMIND_MODAPI_OomErrorStrings[(int) error];
+    modapi->lastErrorStaticString = SHAREMIND_MODULE_API_OomErrorStrings[(int) error];
     return !hasErrorString;
 }
 

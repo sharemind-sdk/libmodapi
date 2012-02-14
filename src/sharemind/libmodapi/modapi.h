@@ -48,8 +48,8 @@ void SharemindModuleApi_set_error_with_static_string(
         SharemindModuleApiError error,
         const char * errorString) __attribute__ ((nonnull(1)));
 
-#define OOM(modapi) if (1) { SharemindModuleApi_set_error_with_static_string((modapi), SHAREMIND_MODAPI_OUT_OF_MEMORY, "Out of memory!"); } else (void) 0
-#define OOR(modapi) if (1) { SharemindModuleApi_set_error_with_static_string((modapi), SHAREMIND_MODAPI_REFERENCE_OVERFLOW, "Too many references!"); } else (void) 0
+#define OOM(modapi) if (1) { SharemindModuleApi_set_error_with_static_string((modapi), SHAREMIND_MODULE_API_OUT_OF_MEMORY, "Out of memory!"); } else (void) 0
+#define OOR(modapi) if (1) { SharemindModuleApi_set_error_with_static_string((modapi), SHAREMIND_MODULE_API_REFERENCE_OVERFLOW, "Too many references!"); } else (void) 0
 
 bool SharemindModuleApi_set_error_with_dynamic_string(
         SharemindModuleApi * modapi,

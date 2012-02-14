@@ -64,21 +64,21 @@ SharemindModuleApiError SHAREMIND_Module_load_0x1(SharemindModule * m) {
 
     apiData = (SHAREMIND_Module_ApiData_0x1 *) malloc(sizeof(SHAREMIND_Module_ApiData_0x1));
     if (unlikely(!apiData)) {
-        status = SHAREMIND_MODAPI_OUT_OF_MEMORY;
+        status = SHAREMIND_MODULE_API_OUT_OF_MEMORY;
         goto loadModule_0x1_fail_0;
     }
 
     /* Handle loader function: */
     apiData->initializer = (SharemindModuleApi0x1ModuleInitializer) dlsym(m->libHandle, "sharemind_module_api_0x1_module_init");
     if (unlikely(!apiData->initializer)) {
-        status = SHAREMIND_MODAPI_API_ERROR;
+        status = SHAREMIND_MODULE_API_API_ERROR;
         goto loadModule_0x1_fail_1;
     }
 
     /* Handle unloader function: */
     apiData->deinitializer = (SharemindModuleApi0x1ModuleDeinitializer) dlsym(m->libHandle, "sharemind_module_api_0x1_module_deinit");
     if (unlikely(!apiData->deinitializer)) {
-        status = SHAREMIND_MODAPI_API_ERROR;
+        status = SHAREMIND_MODULE_API_API_ERROR;
         goto loadModule_0x1_fail_1;
     }
 
@@ -92,7 +92,7 @@ SharemindModuleApiError SHAREMIND_Module_load_0x1(SharemindModule * m) {
             size_t oldSize;
 
             if (unlikely(!(*scs)[i].syscall_f)) {
-                status = SHAREMIND_MODAPI_API_ERROR;
+                status = SHAREMIND_MODULE_API_API_ERROR;
                 goto loadModule_0x1_fail_2;
             }
 
@@ -100,15 +100,15 @@ SharemindModuleApiError SHAREMIND_Module_load_0x1(SharemindModule * m) {
             sc = SharemindSyscallMap_get_or_insert(&apiData->syscalls, (*scs)[i].name);
             assert(oldSize <= apiData->syscalls.size);
             if (unlikely(!sc)) {
-                status = SHAREMIND_MODAPI_OUT_OF_MEMORY;
+                status = SHAREMIND_MODULE_API_OUT_OF_MEMORY;
                 goto loadModule_0x1_fail_2;
             }
             if (unlikely(oldSize == apiData->syscalls.size)) {
-                status = SHAREMIND_MODAPI_DUPLICATE_SYSCALL;
+                status = SHAREMIND_MODULE_API_DUPLICATE_SYSCALL;
                 goto loadModule_0x1_fail_2;
             }
             if (unlikely(!SharemindSyscall_init(sc, (*scs)[i].name, (*scs)[i].syscall_f, NULL, m))) {
-                status = SHAREMIND_MODAPI_OUT_OF_MEMORY;
+                status = SHAREMIND_MODULE_API_OUT_OF_MEMORY;
                 int r = SharemindSyscallMap_remove(&apiData->syscalls, (*scs)[i].name);
                 assert(r == 1); (void) r;
                 goto loadModule_0x1_fail_2;
@@ -117,7 +117,7 @@ SharemindModuleApiError SHAREMIND_Module_load_0x1(SharemindModule * m) {
             i++;
         }
         if (unlikely((*scs)[i].syscall_f)) {
-            status = SHAREMIND_MODAPI_API_ERROR;
+            status = SHAREMIND_MODULE_API_API_ERROR;
             goto loadModule_0x1_fail_2;
         }
     }
@@ -136,7 +136,7 @@ SharemindModuleApiError SHAREMIND_Module_load_0x1(SharemindModule * m) {
                          || !(*pdks)[i].pdpi_startup_f
                          || !(*pdks)[i].pdpi_shutdown_f))
             {
-                status = SHAREMIND_MODAPI_API_ERROR;
+                status = SHAREMIND_MODULE_API_API_ERROR;
                 goto loadModule_0x1_fail_3;
             }
 
@@ -144,11 +144,11 @@ SharemindModuleApiError SHAREMIND_Module_load_0x1(SharemindModule * m) {
             pdk = SharemindPdkMap_get_or_insert(&apiData->pdks, (*pdks)[i].name);
             assert(oldSize <= apiData->syscalls.size);
             if (unlikely(!pdk)) {
-                status = SHAREMIND_MODAPI_OUT_OF_MEMORY;
+                status = SHAREMIND_MODULE_API_OUT_OF_MEMORY;
                 goto loadModule_0x1_fail_3;
             }
             if (unlikely(oldSize == apiData->pdks.size)) {
-                status = SHAREMIND_MODAPI_DUPLICATE_PROTECTION_DOMAIN;
+                status = SHAREMIND_MODULE_API_DUPLICATE_PROTECTION_DOMAIN;
                 goto loadModule_0x1_fail_3;
             }
             if (unlikely(!SharemindPdk_init(pdk,
@@ -160,7 +160,7 @@ SharemindModuleApiError SHAREMIND_Module_load_0x1(SharemindModule * m) {
                                         (*pdks)[i].pdpi_shutdown_f, NULL,
                                         m)))
             {
-                status = SHAREMIND_MODAPI_OUT_OF_MEMORY;
+                status = SHAREMIND_MODULE_API_OUT_OF_MEMORY;
                 int r = SharemindPdkMap_remove(&apiData->pdks, (*scs)[i].name);
                 assert(r == 1); (void) r;
                 goto loadModule_0x1_fail_3;
@@ -173,7 +173,7 @@ SharemindModuleApiError SHAREMIND_Module_load_0x1(SharemindModule * m) {
                      || (*pdks)[i].pdpi_startup_f
                      || (*pdks)[i].pdpi_shutdown_f))
         {
-            status = SHAREMIND_MODAPI_API_ERROR;
+            status = SHAREMIND_MODULE_API_API_ERROR;
             goto loadModule_0x1_fail_3;
         }
     }
@@ -181,7 +181,7 @@ SharemindModuleApiError SHAREMIND_Module_load_0x1(SharemindModule * m) {
     /** \todo Handle protection domain definitions: */
     m->apiData = (void *) apiData;
 
-    return SHAREMIND_MODAPI_OK;
+    return SHAREMIND_MODULE_API_OK;
 
 loadModule_0x1_fail_3:
 
@@ -224,16 +224,16 @@ SharemindModuleApiError SHAREMIND_Module_init_0x1(SharemindModule * const m) {
         case SHAREMIND_MODULE_API_0x1_IC_OK:
             if (!context.moduleHandle) {
                 apiData->deinitializer(&context);
-                return SHAREMIND_MODAPI_API_ERROR;
+                return SHAREMIND_MODULE_API_API_ERROR;
             }
             m->moduleHandle = context.moduleHandle;
-            return SHAREMIND_MODAPI_OK;
+            return SHAREMIND_MODULE_API_OK;
         case SHAREMIND_MODULE_API_0x1_IC_OUT_OF_MEMORY:
-            return SHAREMIND_MODAPI_OUT_OF_MEMORY;
+            return SHAREMIND_MODULE_API_OUT_OF_MEMORY;
         case SHAREMIND_MODULE_API_0x1_IC_ERROR:
-            return SHAREMIND_MODAPI_MODULE_ERROR;
+            return SHAREMIND_MODULE_API_MODULE_ERROR;
         default:
-            return SHAREMIND_MODAPI_API_ERROR;
+            return SHAREMIND_MODULE_API_API_ERROR;
     }
 }
 

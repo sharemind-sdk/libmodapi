@@ -51,28 +51,28 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
     (void) dlerror();
     m->libHandle = dlopen(filename, RTLD_NOW | RTLD_LOCAL | RTLD_DEEPBIND);
     if (unlikely(!m->libHandle)) {
-        SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODAPI_UNABLE_TO_OPEN_MODULE, dlerror());
+        SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODULE_API_UNABLE_TO_OPEN_MODULE, dlerror());
         goto SharemindModule_new_fail_1;
     }
 
     /* Determine API version to use: */
     modApiVersions = (const uint32_t (*)[]) dlsym(m->libHandle, "sharemindModuleApiSupportedVersions");
     if (unlikely(!modApiVersions || (*modApiVersions)[0] == 0u)) {
-        SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODAPI_INVALID_MODULE, dlerror());
+        SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODULE_API_INVALID_MODULE, dlerror());
         goto SharemindModule_new_fail_2;
     }
     i = 0u;
     m->apiVersion = 0u;
     do {
         if ((*modApiVersions)[i] > m->apiVersion
-            && (*modApiVersions)[i] >= SHAREMIND_MODAPI_API_MIN_VERSION
-            && (*modApiVersions)[i] <= SHAREMIND_MODAPI_API_VERSION)
+            && (*modApiVersions)[i] >= SHAREMIND_MODULE_API_API_MIN_VERSION
+            && (*modApiVersions)[i] <= SHAREMIND_MODULE_API_API_VERSION)
         {
             m->apiVersion = (*modApiVersions)[i];
         }
     } while ((*modApiVersions)[++i] == 0u);
     if (unlikely(m->apiVersion <= 0u)) {
-        SharemindModuleApi_set_error_with_static_string(modapi, SHAREMIND_MODAPI_API_NOT_SUPPORTED, "API not supported!");
+        SharemindModuleApi_set_error_with_static_string(modapi, SHAREMIND_MODULE_API_API_NOT_SUPPORTED, "API not supported!");
         goto SharemindModule_new_fail_2;
     }
     m->api = &SHAREMIND_APIs[m->apiVersion - 1u];
@@ -80,11 +80,11 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
     /* Determine module name: */
     modName = (const char **) dlsym(m->libHandle, "sharemindModuleApiModuleName");
     if (unlikely(!modName)) {
-        SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODAPI_INVALID_MODULE, dlerror());
+        SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODULE_API_INVALID_MODULE, dlerror());
         goto SharemindModule_new_fail_2;
     }
     if (unlikely(!*modName)) {
-        SharemindModuleApi_set_error_with_static_string(modapi, SHAREMIND_MODAPI_INVALID_MODULE, NULL);
+        SharemindModuleApi_set_error_with_static_string(modapi, SHAREMIND_MODULE_API_INVALID_MODULE, NULL);
         goto SharemindModule_new_fail_2;
     }
     m->name = strdup(*modName);
@@ -96,7 +96,7 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
     /* Determine module version: */
     modVersion = (const uint32_t *) dlsym(m->libHandle, "sharemindModuleApiModuleVersion");
     if (unlikely(!modVersion)) {
-        SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODAPI_INVALID_MODULE, dlerror());
+        SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODULE_API_INVALID_MODULE, dlerror());
         goto SharemindModule_new_fail_3;
     }
     m->version = *modVersion;
@@ -105,7 +105,7 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
     {
         SHAREMIND_REFS_INIT(m);
         SharemindModuleApiError status = (*(m->api->module_load))(m);
-        if (likely(status == SHAREMIND_MODAPI_OK)) {
+        if (likely(status == SHAREMIND_MODULE_API_OK)) {
             SharemindFacilityMap_init(&m->moduleFacilityMap, &modapi->moduleFacilityMap);
             SharemindFacilityMap_init(&m->pdFacilityMap, &modapi->pdFacilityMap);
             SharemindFacilityMap_init(&m->pdpiFacilityMap, &modapi->pdpiFacilityMap);
@@ -156,7 +156,7 @@ SharemindModuleApiError SharemindModule_mod_init(SharemindModule * m) {
     assert(m);
     assert(!m->isInitialized);
     SharemindModuleApiError e = (*(m->api->module_init))(m);
-    if (likely(e == SHAREMIND_MODAPI_OK)) {
+    if (likely(e == SHAREMIND_MODULE_API_OK)) {
         assert(m->moduleHandle);
         m->isInitialized = true;
     }

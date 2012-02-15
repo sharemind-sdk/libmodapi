@@ -54,7 +54,7 @@ struct SharemindPdpi_;
 typedef struct SharemindPdpi_ SharemindPdpi;
 
 /*******************************************************************************
-  SHAREMIND_MODAPI
+  SharemindModuleApi
 *******************************************************************************/
 
 #define SHAREMIND_MODULE_API_API_VERSION     1u
@@ -92,7 +92,7 @@ const SharemindFacility * SharemindModuleApi_get_pdpi_facility(const SharemindMo
 
 
 /*******************************************************************************
-  SHAREMIND_Module
+  SharemindModule
 *******************************************************************************/
 
 SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * filename) __attribute__ ((nonnull(1, 2)));
@@ -126,7 +126,7 @@ const SharemindFacility * SharemindModule_get_pdpi_facility(const SharemindModul
 
 
 /*******************************************************************************
-  SHAREMIND_Syscall
+  SharemindSyscall
 *******************************************************************************/
 
 const char * SharemindSyscall_get_signature(const SharemindSyscall * sc) __attribute__ ((nonnull(1)));
@@ -142,7 +142,7 @@ SharemindSyscallWrapper SharemindSyscall_get_wrapper(const SharemindSyscall * sc
 
 
 /*******************************************************************************
-  SHAREMIND_PDK
+  SharemindPdk
 *******************************************************************************/
 
 const char * SharemindPdk_get_name(const SharemindPdk * pdk) __attribute__ ((nonnull(1)));
@@ -157,7 +157,7 @@ const SharemindFacility * SharemindPdk_get_pdpi_facility(const SharemindPdk * pd
 
 
 /*******************************************************************************
-  SHAREMIND_PD
+  SharemindPd
 *******************************************************************************/
 
 SharemindPd * SharemindPd_new(SharemindPdk * pdk, const char * name, const char * conf) __attribute__ ((nonnull(1, 2)));
@@ -183,7 +183,7 @@ const SharemindFacility * SharemindPd_get_pdpi_facility(const SharemindPd * pd, 
 
 
 /*******************************************************************************
-  SHAREMIND_PDPI
+  SharemindPdpi
 *******************************************************************************/
 
 SharemindPdpi * SharemindPdpi_new(SharemindPd * pd) __attribute__ ((nonnull(1)));

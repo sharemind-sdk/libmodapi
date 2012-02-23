@@ -50,7 +50,7 @@ typedef struct {
     SharemindModuleApi0x1ModuleDeinitializer deinitializer;
     SharemindSyscallMap syscalls;
     SharemindPdkMap pdks;
-} SHAREMIND_Module_ApiData_0x1;
+} SharemindModuleApiData0x1;
 
 
 SharemindModuleApiError SHAREMIND_Module_load_0x1(SharemindModule * m) {
@@ -60,9 +60,9 @@ SharemindModuleApiError SHAREMIND_Module_load_0x1(SharemindModule * m) {
     SharemindModuleApi0x1SyscallDefinitions * scs;
     SharemindModuleApi0x1PdkDefinitions * pdks;
 
-    SHAREMIND_Module_ApiData_0x1 * apiData;
+    SharemindModuleApiData0x1 * apiData;
 
-    apiData = (SHAREMIND_Module_ApiData_0x1 *) malloc(sizeof(SHAREMIND_Module_ApiData_0x1));
+    apiData = (SharemindModuleApiData0x1 *) malloc(sizeof(SharemindModuleApiData0x1));
     if (unlikely(!apiData)) {
         status = SHAREMIND_MODULE_API_OUT_OF_MEMORY;
         goto loadModule_0x1_fail_0;
@@ -204,7 +204,7 @@ void SHAREMIND_Module_unload_0x1(SharemindModule * const m) {
     assert(m);
     assert(m->apiData);
 
-    SHAREMIND_Module_ApiData_0x1 * const apiData = (SHAREMIND_Module_ApiData_0x1 *) m->apiData;
+    SharemindModuleApiData0x1 * const apiData = (SharemindModuleApiData0x1 *) m->apiData;
 
     SharemindPdkMap_destroy_with(&apiData->pdks, &SharemindPdkMap_destroyer);
     SharemindSyscallMap_destroy_with(&apiData->syscalls, &SharemindSyscallMap_destroyer);
@@ -212,7 +212,7 @@ void SHAREMIND_Module_unload_0x1(SharemindModule * const m) {
 }
 
 SharemindModuleApiError SHAREMIND_Module_init_0x1(SharemindModule * const m) {
-    SHAREMIND_Module_ApiData_0x1 * const apiData = (SHAREMIND_Module_ApiData_0x1 *) m->apiData;
+    SharemindModuleApiData0x1 * const apiData = (SharemindModuleApiData0x1 *) m->apiData;
 
     SharemindModuleApi0x1ModuleContext context = {
         .moduleHandle = NULL, /* Just in case */
@@ -238,7 +238,7 @@ SharemindModuleApiError SHAREMIND_Module_init_0x1(SharemindModule * const m) {
 }
 
 void SHAREMIND_Module_deinit_0x1(SharemindModule * const m) {
-    SHAREMIND_Module_ApiData_0x1 * const apiData = (SHAREMIND_Module_ApiData_0x1 *) m->apiData;
+    SharemindModuleApiData0x1 * const apiData = (SharemindModuleApiData0x1 *) m->apiData;
 
     SharemindModuleApi0x1ModuleContext context = {
         .moduleHandle = m->moduleHandle,
@@ -249,39 +249,39 @@ void SHAREMIND_Module_deinit_0x1(SharemindModule * const m) {
 }
 
 size_t SHAREMIND_Module_get_num_syscalls_0x1(const SharemindModule * m) {
-    SHAREMIND_Module_ApiData_0x1 * const apiData = (SHAREMIND_Module_ApiData_0x1 *) m->apiData;
+    SharemindModuleApiData0x1 * const apiData = (SharemindModuleApiData0x1 *) m->apiData;
 
     return apiData->syscalls.size;
 }
 
 SharemindSyscall * SHAREMIND_Module_get_syscall_0x1(const SharemindModule * m, size_t index) {
-    SHAREMIND_Module_ApiData_0x1 * const apiData = (SHAREMIND_Module_ApiData_0x1 *) m->apiData;
+    SharemindModuleApiData0x1 * const apiData = (SharemindModuleApiData0x1 *) m->apiData;
 
     return SharemindSyscallMap_value_at(&apiData->syscalls, index);
 }
 
 
 SharemindSyscall * SHAREMIND_Module_find_syscall_0x1(const SharemindModule * m, const char * signature) {
-    SHAREMIND_Module_ApiData_0x1 * const apiData = (SHAREMIND_Module_ApiData_0x1 *) m->apiData;
+    SharemindModuleApiData0x1 * const apiData = (SharemindModuleApiData0x1 *) m->apiData;
 
     return SharemindSyscallMap_get(&apiData->syscalls, signature);
 }
 
 size_t SHAREMIND_Module_get_num_pdks_0x1(const SharemindModule * m) {
-    SHAREMIND_Module_ApiData_0x1 * const apiData = (SHAREMIND_Module_ApiData_0x1 *) m->apiData;
+    SharemindModuleApiData0x1 * const apiData = (SharemindModuleApiData0x1 *) m->apiData;
 
     return apiData->pdks.size;
 }
 
 SharemindPdk * SHAREMIND_Module_get_pdk_0x1(const SharemindModule * m, size_t index) {
-    SHAREMIND_Module_ApiData_0x1 * const apiData = (SHAREMIND_Module_ApiData_0x1 *) m->apiData;
+    SharemindModuleApiData0x1 * const apiData = (SharemindModuleApiData0x1 *) m->apiData;
 
     return SharemindPdkMap_value_at(&apiData->pdks, index);
 }
 
 
 SharemindPdk * SHAREMIND_Module_find_pdk_0x1(const SharemindModule * m, const char * name) {
-    SHAREMIND_Module_ApiData_0x1 * const apiData = (SHAREMIND_Module_ApiData_0x1 *) m->apiData;
+    SharemindModuleApiData0x1 * const apiData = (SharemindModuleApiData0x1 *) m->apiData;
 
     return SharemindPdkMap_get(&apiData->pdks, name);
 }

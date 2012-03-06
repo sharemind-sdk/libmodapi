@@ -182,7 +182,7 @@ struct SharemindModuleApi0x1SyscallContext_ {
                                                   void ** moduleHandle);
 
     /** Access to public dynamic memory inside the VM process: */
-    uint64_t (* SHAREMIND_ICONST publicAlloc)(SharemindModuleApi0x1SyscallContext * c, size_t nBytes);
+    uint64_t (* SHAREMIND_ICONST publicAlloc)(SharemindModuleApi0x1SyscallContext * c, uint64_t nBytes);
     int (* SHAREMIND_ICONST publicFree)(SharemindModuleApi0x1SyscallContext * c, uint64_t ptr);
     size_t (* SHAREMIND_ICONST publicMemPtrSize)(SharemindModuleApi0x1SyscallContext * c, uint64_t ptr);
     void * (* SHAREMIND_ICONST publicMemPtrData)(SharemindModuleApi0x1SyscallContext * c, uint64_t ptr);

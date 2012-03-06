@@ -47,7 +47,7 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
 
     /* Load module: */
     (void) dlerror();
-    m->libHandle = dlopen(filename, RTLD_NOW | RTLD_LOCAL | RTLD_DEEPBIND);
+    m->libHandle = dlopen(filename, RTLD_NOW | RTLD_LOCAL);
     if (unlikely(!m->libHandle)) {
         SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODULE_API_UNABLE_TO_OPEN_MODULE, dlerror());
         goto SharemindModule_new_fail_1;

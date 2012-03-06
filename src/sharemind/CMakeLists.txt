@@ -62,6 +62,7 @@ SET(OTHER_FILES ${OTHER_FILES}
 PREPARE_OTHER_FILES()
 ADD_LIBRARY("libmodapi" SHARED
             "libmodapi/apis.c"
+            "libmodapi/facilitymap.c"
             "libmodapi/modapi.c"
             "libmodapi/module.c"
             "libmodapi/module_0x1.c"

@@ -20,7 +20,9 @@
 
 
 SHAREMIND_STRINGMAP_DECLARE(SharemindFacilityMapInner,SharemindFacility,inline)
+#ifndef SHAREMIND_LIBMODAPI_FACILITYMAP_C
 SHAREMIND_STRINGMAP_DEFINE(SharemindFacilityMapInner,SharemindFacility,malloc,free,strdup,inline)
+#endif
 
 
 #ifdef __cplusplus

@@ -16,6 +16,7 @@
 
 #include <sharemind/stringmap.h>
 #include <stdlib.h>
+#include <string.h>
 #include "libmodapi.h"
 
 

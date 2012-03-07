@@ -233,7 +233,7 @@ SharemindModuleApiError SHAREMIND_Module_init_0x1(SharemindModule * const m) {
         case SHAREMIND_MODULE_API_0x1_IC_ERROR:
             return SHAREMIND_MODULE_API_MODULE_ERROR;
         default:
-            return SHAREMIND_MODULE_API_API_ERROR;
+            return SHAREMIND_MODULE_API_API_ERROR; /* False positive with -Wunreachable-code */
     }
 }
 

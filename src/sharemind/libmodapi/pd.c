@@ -167,16 +167,6 @@ void * SharemindPd_get_handle(const SharemindPd * pd) {
     return pd->pdHandle;
 }
 
-void SHAREMIND_PD_set_facility_context(SharemindPd * pd, void * facilityContext) {
-    assert(pd);
-    pd->facilityContext = facilityContext;
-}
-
-void * SHAREMIND_PD_get_facility_context(const SharemindPd * pd) {
-    assert(pd);
-    return pd->facilityContext;
-}
-
 int SharemindPd_set_facility(SharemindPd * pd, const char * name, void * facility, void * context) {
     assert(pd);
     assert(name);

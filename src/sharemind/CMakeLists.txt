@@ -59,6 +59,7 @@ ENDFUNCTION(PREPARE_OTHER_FILES)
 ################################################################################
 
 SET(OTHER_FILES ${OTHER_FILES}
+    "libmodapi/api.h"
     "libmodapi/api_0x1.h"
     "libmodapi/apis.h"
     "libmodapi/facilitymap.h"
@@ -93,7 +94,7 @@ SET_TARGET_PROPERTIES("libmodapi" PROPERTIES
                       LIBRARY_OUTPUT_DIRECTORY "${SHAREMIND_LIB_DIR}"
                       VERSION "0.1.0.0"
                       SOVERSION "0.1")
-INSTALL(FILES "libmodapi/libmodapi.h" "libmodapi/api_0x1.h"
+INSTALL(FILES "libmodapi/libmodapi.h" "libmodapi/api.h" "libmodapi/api_0x1.h"
         DESTINATION "${SHAREMIND_INCLUDE_DESTINATION}/libmodapi")
 
 INSTALL(TARGETS "libmodapi"

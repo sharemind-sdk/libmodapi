@@ -12,7 +12,7 @@
 
 #include <sharemind/codeblock.h>
 #include <stddef.h>
-#include <stdint.h>
+#include "api.h"
 
 
 #ifdef __cplusplus
@@ -24,29 +24,6 @@ extern "C" {
 #else
 #define SHAREMIND_ICONST const
 #endif
-
-
-/*******************************************************************************
-  OVERALL MODULE LEVEL
-*******************************************************************************/
-
-typedef struct {
-
-    /** Unique non-empty name of the module (optionally zero-terminated): */
-    const char moduleName[64];
-
-    /** Version of the module: */
-    const uint32_t moduleVersion;
-
-    /** Non-empty zero-terminated array of up to 15 supported API versions: */
-    const uint32_t supportedVersions[16];
-
-} const SharemindModuleInfo;
-
-#define SHAREMIND_MODULE_API_MODULE_INFO(name, version, ...) \
-    extern const SharemindModuleInfo sharemindModuleInfo = { \
-        (name), (version), { __VA_ARGS__, 0x0 } \
-    }
 
 
 /*******************************************************************************

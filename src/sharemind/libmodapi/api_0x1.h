@@ -31,9 +31,16 @@ extern "C" {
 *******************************************************************************/
 
 typedef struct {
-    const char * moduleName;
+
+    /** Unique non-empty name of the module (optionally zero-terminated): */
+    const char moduleName[64];
+
+    /** Version of the module: */
     const uint32_t moduleVersion;
-    const uint32_t supportedVersions[10];
+
+    /** Non-empty zero-terminated array of up to 15 supported API versions: */
+    const uint32_t supportedVersions[16];
+
 } const SharemindModuleInfo;
 
 #define SHAREMIND_MODULE_API_MODULE_INFO(name, version, ...) \
@@ -247,8 +254,8 @@ typedef SharemindModuleApi0x1SyscallCode (* SharemindModuleApi0x1Syscall)(
 /** System call list item:*/
 typedef struct {
 
-    /** Unique name of the system call: */
-    const char * const signature;
+    /** Unique non-empty name of the system call (optionally zero-terminated): */
+    const char signature[256];
 
     /** Pointer to the system call implementation: */
     const SharemindModuleApi0x1Syscall fptr;
@@ -262,7 +269,7 @@ typedef SharemindModuleApi0x1SyscallDefinition const SharemindModuleApi0x1Syscal
 #define SHAREMIND_MODULE_API_0x1_SYSCALL_DEFINITIONS(...) \
     extern const SharemindModuleApi0x1SyscallDefinitions sharemindModuleApi0x1SyscallDefinitions = { \
         __VA_ARGS__ , \
-        { NULL, NULL } \
+        { "", NULL } \
     }
 
 
@@ -373,8 +380,8 @@ typedef void (* SharemindModuleApi0x1PdpiShutdown)(SharemindModuleApi0x1PdpiWrap
 /** Protection domain kind list item: */
 typedef struct {
 
-    /** Unique name of the protection domain kind: */
-    const char * const name;
+    /** Unique non-empty name of the protection domain kind (optionally zero-terminated): */
+    const char name[256];
 
     /** Pointer to the protection domain initialization implementation: */
     const SharemindModuleApi0x1PdStartup pd_startup_f;
@@ -397,7 +404,7 @@ typedef SharemindModuleApi0x1PdkDefinition const SharemindModuleApi0x1PdkDefinit
 #define SHAREMIND_MODULE_API_0x1_PDK_DEFINITIONS(...) \
     extern const SharemindModuleApi0x1PdkDefinitions sharemindModuleApi0x1PdkDefinitions = { \
         __VA_ARGS__, \
-        { NULL, NULL, NULL, NULL, NULL } \
+        { "", NULL, NULL, NULL, NULL } \
     }
 
 #ifdef __cplusplus

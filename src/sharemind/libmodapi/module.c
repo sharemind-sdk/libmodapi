@@ -12,6 +12,7 @@
 #include "module.h"
 
 #include <dlfcn.h>
+#include <string.h>
 #include "modapi.h"
 
 
@@ -61,7 +62,7 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
     }
 
     /* Verify module name: */
-    if (unlikely(moduleInfo->moduleName == NULL)) {
+    if (unlikely(!moduleInfo->moduleName[0])) {
         SharemindModuleApi_set_error_with_static_string(modapi, SHAREMIND_MODULE_API_API_NOT_SUPPORTED, "Invalid module name pointer!");
         goto SharemindModule_new_fail_2;
     }
@@ -91,7 +92,7 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
     m->api = &SHAREMIND_APIs[m->apiVersion - 1u];
 
     /* Read module name: */
-    m->name = strdup(moduleInfo->moduleName);
+    m->name = strndup(moduleInfo->moduleName, sizeof(moduleInfo->moduleName));
     if (unlikely(!m->name)) {
         OOM(modapi);
         goto SharemindModule_new_fail_2;

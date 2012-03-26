@@ -161,7 +161,7 @@ SharemindModuleApiError SHAREMIND_Module_load_0x1(SharemindModule * m) {
                                         m)))
             {
                 status = SHAREMIND_MODULE_API_OUT_OF_MEMORY;
-                int r = SharemindPdkMap_remove(&apiData->pdks, (*scs)[i].signature);
+                int r = SharemindPdkMap_remove(&apiData->pdks, (*pdks)[i].name);
                 assert(r == 1); (void) r;
                 goto loadModule_0x1_fail_3;
             }

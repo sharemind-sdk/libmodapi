@@ -19,7 +19,10 @@
 #include "pdk.h"
 
 
-static const SharemindFacility * SHAREMIND_PD_get_facility_wrapper(SharemindModuleApi0x1PdWrapper * w, const char * name) {
+static const SharemindFacility * SHAREMIND_PD_get_facility_wrapper(
+        SharemindModuleApi0x1PdWrapper * w,
+        const char * name)
+{
     assert(w);
     assert(w->internal);
     assert(name);
@@ -27,9 +30,10 @@ static const SharemindFacility * SHAREMIND_PD_get_facility_wrapper(SharemindModu
     return SharemindPd_get_facility((SharemindPd *) w->internal, name);
 }
 
-static inline void SHAREMIND_PD_init_start_stop_wrappers(SharemindPd * pd,
-                                                    SharemindModuleApi0x1PdConf * pdConf,
-                                                    SharemindModuleApi0x1PdWrapper * pdWrapper)
+static inline void SHAREMIND_PD_init_start_stop_wrappers(
+        SharemindPd * pd,
+        SharemindModuleApi0x1PdConf * pdConf,
+        SharemindModuleApi0x1PdWrapper * pdWrapper)
 {
     assert(pd);
     assert(pd->pdk);

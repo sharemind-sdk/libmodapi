@@ -63,7 +63,7 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
 
     /* Verify module name: */
     if (unlikely(!moduleInfo->moduleName[0])) {
-        SharemindModuleApi_set_error_with_static_string(modapi, SHAREMIND_MODULE_API_API_NOT_SUPPORTED, "Invalid module name pointer!");
+        SharemindModuleApi_set_error_with_static_string(modapi, SHAREMIND_MODULE_API_API_NOT_SUPPORTED, "Invalid module name!");
         goto SharemindModule_new_fail_2;
     }
 

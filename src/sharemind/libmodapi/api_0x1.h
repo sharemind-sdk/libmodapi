@@ -278,7 +278,10 @@ struct SharemindModuleApi0x1PdConf_ {
     */
     SHAREMIND_ICONST size_t pdk_index;
 
-    /** The protection domain configuration string. */
+    /**
+      The protection domain configuration string.
+      \note Might be NULL if empty.
+    */
     const char * SHAREMIND_ICONST pd_conf_string;
 
 };

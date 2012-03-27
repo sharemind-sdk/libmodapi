@@ -225,21 +225,26 @@ SharemindModuleApiError SHAREMIND_Module_init_0x1(SharemindModule * const m) {
         .getModuleFacility = &SHAREMIND_Module_get_facility_wrapper,
         .internal = m
     };
-    SharemindModuleApi0x1InitializerCode r = apiData->initializer(&context);
+    SharemindModuleApi0x1Error r = apiData->initializer(&context);
     switch (r) {
-        case SHAREMIND_MODULE_API_0x1_IC_OK:
+        case SHAREMIND_MODULE_API_0x1_OK:
             if (!context.moduleHandle) {
                 apiData->deinitializer(&context);
                 return SHAREMIND_MODULE_API_API_ERROR;
             }
             m->moduleHandle = context.moduleHandle;
             return SHAREMIND_MODULE_API_OK;
-        case SHAREMIND_MODULE_API_0x1_IC_OUT_OF_MEMORY:
+        case SHAREMIND_MODULE_API_0x1_OUT_OF_MEMORY:
             return SHAREMIND_MODULE_API_OUT_OF_MEMORY;
-        case SHAREMIND_MODULE_API_0x1_IC_ERROR:
+        case SHAREMIND_MODULE_API_0x1_SHAREMIND_ERROR:
+            return SHAREMIND_MODULE_API_SHAREMIND_ERROR;
+        case SHAREMIND_MODULE_API_0x1_MODULE_ERROR:
+            return SHAREMIND_MODULE_API_MODULE_ERROR;
+        case SHAREMIND_MODULE_API_0x1_GENERAL_ERROR:
             return SHAREMIND_MODULE_API_MODULE_ERROR;
         default:
-            return SHAREMIND_MODULE_API_API_ERROR; /* False positive with -Wunreachable-code */
+            /** \todo Log invalid return code. */
+            return SHAREMIND_MODULE_API_API_ERROR;
     }
 }
 
@@ -251,7 +256,11 @@ void SHAREMIND_Module_deinit_0x1(SharemindModule * const m) {
         .getModuleFacility = &SHAREMIND_Module_get_facility_wrapper,
         .internal = m
     };
-    apiData->deinitializer(&context);
+
+    SharemindModuleApi0x1Error r = apiData->deinitializer(&context);
+    if (r != SHAREMIND_MODULE_API_0x1_OK) {
+        /** \todo Log return status. */
+    }
 }
 
 size_t SHAREMIND_Module_get_num_syscalls_0x1(const SharemindModule * m) {

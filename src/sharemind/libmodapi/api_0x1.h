@@ -42,12 +42,31 @@ struct SharemindModuleApi0x1PdpiWrapper_;
 struct SharemindModuleApi0x1PdkDefinition_;
 
 
-/** Possible return codes returned by the Sharemind module initializer */
+/** Possible return codes returned by the procedures in Sharemind modules. */
 typedef enum {
-    SHAREMIND_MODULE_API_0x1_IC_OK = 0,
-    SHAREMIND_MODULE_API_0x1_IC_OUT_OF_MEMORY,
-    SHAREMIND_MODULE_API_0x1_IC_ERROR
-} SharemindModuleApi0x1InitializerCode;
+
+    /** No error. */
+    SHAREMIND_MODULE_API_0x1_OK = 0,
+
+    /** A fatal out of memory condition occurred. */
+    SHAREMIND_MODULE_API_0x1_OUT_OF_MEMORY,
+
+    /** Sharemind acted in an unspecified manner. */
+    SHAREMIND_MODULE_API_0x1_SHAREMIND_ERROR,
+
+    /** Programming fault in the module. */
+    SHAREMIND_MODULE_API_0x1_MODULE_ERROR,
+
+    /** A general runtime error. */
+    SHAREMIND_MODULE_API_0x1_GENERAL_ERROR,
+
+    /** The system call was called improperly by the bytecode. */
+    SHAREMIND_MODULE_API_0x1_INVALID_CALL,
+
+    /** A required facility was not provided by Sharemind. */
+    SHAREMIND_MODULE_API_0x1_MISSING_FACILITY
+
+} SharemindModuleApi0x1Error;
 
 /** A facility with a context. */
 typedef struct {
@@ -80,14 +99,14 @@ struct SharemindModuleApi0x1ModuleContext_ {
 };
 
 /** Module initializer function signature: */
-typedef SharemindModuleApi0x1InitializerCode (*SharemindModuleApi0x1ModuleInitializer)(SharemindModuleApi0x1ModuleContext * c);
+typedef SharemindModuleApi0x1Error (*SharemindModuleApi0x1ModuleInitializer)(SharemindModuleApi0x1ModuleContext * c);
 #define SHAREMIND_MODULE_API_0x1_INITIALIZER(c) \
-    SharemindModuleApi0x1InitializerCode sharemind_module_api_0x1_module_init(SharemindModuleApi0x1ModuleContext * c)
+    SharemindModuleApi0x1Error sharemind_module_api_0x1_module_init(SharemindModuleApi0x1ModuleContext * c)
 
 /** Module deinitializer function signature: */
-typedef void (*SharemindModuleApi0x1ModuleDeinitializer)(SharemindModuleApi0x1ModuleContext * c);
+typedef SharemindModuleApi0x1Error (*SharemindModuleApi0x1ModuleDeinitializer)(SharemindModuleApi0x1ModuleContext * c);
 #define SHAREMIND_MODULE_API_0x1_DEINITIALIZER(c) \
-    void sharemind_module_api_0x1_module_deinit(SharemindModuleApi0x1ModuleContext * c)
+    SharemindModuleApi0x1Error sharemind_module_api_0x1_module_deinit(SharemindModuleApi0x1ModuleContext * c)
 
 
 /*******************************************************************************
@@ -123,14 +142,6 @@ struct SharemindModuleApi0x1CReference_ {
     SHAREMIND_ICONST size_t size;
 
 };
-
-/** Possible return codes returned by system calls */
-typedef enum {
-    SHAREMIND_MODULE_API_0x1_SC_OK = 0x00,
-    SHAREMIND_MODULE_API_0x1_SC_OUT_OF_MEMORY = 0x01,
-    SHAREMIND_MODULE_API_0x1_SC_INVALID_CALL = 0x02,
-    SHAREMIND_MODULE_API_0x1_SC_GENERAL_FAILURE = 0x03
-} SharemindModuleApi0x1SyscallCode;
 
 /** Additional context provided for system calls: */
 typedef struct SharemindModuleApi0x1SyscallContext_ SharemindModuleApi0x1SyscallContext;
@@ -182,7 +193,7 @@ struct SharemindModuleApi0x1SyscallContext_ {
 };
 
 /** System call function signature: */
-typedef SharemindModuleApi0x1SyscallCode (* SharemindModuleApi0x1Syscall)(
+typedef SharemindModuleApi0x1Error (* SharemindModuleApi0x1Syscall)(
     /**
       Pointer to array of regular arguments passed to syscall.
       \warning might be NULL if num_args is zero.
@@ -220,7 +231,7 @@ typedef SharemindModuleApi0x1SyscallCode (* SharemindModuleApi0x1Syscall)(
     SharemindModuleApi0x1SyscallContext * c
 );
 #define SHAREMIND_MODULE_API_0x1_SYSCALL(name,args,num_args,refs,crefs,returnValue,c) \
-    SharemindModuleApi0x1SyscallCode name( \
+    SharemindModuleApi0x1Error name( \
         SharemindCodeBlock * args, \
         size_t num_args, \
         const SharemindModuleApi0x1Reference * refs, \
@@ -335,24 +346,24 @@ struct SharemindModuleApi0x1PdpiWrapper_ {
 };
 
 /** Protection domain initialization function signature */
-typedef int (* SharemindModuleApi0x1PdStartup)(SharemindModuleApi0x1PdWrapper *);
+typedef SharemindModuleApi0x1Error (* SharemindModuleApi0x1PdStartup)(SharemindModuleApi0x1PdWrapper *);
 #define SHAREMIND_MODULE_API_0x1_PD_STARTUP(name,wrapper) \
-    int name(SharemindModuleApi0x1PdWrapper * wrapper)
+    SharemindModuleApi0x1Error name(SharemindModuleApi0x1PdWrapper * wrapper)
 
 /** Protection domain deinitialization function signature */
-typedef void (* SharemindModuleApi0x1PdShutdown)(SharemindModuleApi0x1PdWrapper *);
+typedef SharemindModuleApi0x1Error (* SharemindModuleApi0x1PdShutdown)(SharemindModuleApi0x1PdWrapper *);
 #define SHAREMIND_MODULE_API_0x1_PD_SHUTDOWN(name,wrapper) \
-    void name(SharemindModuleApi0x1PdWrapper * wrapper)
+    SharemindModuleApi0x1Error name(SharemindModuleApi0x1PdWrapper * wrapper)
 
 /** Protection domain process initialization function signature */
-typedef int (* SharemindModuleApi0x1PdpiStartup)(SharemindModuleApi0x1PdpiWrapper *);
+typedef SharemindModuleApi0x1Error (* SharemindModuleApi0x1PdpiStartup)(SharemindModuleApi0x1PdpiWrapper *);
 #define SHAREMIND_MODULE_API_0x1_PDPI_STARTUP(name,wrapper) \
-    int name(SharemindModuleApi0x1PdpiWrapper * wrapper)
+    SharemindModuleApi0x1Error name(SharemindModuleApi0x1PdpiWrapper * wrapper)
 
 /** Protection domain process deinitialization function signature */
-typedef void (* SharemindModuleApi0x1PdpiShutdown)(SharemindModuleApi0x1PdpiWrapper *);
+typedef SharemindModuleApi0x1Error (* SharemindModuleApi0x1PdpiShutdown)(SharemindModuleApi0x1PdpiWrapper *);
 #define SHAREMIND_MODULE_API_0x1_PDPI_SHUTDOWN(name,wrapper) \
-    void name(SharemindModuleApi0x1PdpiWrapper * wrapper)
+    SharemindModuleApi0x1Error name(SharemindModuleApi0x1PdpiWrapper * wrapper)
 
 /** Protection domain kind list item: */
 typedef struct {

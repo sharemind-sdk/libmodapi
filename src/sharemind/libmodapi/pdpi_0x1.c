@@ -45,18 +45,21 @@ bool SHAREMIND_PDPI_start_0x1(SharemindPdpi * pdpi) {
     };
 
     const SharemindPdk * const pdk = pd->pdk;
-    const int r = (*((SharemindModuleApi0x1PdpiStartup) pdk->pdpi_startup_impl_or_wrapper))(&pdpiWrapper);
-    if (likely(r == 0)) {
+    const SharemindModuleApi0x1Error r = (*((SharemindModuleApi0x1PdpiStartup) pdk->pdpi_startup_impl_or_wrapper))(&pdpiWrapper);
+    if (likely(r == SHAREMIND_MODULE_API_0x1_OK)) {
         pdpi->pdProcessHandle = pdpiWrapper.pdProcessHandle;
         return true;
     }
 
+    /** \todo log return status. */
+#if 0
     const char * const errorFormatString = "PDPI startup failed with code %d from the module!";
     const size_t len = strlen(errorFormatString) + sizeof(int) * 3; /* -"%d" + '\0' + '-' + 3 for each byte of int */
     char * const errorString = (char *) malloc(len);
     if (likely(errorString))
         snprintf(errorString, len, errorFormatString, r);
     SharemindModuleApi_set_error_with_dynamic_string(pdk->module->modapi, SHAREMIND_MODULE_API_PDPI_STARTUP_FAILED, errorString);
+#endif
     return false;
 }
 
@@ -73,5 +76,8 @@ void SHAREMIND_PDPI_stop_0x1(SharemindPdpi * pdpi) {
         .getPdpiFacility = &SHAREMIND_PDPI_get_facility_wrapper,
         .internal = pdpi
     };
-    (*((SharemindModuleApi0x1PdpiShutdown) pd->pdk->pdpi_shutdown_impl_or_wrapper))(&pdpiWrapper);
+    const SharemindModuleApi0x1Error r = (*((SharemindModuleApi0x1PdpiShutdown) pd->pdk->pdpi_shutdown_impl_or_wrapper))(&pdpiWrapper);
+    if (r != SHAREMIND_MODULE_API_0x1_OK) {
+        /** \todo log return status. */
+    }
 }

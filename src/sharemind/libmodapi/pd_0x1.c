@@ -56,19 +56,22 @@ bool SHAREMIND_PD_start_0x1(SharemindPd * pd) {
     const SharemindPdk * const pdk = pd->pdk;
     pdWrapper.internal = pd;
 
-    const int r = (*((SharemindModuleApi0x1PdStartup) pdk->pd_startup_impl_or_wrapper))(&pdWrapper);
-    if (likely(r == 0)) {
+    const SharemindModuleApi0x1Error r = (*((SharemindModuleApi0x1PdStartup) pdk->pd_startup_impl_or_wrapper))(&pdWrapper);
+    if (likely(r == SHAREMIND_MODULE_API_0x1_OK)) {
         pd->pdHandle = pdWrapper.pdHandle;
         pd->isStarted = true;
         return true;
     }
 
+    /** \todo log return status. */
+#if 0
     const char * const errorFormatString = "PD startup failed with code %d from the module!";
     const size_t len = strlen(errorFormatString) + sizeof(int) * 3; /* -"%d" + '\0' + '-' + 3 for each byte of int */
     char * const errorString = (char *) malloc(len);
     if (likely(errorString))
         snprintf(errorString, len, errorFormatString, r);
     SharemindModuleApi_set_error_with_dynamic_string(pdk->module->modapi, SHAREMIND_MODULE_API_PD_STARTUP_FAILED, errorString);
+#endif
     return false;
 }
 
@@ -85,5 +88,8 @@ void SHAREMIND_PD_stop_0x1(SharemindPd * pd) {
     const SharemindPdk * const pdk = pd->pdk;
     pdWrapper.internal = pd;
 
-    (*((SharemindModuleApi0x1PdShutdown) pdk->pd_shutdown_impl_or_wrapper))(&pdWrapper);
+    const SharemindModuleApi0x1Error r = (*((SharemindModuleApi0x1PdShutdown) pdk->pd_shutdown_impl_or_wrapper))(&pdWrapper);
+    if (r != SHAREMIND_MODULE_API_0x1_OK) {
+        /** \todo log return status. */
+    }
 }

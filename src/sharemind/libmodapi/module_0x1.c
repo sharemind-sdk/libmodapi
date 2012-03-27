@@ -185,7 +185,6 @@ SharemindModuleApiError SHAREMIND_Module_load_0x1(SharemindModule * m) {
         }
     }
 
-    /** \todo Handle protection domain definitions: */
     m->apiData = (void *) apiData;
 
     return SHAREMIND_MODULE_API_OK;

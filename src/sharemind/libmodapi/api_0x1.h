@@ -143,6 +143,27 @@ struct SharemindModuleApi0x1CReference_ {
 
 };
 
+/**
+  PDPI information returned by get_pd_process_instance_handle in the system call
+  context.
+*/
+typedef struct SharemindModuleApi0x1PdpiInfo_ SharemindModuleApi0x1PdpiInfo;
+struct SharemindModuleApi0x1PdpiInfo_ {
+
+    /** The PDPI handle. */
+    void * pdpiHandle;
+
+    /** The PD handle. */
+    void * pdHandle;
+
+    /** The PDK index. */
+    size_t pdkIndex;
+
+    /** The module handle. */
+    void * moduleHandle;
+
+};
+
 /** Additional context provided for system calls: */
 typedef struct SharemindModuleApi0x1SyscallContext_ SharemindModuleApi0x1SyscallContext;
 struct SharemindModuleApi0x1SyscallContext_ {
@@ -161,20 +182,15 @@ struct SharemindModuleApi0x1SyscallContext_ {
     void * SHAREMIND_ICONST moduleHandle;
 
     /**
-      Used to get access to internal data of protection domain per-process data
-      (see below for pdProcessHandle).
+      Used to get access to internal data of protection domain per-process data.
       \param[in] c context
       \param[in] pd_index the protection domain index.
-      \param[out] processHandle Where to save the pointer to protection domain per-process data.
-      \param[out] pdk_index Where to save the index of the protection domain kind in the module.
-      \param[out] moduleHandle Where to save the pointer to protection domain module data.
-      \returns an error code or 0 on success.
+      \returns a pointer to a SharemindModuleApi0x1PdpiInfo structure for the PDPI.
+      \retval NULL if no PDPI was found.
     */
-    int (* SHAREMIND_ICONST get_pd_process_instance_handle)(SharemindModuleApi0x1SyscallContext * c,
-                                                  uint64_t pd_index,
-                                                  void ** pdProcessHandle,
-                                                  size_t * pdkIndex,
-                                                  void ** moduleHandle);
+    const SharemindModuleApi0x1PdpiInfo * (* SHAREMIND_ICONST get_pdpi_info)(
+            SharemindModuleApi0x1SyscallContext * c,
+            uint64_t pd_index);
 
     /** Access to public dynamic memory inside the VM process: */
     uint64_t (* SHAREMIND_ICONST publicAlloc)(SharemindModuleApi0x1SyscallContext * c, uint64_t nBytes);

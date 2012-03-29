@@ -39,6 +39,7 @@ inline void SharemindFacilityMap_init(SharemindFacilityMap * fm, SharemindFacili
 inline void SharemindFacilityMap_destroy(SharemindFacilityMap * fm) __attribute__ ((nonnull(1)));
 inline int SharemindFacilityMap_set(SharemindFacilityMap * fm, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
 inline const SharemindFacility * SharemindFacilityMap_get(const SharemindFacilityMap * fm, const char * name) __attribute__ ((nonnull(1,2)));
+inline const SharemindFacility * SharemindFacilityMap_get_norecurse(const SharemindFacilityMap * fm, const char * name) __attribute__ ((nonnull(1,2)));
 
 
 #define SHAREMIND_FACILITYMAP_DEFINE(qualifiers) \
@@ -72,6 +73,12 @@ inline const SharemindFacility * SharemindFacilityMap_get(const SharemindFacilit
         if (fm->nextMap) \
             return SharemindFacilityMap_get(fm->nextMap, name); \
         return NULL; \
+    } \
+    qualifiers const SharemindFacility * SharemindFacilityMap_get_norecurse(const SharemindFacilityMap * fm, const char * name) { \
+        assert(fm); \
+        assert(name); \
+        assert(name[0]); \
+        return SharemindFacilityMapInner_get_const(&fm->realMap, name); \
     }
 
 #ifndef SHAREMIND_LIBMODAPI_FACILITYMAP_C

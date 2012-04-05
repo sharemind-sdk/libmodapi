@@ -16,6 +16,10 @@
 #include "modapi.h"
 
 
+// Include API list:
+#include "apis.c"
+
+
 SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * filename) {
     assert(modapi);
     assert(filename);
@@ -89,7 +93,7 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
         SharemindModuleApi_set_error_with_static_string(modapi, SHAREMIND_MODULE_API_API_NOT_SUPPORTED, "API not supported!");
         goto SharemindModule_new_fail_2;
     }
-    m->api = &SHAREMIND_APIs[m->apiVersion - 1u];
+    m->api = &SharemindApis[m->apiVersion - 1u];
 
     /* Read module name: */
     m->name = strndup(moduleInfo->moduleName, sizeof(moduleInfo->moduleName));

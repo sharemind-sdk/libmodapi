@@ -22,8 +22,8 @@ extern "C" {
 #endif
 
 
-bool SHAREMIND_PD_start_0x1(SharemindPd * pd) __attribute__ ((nonnull(1)));
-void SHAREMIND_PD_stop_0x1(SharemindPd * pd) __attribute__ ((nonnull(1)));
+bool SharemindPd_start_0x1(SharemindPd * pd) __attribute__ ((nonnull(1), visibility("internal")));
+void SharemindPd_stop_0x1(SharemindPd * pd) __attribute__ ((nonnull(1), visibility("internal")));
 
 
 #ifdef __cplusplus

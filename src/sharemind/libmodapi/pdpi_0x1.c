@@ -28,7 +28,7 @@ static const SharemindFacility * SHAREMIND_PDPI_get_facility_wrapper(SharemindMo
     return SharemindPdpi_get_facility((SharemindPdpi *) w->internal, name);
 }
 
-bool SHAREMIND_PDPI_start_0x1(SharemindPdpi * pdpi) {
+bool SharemindPdpi_start_0x1(SharemindPdpi * pdpi) {
     assert(pdpi);
     assert(pdpi->pd);
     assert(pdpi->pd->pdk);
@@ -63,7 +63,7 @@ bool SHAREMIND_PDPI_start_0x1(SharemindPdpi * pdpi) {
     return false;
 }
 
-void SHAREMIND_PDPI_stop_0x1(SharemindPdpi * pdpi) {
+void SharemindPdpi_stop_0x1(SharemindPdpi * pdpi) {
     assert(pdpi);
     assert(pdpi->pd);
     assert(pdpi->pd->pdk);

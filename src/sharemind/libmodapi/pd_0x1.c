@@ -50,7 +50,7 @@ static inline void SHAREMIND_PD_init_start_stop_wrappers(
     pdWrapper->getPdFacility = &SHAREMIND_PD_get_facility_wrapper;
 }
 
-bool SHAREMIND_PD_start_0x1(SharemindPd * pd) {
+bool SharemindPd_start_0x1(SharemindPd * pd) {
     assert(pd);
     assert(!pd->isStarted);
 
@@ -79,7 +79,7 @@ bool SHAREMIND_PD_start_0x1(SharemindPd * pd) {
     return false;
 }
 
-void SHAREMIND_PD_stop_0x1(SharemindPd * pd) {
+void SharemindPd_stop_0x1(SharemindPd * pd) {
     assert(pd);
     assert(pd->isStarted);
     assert(pd->pdk);

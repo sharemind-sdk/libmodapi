@@ -33,7 +33,7 @@ struct SharemindModule_ {
     char * name;
     uint32_t apiVersion;
     uint32_t version;
-    const SHAREMIND_API * api;
+    const SharemindApi * api;
 
     void * apiData;
     void * moduleHandle;

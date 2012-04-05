@@ -12,10 +12,13 @@
 #include "pd.h"
 
 #include <stdlib.h>
-#include "apis.h"
 #include "modapi.h"
 #include "module.h"
 #include "pdk.h"
+
+
+// Include API list:
+#include "apis.c"
 
 
 SharemindPd * SharemindPd_new(SharemindPdk * pdk, const char * name, const char * conf) {

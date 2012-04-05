@@ -17,7 +17,7 @@ SHAREMIND_ENUM_CUSTOM_DEFINE_TOSTRING(SharemindModuleApiError,SHAREMIND_MODULE_A
 #define SHAREMIND_MODULE_API_DEFINE_ERRORSTRING(unused,unused2,e) \
     [(int) SHAREMIND_T(2,0,e)] = "Out of memory while generating error message for error with code " SHAREMIND_2S(SHAREMIND_T(2,0,e)) "!",
 
-const char * const SHAREMIND_MODULE_API_OomErrorStrings[SHAREMIND_MODULE_API_ERROR_COUNT + 1] = {
+static const char * const sharemindModuleApiOomErrorStrings[SHAREMIND_MODULE_API_ERROR_COUNT + 1] = {
     BOOST_PP_SEQ_FOR_EACH(SHAREMIND_MODULE_API_DEFINE_ERRORSTRING,_,SHAREMIND_MODULE_API_ERROR_ENUM)
 };
 
@@ -110,7 +110,7 @@ bool SharemindModuleApi_set_error_with_dynamic_string(SharemindModuleApi * modap
             return true;
         }
     }
-    modapi->lastErrorStaticString = SHAREMIND_MODULE_API_OomErrorStrings[(int) error];
+    modapi->lastErrorStaticString = sharemindModuleApiOomErrorStrings[(int) error];
     return !hasErrorString;
 }
 

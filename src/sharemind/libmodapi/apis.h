@@ -45,8 +45,6 @@ typedef struct {
     void (* const pdpi_stop)(SharemindPdpi * pd);
 } SharemindApi;
 
-static const SharemindApi SharemindApis[];
-
 #ifdef __cplusplus
 } /* extern "C" { */
 #endif

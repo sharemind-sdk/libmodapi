@@ -17,8 +17,13 @@
 extern "C" {
 #endif
 
-
-typedef struct {
+/**
+  \note This struct needs a name, because otherwise we might get this warning
+        for modules written in C:
+            warning: non-local variable 'sharemindModuleInfo' with anonymous
+            type is questionable in C++
+*/
+typedef struct SharemindModuleInfo_ {
 
     /** Unique non-empty name of the module (optionally zero-terminated): */
     const char moduleName[64];

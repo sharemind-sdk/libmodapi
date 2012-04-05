@@ -144,8 +144,7 @@ struct SharemindModuleApi0x1CReference_ {
 };
 
 /**
-  PDPI information returned by get_pd_process_instance_handle in the system call
-  context.
+  PDPI information returned by get_pdpi_info in the system call context.
 */
 typedef struct SharemindModuleApi0x1PdpiInfo_ SharemindModuleApi0x1PdpiInfo;
 struct SharemindModuleApi0x1PdpiInfo_ {

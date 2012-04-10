@@ -168,10 +168,13 @@ typedef struct SharemindModuleApi0x1SyscallContext_ SharemindModuleApi0x1Syscall
 struct SharemindModuleApi0x1SyscallContext_ {
 
     /** Internal pointer, do not use! */
-    SHAREMIND_ICONST void * SHAREMIND_ICONST internal;
+    SHAREMIND_ICONST void * SHAREMIND_ICONST vm_internal;
 
-    /** Internal pointer, do not use! */
-    SHAREMIND_ICONST void * SHAREMIND_ICONST libmodapi_internal;
+    /** System call specific data. */
+    SHAREMIND_ICONST void * SHAREMIND_ICONST syscall_internal;
+
+    /** Process specific data. */
+    SHAREMIND_ICONST void * SHAREMIND_ICONST process_internal;
 
     /**
       A handle to the private data of the module instance. This is the same

@@ -38,6 +38,7 @@ struct SharemindModuleApi0x1SyscallContext_;
 struct SharemindModuleApi0x1SyscallDefinition_;
 struct SharemindModuleApi0x1PdConf_;
 struct SharemindModuleApi0x1PdWrapper_;
+struct SharemindModuleApi0x1PdpiInfo_;
 struct SharemindModuleApi0x1PdpiWrapper_;
 struct SharemindModuleApi0x1PdkDefinition_;
 

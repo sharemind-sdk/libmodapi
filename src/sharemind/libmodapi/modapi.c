@@ -72,14 +72,15 @@ void SharemindModuleApi_clear_error(SharemindModuleApi * modapi) {
     modapi->lastError = SHAREMIND_MODULE_API_OK;
 }
 
-void SharemindModuleApi_set_error_with_static_string(SharemindModuleApi * modapi,
-                                          SharemindModuleApiError error,
-                                          const char * errorString)
+void SharemindModuleApi_set_error_with_static_string(
+        SharemindModuleApi * modapi,
+        SharemindModuleApiError error,
+        const char * errorString)
 {
     assert(modapi);
     assert(error != SHAREMIND_MODULE_API_OK);
 
-    if (unlikely(!errorString && !errorString[0]))
+    if (unlikely(!errorString || !errorString[0]))
         errorString = SharemindModuleApiError_toString(error);
 
     assert(errorString);

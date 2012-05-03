@@ -65,7 +65,10 @@ typedef enum {
     SHAREMIND_MODULE_API_0x1_INVALID_CALL,
 
     /** A required facility was not provided by Sharemind. */
-    SHAREMIND_MODULE_API_0x1_MISSING_FACILITY
+    SHAREMIND_MODULE_API_0x1_MISSING_FACILITY,
+
+    /** The protection domain configuration given was invalid or erroneous. */
+    SHAREMIND_MODULE_API_0x1_INVALID_PD_CONFIGURATION
 
 } SharemindModuleApi0x1Error;
 

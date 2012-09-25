@@ -136,7 +136,7 @@ SharemindModuleApi * SharemindSyscall_get_modapi(const SharemindSyscall * sc) __
 
 typedef struct {
     SharemindSyscallCallable callable;
-    void * internal;
+    void (* internal)(void);
 } SharemindSyscallWrapper;
 
 SharemindSyscallWrapper SharemindSyscall_get_wrapper(const SharemindSyscall * sc) __attribute__ ((nonnull(1)));

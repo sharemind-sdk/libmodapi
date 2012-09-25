@@ -18,7 +18,7 @@
 #include "module.h"
 
 
-int SharemindSyscall_init(SharemindSyscall * sc, const char * name, void * impl, SharemindSyscallCallable wrapper, SharemindModule * m) {
+int SharemindSyscall_init(SharemindSyscall * sc, const char * name, void (* impl)(void), SharemindSyscallCallable wrapper, SharemindModule * m) {
     assert(sc);
     assert(name);
     assert(impl);

@@ -110,7 +110,7 @@ SharemindModuleApiError SharemindModule_load_0x1(SharemindModule * m) {
                 status = SHAREMIND_MODULE_API_DUPLICATE_SYSCALL;
                 goto loadModule_0x1_fail_2;
             }
-            if (unlikely(!SharemindSyscall_init(sc, syscallSignatureBuffer, (*scs)[i].fptr, NULL, m))) {
+            if (unlikely(!SharemindSyscall_init(sc, syscallSignatureBuffer, (void (*)(void)) (*scs)[i].fptr, NULL, m))) {
                 status = SHAREMIND_MODULE_API_OUT_OF_MEMORY;
                 int r = SharemindSyscallMap_remove(&apiData->syscalls, syscallSignatureBuffer);
                 assert(r == 1); (void) r;
@@ -161,10 +161,10 @@ SharemindModuleApiError SharemindModule_load_0x1(SharemindModule * m) {
             if (unlikely(!SharemindPdk_init(pdk,
                                         i,
                                         pdkNameBuffer,
-                                        (*pdks)[i].pd_startup_f, NULL,
-                                        (*pdks)[i].pd_shutdown_f, NULL,
-                                        (*pdks)[i].pdpi_startup_f, NULL,
-                                        (*pdks)[i].pdpi_shutdown_f, NULL,
+                                        (void (*)(void)) (*pdks)[i].pd_startup_f, (void (*)(void)) NULL,
+                                        (void (*)(void)) (*pdks)[i].pd_shutdown_f, (void (*)(void)) NULL,
+                                        (void (*)(void)) (*pdks)[i].pdpi_startup_f, (void (*)(void)) NULL,
+                                        (void (*)(void)) (*pdks)[i].pdpi_shutdown_f, (void (*)(void)) NULL,
                                         m)))
             {
                 status = SHAREMIND_MODULE_API_OUT_OF_MEMORY;

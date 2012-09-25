@@ -36,28 +36,28 @@ struct SharemindPdk_ {
     char * name;
 
     /** Pointer to implementation function if current API, otherwise to a wrapper function. */
-    void * pd_startup_impl_or_wrapper;
+    void (* pd_startup_impl_or_wrapper)(void);
 
     /** NULL if current API, otherwise pointer to implementation function. */
-    void * pd_startup_null_or_impl;
+    void (* pd_startup_null_or_impl)(void);
 
     /** Pointer to implementation function if current API, otherwise to a wrapper function. */
-    void * pd_shutdown_impl_or_wrapper;
+    void (* pd_shutdown_impl_or_wrapper)(void);
 
     /** NULL if current API, otherwise pointer to implementation function. */
-    void * pd_shutdown_null_or_impl;
+    void (* pd_shutdown_null_or_impl)(void);
 
     /** Pointer to implementation function if current API, otherwise to a wrapper function. */
-    void * pdpi_startup_impl_or_wrapper;
+    void (* pdpi_startup_impl_or_wrapper)(void);
 
     /** NULL if current API, otherwise pointer to implementation function. */
-    void * pdpi_startup_null_or_impl;
+    void (* pdpi_startup_null_or_impl)(void);
 
     /** Pointer to implementation function if current API, otherwise to a wrapper function. */
-    void * pdpi_shutdown_impl_or_wrapper;
+    void (* pdpi_shutdown_impl_or_wrapper)(void);
 
     /** NULL if current API, otherwise pointer to implementation function. */
-    void * pdpi_shutdown_null_or_impl;
+    void (* pdpi_shutdown_null_or_impl)(void);
 
     /** Pointer to the module which provides this protection domain kind. */
     SharemindModule * module;
@@ -75,14 +75,14 @@ struct SharemindPdk_ {
 int SharemindPdk_init(SharemindPdk * pdk,
                   size_t pdk_index,
                   const char * name,
-                  void * pd_startup_impl,
-                  void * pd_startup_wrapper,
-                  void * pd_shutdown_impl,
-                  void * pd_shutdown_wrapper,
-                  void * pdpi_startup_impl,
-                  void * pdpi_startup_wrapper,
-                  void * pdpi_shutdown_impl,
-                  void * pdpi_shutdown_wrapper,
+                  void (* pd_startup_impl)(void),
+                  void (* pd_startup_wrapper)(void),
+                  void (* pd_shutdown_impl)(void),
+                  void (* pd_shutdown_wrapper)(void),
+                  void (* pd_process_startup_impl)(void),
+                  void (* pd_process_startup_wrapper)(void),
+                  void (* pd_process_shutdown_impl)(void),
+                  void (* pd_process_shutdown_wrapper)(void),
                   SharemindModule * module) __attribute__ ((nonnull(1, 3, 4, 6, 8, 10, 12)));
 void SharemindPdk_destroy(SharemindPdk * pdk) __attribute__ ((nonnull(1)));
 

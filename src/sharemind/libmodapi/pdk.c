@@ -22,14 +22,14 @@
 int SharemindPdk_init(SharemindPdk * pdk,
                   size_t pdk_index,
                   const char * name,
-                  void * pd_startup_impl,
-                  void * pd_startup_wrapper,
-                  void * pd_shutdown_impl,
-                  void * pd_shutdown_wrapper,
-                  void * pd_process_startup_impl,
-                  void * pd_process_startup_wrapper,
-                  void * pd_process_shutdown_impl,
-                  void * pd_process_shutdown_wrapper,
+                  void (* pd_startup_impl)(void),
+                  void (* pd_startup_wrapper)(void),
+                  void (* pd_shutdown_impl)(void),
+                  void (* pd_shutdown_wrapper)(void),
+                  void (* pd_process_startup_impl)(void),
+                  void (* pd_process_startup_wrapper)(void),
+                  void (* pd_process_shutdown_impl)(void),
+                  void (* pd_process_shutdown_wrapper)(void),
                   SharemindModule * module)
 {
     assert(pdk);

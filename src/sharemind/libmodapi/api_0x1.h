@@ -175,7 +175,7 @@ struct SharemindModuleApi0x1SyscallContext_ {
     SHAREMIND_ICONST void * SHAREMIND_ICONST vm_internal;
 
     /** System call specific data. */
-    SHAREMIND_ICONST void * SHAREMIND_ICONST syscall_internal;
+    void * syscall_internal;
 
     /** Process specific data. */
     SHAREMIND_ICONST void * SHAREMIND_ICONST process_internal;
@@ -185,7 +185,7 @@ struct SharemindModuleApi0x1SyscallContext_ {
       handle as provided to SharemindModuleApi0x1ModuleContext on module
       initialization.
     */
-    void * SHAREMIND_ICONST moduleHandle;
+    void * moduleHandle;
 
     /**
       Used to get access to internal data of protection domain per-process data.

@@ -96,7 +96,7 @@ const SharemindFacility * SharemindModuleApi_get_pdpi_facility(const SharemindMo
   SharemindModule
 *******************************************************************************/
 
-SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * filename) __attribute__ ((nonnull(1, 2)));
+SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * filename, const char * conf) __attribute__ ((nonnull(1, 2)));
 void SharemindModule_free(SharemindModule * m) __attribute__ ((nonnull(1)));
 
 SharemindModuleApiError SharemindModule_mod_init(SharemindModule * m) __attribute__ ((nonnull(1)));
@@ -105,6 +105,7 @@ bool SharemindModule_mod_is_initialized(const SharemindModule * m) __attribute__
 
 const char * SharemindModule_get_filename(const SharemindModule * m) __attribute__ ((nonnull(1)));
 const char * SharemindModule_get_name(const SharemindModule * m) __attribute__ ((nonnull(1)));
+const char * SharemindModule_get_conf(const SharemindModule * m) __attribute__ ((nonnull(1)));
 uint32_t SharemindModule_get_api_version_in_use(const SharemindModule * m) __attribute__ ((nonnull(1)));
 void * SharemindModule_get_handle(const SharemindModule * m) __attribute__ ((nonnull(1)));
 

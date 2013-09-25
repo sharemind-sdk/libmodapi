@@ -68,7 +68,10 @@ typedef enum {
     SHAREMIND_MODULE_API_0x1_MISSING_FACILITY,
 
     /** The protection domain configuration given was invalid or erroneous. */
-    SHAREMIND_MODULE_API_0x1_INVALID_PD_CONFIGURATION
+    SHAREMIND_MODULE_API_0x1_INVALID_PD_CONFIGURATION,
+
+    /** The module configuration given was invalid or erroneous. */
+    SHAREMIND_MODULE_API_0x1_INVALID_MODULE_CONFIGURATION
 
 } SharemindModuleApi0x1Error;
 
@@ -90,6 +93,12 @@ struct SharemindModuleApi0x1ModuleContext_ {
       this handle is also passed to facilities provided by this module.
     */
     void * moduleHandle;
+
+    /**
+      The module configuration string.
+      \note Might be NULL if empty.
+    */
+    const char * SHAREMIND_ICONST conf;
 
     /**
       \brief Finds a module specific system facility.

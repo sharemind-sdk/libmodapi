@@ -224,7 +224,8 @@ SharemindModuleApiError SharemindModule_init_0x1(SharemindModule * const m) {
     SharemindModuleApi0x1ModuleContext context = {
         .moduleHandle = NULL, /* Just in case */
         .getModuleFacility = &SharemindModule_get_facility_wrapper,
-        .internal = m
+        .internal = m,
+        .conf = m->conf
     };
     SharemindModuleApi0x1Error r = apiData->initializer(&context);
     SHAREMIND_STATIC_ASSERT(sizeof(r) <= sizeof(int));
@@ -256,7 +257,8 @@ void SharemindModule_deinit_0x1(SharemindModule * const m) {
     SharemindModuleApi0x1ModuleContext context = {
         .moduleHandle = m->moduleHandle,
         .getModuleFacility = &SharemindModule_get_facility_wrapper,
-        .internal = m
+        .internal = m,
+        .conf = m->conf
     };
 
     SharemindModuleApi0x1Error r = apiData->deinitializer(&context);

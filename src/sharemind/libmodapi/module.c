@@ -20,7 +20,7 @@
 #include "apis.c"
 
 
-SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * filename) {
+SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * filename, const char * conf) {
     assert(modapi);
     assert(filename);
     assert(filename[0]);
@@ -50,25 +50,33 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
         goto SharemindModule_new_fail_0;
     }
 
+    if (likely(conf && conf[0])) {
+        m->conf = strdup(conf);
+        if (!m->conf)
+            goto SharemindModule_new_fail_1;
+    } else {
+        m->conf = NULL;
+    }
+
     /* Load module: */
     (void) dlerror();
     m->libHandle = dlopen(filename, RTLD_NOW | RTLD_LOCAL);
     if (unlikely(!m->libHandle)) {
         SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODULE_API_UNABLE_TO_OPEN_MODULE, dlerror());
-        goto SharemindModule_new_fail_1;
+        goto SharemindModule_new_fail_2;
     }
 
     /* Read module info: */
     moduleInfo = (const SharemindModuleInfo *) dlsym(m->libHandle, "sharemindModuleInfo");
     if (unlikely(!moduleInfo)) {
         SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODULE_API_INVALID_MODULE, dlerror());
-        goto SharemindModule_new_fail_2;
+        goto SharemindModule_new_fail_3;
     }
 
     /* Verify module name: */
     if (unlikely(!moduleInfo->moduleName[0])) {
         SharemindModuleApi_set_error_with_static_string(modapi, SHAREMIND_MODULE_API_API_NOT_SUPPORTED, "Invalid module name!");
-        goto SharemindModule_new_fail_2;
+        goto SharemindModule_new_fail_3;
     }
 
     /*
@@ -77,7 +85,7 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
     */
     if (unlikely(moduleInfo->supportedVersions[0] == 0u)) {
         SharemindModuleApi_set_error_with_static_string(modapi, SHAREMIND_MODULE_API_API_NOT_SUPPORTED, "Invalid supported API list!");
-        goto SharemindModule_new_fail_2;
+        goto SharemindModule_new_fail_3;
     }
     i = 0u;
     m->apiVersion = 0u;
@@ -91,7 +99,7 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
     } while (moduleInfo->supportedVersions[++i] == 0u);
     if (unlikely(m->apiVersion <= 0u)) {
         SharemindModuleApi_set_error_with_static_string(modapi, SHAREMIND_MODULE_API_API_NOT_SUPPORTED, "API not supported!");
-        goto SharemindModule_new_fail_2;
+        goto SharemindModule_new_fail_3;
     }
     m->api = &SharemindApis[m->apiVersion - 1u];
 
@@ -99,7 +107,7 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
     m->name = strndup(moduleInfo->moduleName, sizeof(moduleInfo->moduleName));
     if (unlikely(!m->name)) {
         OOM(modapi);
-        goto SharemindModule_new_fail_2;
+        goto SharemindModule_new_fail_3;
     }
 
     /* Read module version: */
@@ -111,7 +119,7 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
         SharemindModuleApiError status = (*(m->api->module_load))(m);
         if (unlikely(status != SHAREMIND_MODULE_API_OK)) {
             SharemindModuleApi_set_error_with_static_string(modapi, status, NULL);
-            goto SharemindModule_new_fail_3;
+            goto SharemindModule_new_fail_4;
         }
 
         SharemindFacilityMap_init(&m->moduleFacilityMap, &modapi->moduleFacilityMap);
@@ -120,13 +128,18 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
         return m;
     }
 
-SharemindModule_new_fail_3:
+SharemindModule_new_fail_4:
 
     free(m->name);
 
-SharemindModule_new_fail_2:
+SharemindModule_new_fail_3:
 
     dlclose(m->libHandle);
+
+SharemindModule_new_fail_2:
+
+    if (likely(m->conf))
+        free(m->conf);
 
 SharemindModule_new_fail_1:
 
@@ -148,6 +161,8 @@ void SharemindModule_free(SharemindModule * m) {
     SHAREMIND_REFS_ASSERT_IF_REFERENCED(m);
     free(m->name);
     dlclose(m->libHandle);
+    if (likely(m->conf))
+        free(m->conf);
     free(m->filename);
     SharemindModuleApi_refs_unref(m->modapi);
 
@@ -198,6 +213,13 @@ const char * SharemindModule_get_filename(const SharemindModule * m) {
 const char * SharemindModule_get_name(const SharemindModule * m) {
     assert(m);
     return m->name;
+}
+
+const char * SharemindModule_get_conf(const SharemindModule * m) {
+    assert(m);
+    assert(m->conf);
+    assert(m->conf[0]);
+    return m->conf;
 }
 
 uint32_t SharemindModule_get_api_version_in_use(const SharemindModule * m) {

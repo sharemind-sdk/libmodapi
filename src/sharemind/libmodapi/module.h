@@ -31,6 +31,7 @@ struct SharemindModule_ {
     void * libHandle;
     char * filename;
     char * name;
+    char * conf;
     uint32_t apiVersion;
     uint32_t version;
     const SharemindApi * api;

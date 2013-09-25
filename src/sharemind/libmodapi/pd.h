@@ -7,8 +7,8 @@
  * code is subject to the appropriate license agreement.
  */
 
-#ifndef SHAREMIND_LIBSHAREMIND_PD_H
-#define SHAREMIND_LIBSHAREMIND_PD_H
+#ifndef SHAREMIND_LIBMODAPI_PD_H
+#define SHAREMIND_LIBMODAPI_PD_H
 
 #ifndef SHAREMIND_INTERNAL__
 #error including an internal header!
@@ -64,4 +64,4 @@ SHAREMIND_NAMED_REFS_DECLARE_FUNCTIONS(SharemindPd,startedRefs)
 } /* extern "C" { */
 #endif
 
-#endif /* SHAREMIND_LIBSHAREMIND_PD_H */
+#endif /* SHAREMIND_LIBMODAPI_PD_H */

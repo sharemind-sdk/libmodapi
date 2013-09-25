@@ -7,8 +7,8 @@
  * code is subject to the appropriate license agreement.
  */
 
-#ifndef SHAREMIND_LIBSHAREMIND_SYSCALL_H
-#define SHAREMIND_LIBSHAREMIND_SYSCALL_H
+#ifndef SHAREMIND_LIBMODAPI_SYSCALL_H
+#define SHAREMIND_LIBMODAPI_SYSCALL_H
 
 #ifndef SHAREMIND_INTERNAL__
 #error including an internal header!
@@ -53,4 +53,4 @@ SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindSyscall)
 } /* extern "C" { */
 #endif
 
-#endif /* SHAREMIND_LIBSHAREMIND_SYSCALL_H */
+#endif /* SHAREMIND_LIBMODAPI_SYSCALL_H */

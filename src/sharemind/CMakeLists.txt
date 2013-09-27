@@ -30,7 +30,8 @@ ENDMACRO(FLAGS_MAGIC)
 FLAGS_MAGIC("Weverything")
 FLAGS_MAGIC("Wlogical-op")
 
-ADD_DEFINITIONS("-D_XOPEN_SOURCE=500" "-D__STDC_LIMIT_MACROS")
+SET(LIBMODAPI_INSTALL_DEFINITIONS "-D__STDC_LIMIT_MACROS")
+ADD_DEFINITIONS("${LIBMODAPI_INSTALL_DEFINITIONS}")
 
 
 
@@ -77,9 +78,10 @@ ADD_LIBRARY("libmodapi" ${SHAREMIND_LIBMODAPI_LINKING_MODE}
             ${SHAREMIND_LIBMODAPI_HEADERS_P}
 )
 
+SET(LIBMODAPI_VERSION "0.1.0.0")
 SET_TARGET_PROPERTIES("libmodapi" PROPERTIES
                       OUTPUT_NAME "sharemind_modapi"
-                      VERSION "0.1.0.0"
+                      VERSION "${LIBMODAPI_VERSION}"
                       SOVERSION "0.1")
 
 INSTALL(TARGETS "libmodapi"
@@ -87,3 +89,17 @@ INSTALL(TARGETS "libmodapi"
 
 INSTALL(FILES ${SHAREMIND_LIBMODAPI_HEADERS}
         DESTINATION "include/sharemind/libmodapi")
+
+# Install cmake files:
+FILE(GLOB_RECURSE sharemind_libmodapi_in_files "${CMAKE_CURRENT_SOURCE_DIR}/*.in")
+ADD_CUSTOM_TARGET("include_sharemind_libmodapi_in_files_in_IDE" SOURCES ${sharemind_libmodapi_in_files})
+SET(LIBMODAPI_INSTALL_LINK_LIBRARIES "-L${CMAKE_INSTALL_PREFIX}/lib" "-lsharemind_modapi")
+SET(LIBMODAPI_INSTALL_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include")
+
+CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/SharemindLibmodapiConfig.cmake.in"
+               "${CMAKE_CURRENT_BINARY_DIR}/SharemindLibmodapiConfig.cmake" @ONLY)
+CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/SharemindLibmodapiConfigVersion.cmake.in"
+               "${CMAKE_CURRENT_BINARY_DIR}/SharemindLibmodapiConfigVersion.cmake" @ONLY)
+INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/SharemindLibmodapiConfig.cmake"
+              "${CMAKE_CURRENT_BINARY_DIR}/SharemindLibmodapiConfigVersion.cmake"
+        DESTINATION "lib/SharemindLibmodapi")

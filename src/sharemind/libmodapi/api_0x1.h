@@ -85,7 +85,7 @@ typedef struct {
 typedef struct SharemindModuleApi0x1ModuleContext_ SharemindModuleApi0x1ModuleContext;
 struct SharemindModuleApi0x1ModuleContext_ {
 
-    /** Internal pointer, do not use! */
+    /** Internal pointer, do not use in modules! Don't! */
     SHAREMIND_ICONST void * SHAREMIND_ICONST internal;
 
     /**
@@ -130,7 +130,7 @@ typedef SharemindModuleApi0x1Error (*SharemindModuleApi0x1ModuleDeinitializer)(S
 typedef struct SharemindModuleApi0x1Reference_ SharemindModuleApi0x1Reference;
 struct SharemindModuleApi0x1Reference_ {
 
-    /** Internal pointer, do not use! */
+    /** Internal pointer, do not use in modules! Really! */
     SHAREMIND_ICONST void * SHAREMIND_ICONST internal;
 
     /** Pointer to referenced data. */
@@ -145,7 +145,7 @@ struct SharemindModuleApi0x1Reference_ {
 typedef struct SharemindModuleApi0x1CReference_ SharemindModuleApi0x1CReference;
 struct SharemindModuleApi0x1CReference_ {
 
-    /** Internal pointer, do not use! */
+    /** Internal pointer, do not use in modules! We mean it! */
     SHAREMIND_ICONST void * SHAREMIND_ICONST internal;
 
     /** Pointer to referenced data. */
@@ -180,13 +180,13 @@ struct SharemindModuleApi0x1PdpiInfo_ {
 typedef struct SharemindModuleApi0x1SyscallContext_ SharemindModuleApi0x1SyscallContext;
 struct SharemindModuleApi0x1SyscallContext_ {
 
-    /** Internal pointer, do not use! */
+    /** Internal pointer, do not use in modules! We're warning you! */
     SHAREMIND_ICONST void * SHAREMIND_ICONST vm_internal;
 
-    /** System call specific data. */
+    /** System call specific data, do not use in modules! Ever! */
     void * syscall_internal;
 
-    /** Process specific data. */
+    /** Process specific data, do not use in modules! Never Ever! */
     SHAREMIND_ICONST void * SHAREMIND_ICONST process_internal;
 
     /**
@@ -321,7 +321,7 @@ struct SharemindModuleApi0x1PdConf_ {
 typedef struct SharemindModuleApi0x1PdWrapper_ SharemindModuleApi0x1PdWrapper;
 struct SharemindModuleApi0x1PdWrapper_ {
 
-    /** Internal pointer, do not use! */
+    /** Internal pointer, do not use in modules! Never ever ever! */
     SHAREMIND_ICONST void * SHAREMIND_ICONST internal;
 
     /** A handle for protection domain runtime data. */
@@ -354,7 +354,7 @@ struct SharemindModuleApi0x1PdWrapper_ {
 typedef struct SharemindModuleApi0x1PdpiWrapper_ SharemindModuleApi0x1PdpiWrapper;
 struct SharemindModuleApi0x1PdpiWrapper_ {
 
-    /** Internal pointer, do not use! */
+    /** Internal pointer, do not use in modules! Please! */
     SHAREMIND_ICONST void * SHAREMIND_ICONST internal;
 
     /** A handle for protection domain per-process data. */

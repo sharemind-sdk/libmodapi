@@ -19,11 +19,13 @@
 extern "C" {
 #endif
 
+#ifndef SHAREMIND_ICONST
 #ifdef SHAREMIND_INTERNAL__
 #define SHAREMIND_ICONST
 #else
 #define SHAREMIND_ICONST const
 #endif
+#endif /* SHAREMIND_ICONST */
 
 
 /*******************************************************************************

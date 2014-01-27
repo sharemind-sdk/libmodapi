@@ -18,7 +18,12 @@
 #include "module.h"
 
 
-int SharemindSyscall_init(SharemindSyscall * sc, const char * name, void (* impl)(void), SharemindSyscallCallable wrapper, SharemindModule * m) {
+int SharemindSyscall_init(SharemindSyscall * sc,
+                          const char * name,
+                          void (* impl)(void),
+                          SharemindSyscallCallable wrapper,
+                          SharemindModule * m)
+{
     assert(sc);
     assert(name);
     assert(impl);
@@ -80,10 +85,12 @@ SharemindModuleApi * SharemindSyscall_get_modapi(const SharemindSyscall * sc) {
 }
 
 /**
-  \note According to the AMD64 ABI, returning _SHAREMIND_SyscallWrapper should be
-        fast, because this struct will be returned in %rax and %rdx.
+  \note According to the AMD64 ABI, returning _SHAREMIND_SyscallWrapper should
+        be fast, because this struct will be returned in %rax and %rdx.
 */
-SharemindSyscallWrapper SharemindSyscall_get_wrapper(const SharemindSyscall * sc) {
+SharemindSyscallWrapper SharemindSyscall_get_wrapper(
+        const SharemindSyscall * sc)
+{
     assert(sc);
     assert(sc->wrapper.callable);
     return sc->wrapper;

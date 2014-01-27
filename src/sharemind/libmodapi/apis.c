@@ -17,8 +17,10 @@
 
 
 static const SharemindApi SharemindApis[] = {
-    { .module_load = &SharemindModule_load_0x1, .module_unload = &SharemindModule_unload_0x1,
-      .module_init = &SharemindModule_init_0x1, .module_deinit = &SharemindModule_deinit_0x1,
+    { .module_load = &SharemindModule_load_0x1,
+      .module_unload = &SharemindModule_unload_0x1,
+      .module_init = &SharemindModule_init_0x1,
+      .module_deinit = &SharemindModule_deinit_0x1,
       .module_get_num_syscalls = &SharemindModule_get_num_syscalls_0x1,
       .module_get_syscall = &SharemindModule_get_syscall_0x1,
       .module_find_syscall = &SharemindModule_find_syscall_0x1,

@@ -90,7 +90,8 @@ typedef enum {
     ((SHAREMIND_MODULE_API_0x1_MISSING_FACILITY,)) \
     ((SHAREMIND_MODULE_API_0x1_INVALID_PD_CONFIGURATION,)) \
     ((SHAREMIND_MODULE_API_0x1_INVALID_MODULE_CONFIGURATION,))
-SHAREMIND_ENUM_CUSTOM_DEFINE(SharemindModuleApi0x1Error,SHAREMIND_MODULE_API_0x1_ERROR_ENUM);
+SHAREMIND_ENUM_CUSTOM_DEFINE(SharemindModuleApi0x1Error,
+                             SHAREMIND_MODULE_API_0x1_ERROR_ENUM);
 
 /** A facility with a context. */
 typedef struct {
@@ -99,15 +100,17 @@ typedef struct {
 } SharemindModuleApi0x1Facility;
 
 /** Environment passed to a Sharemind module initializer and deinitializer: */
-typedef struct SharemindModuleApi0x1ModuleContext_ SharemindModuleApi0x1ModuleContext;
+typedef struct SharemindModuleApi0x1ModuleContext_
+        SharemindModuleApi0x1ModuleContext;
+
 struct SharemindModuleApi0x1ModuleContext_ {
 
     /** Internal pointer, do not use in modules! Don't! */
     SHAREMIND_ICONST void * SHAREMIND_ICONST internal;
 
     /**
-      A handle for module instance data. Inside SHAREMIND_syscall_context and others,
-      this handle is also passed to facilities provided by this module.
+      A handle for module instance data. Inside SHAREMIND_syscall_context and
+      others, this handle is also passed to facilities provided by this module.
     */
     void * moduleHandle;
 
@@ -119,24 +122,32 @@ struct SharemindModuleApi0x1ModuleContext_ {
 
     /**
       \brief Finds a module specific system facility.
-      \param wrapper Pointer to this SharemindModuleApi0x1ModuleContext instance.
+      \param wrapper Pointer to the SharemindModuleApi0x1ModuleContext instance.
       \param[in] name Name of the facility.
       \returns a pointer to the facility and its context.
       \retval NULL if no such facility is associated with this module.
     */
-    const SharemindModuleApi0x1Facility * (* SHAREMIND_ICONST getModuleFacility)(SharemindModuleApi0x1ModuleContext * w, const char * name);
+    const SharemindModuleApi0x1Facility * (* SHAREMIND_ICONST getModuleFacility)
+            (SharemindModuleApi0x1ModuleContext * w,
+             const char * name);
 
 };
 
 /** Module initializer function signature: */
-typedef SharemindModuleApi0x1Error (*SharemindModuleApi0x1ModuleInitializer)(SharemindModuleApi0x1ModuleContext * c);
+typedef SharemindModuleApi0x1Error (*SharemindModuleApi0x1ModuleInitializer)(
+                SharemindModuleApi0x1ModuleContext * c);
+
 #define SHAREMIND_MODULE_API_0x1_INITIALIZER(c) \
-    SharemindModuleApi0x1Error sharemind_module_api_0x1_module_init(SharemindModuleApi0x1ModuleContext * c)
+    SharemindModuleApi0x1Error sharemind_module_api_0x1_module_init( \
+            SharemindModuleApi0x1ModuleContext * c)
 
 /** Module deinitializer function signature: */
-typedef void (*SharemindModuleApi0x1ModuleDeinitializer)(SharemindModuleApi0x1ModuleContext * c);
+typedef void (*SharemindModuleApi0x1ModuleDeinitializer)(
+                SharemindModuleApi0x1ModuleContext * c);
+
 #define SHAREMIND_MODULE_API_0x1_DEINITIALIZER(c) \
-    void sharemind_module_api_0x1_module_deinit(SharemindModuleApi0x1ModuleContext * c)
+    void sharemind_module_api_0x1_module_deinit( \
+            SharemindModuleApi0x1ModuleContext * c)
 
 
 /*******************************************************************************
@@ -194,7 +205,9 @@ struct SharemindModuleApi0x1PdpiInfo_ {
 };
 
 /** Additional context provided for system calls: */
-typedef struct SharemindModuleApi0x1SyscallContext_ SharemindModuleApi0x1SyscallContext;
+typedef struct SharemindModuleApi0x1SyscallContext_
+        SharemindModuleApi0x1SyscallContext;
+
 struct SharemindModuleApi0x1SyscallContext_ {
 
     /** Internal pointer, do not use in modules! We're warning you! */
@@ -217,24 +230,48 @@ struct SharemindModuleApi0x1SyscallContext_ {
       Used to get access to internal data of protection domain per-process data.
       \param[in] c context
       \param[in] pd_index the protection domain index.
-      \returns a pointer to a SharemindModuleApi0x1PdpiInfo structure for the PDPI.
+      \returns a pointer to a SharemindModuleApi0x1PdpiInfo structure for the
+               PDPI.
       \retval NULL if no PDPI was found.
     */
     const SharemindModuleApi0x1PdpiInfo * (* SHAREMIND_ICONST get_pdpi_info)(
             SharemindModuleApi0x1SyscallContext * c,
             uint64_t pd_index);
 
-    /** Access to public dynamic memory inside the VM process: */
-    uint64_t (* SHAREMIND_ICONST publicAlloc)(SharemindModuleApi0x1SyscallContext * c, uint64_t nBytes);
-    int (* SHAREMIND_ICONST publicFree)(SharemindModuleApi0x1SyscallContext * c, uint64_t ptr);
-    size_t (* SHAREMIND_ICONST publicMemPtrSize)(SharemindModuleApi0x1SyscallContext * c, uint64_t ptr);
-    void * (* SHAREMIND_ICONST publicMemPtrData)(SharemindModuleApi0x1SyscallContext * c, uint64_t ptr);
 
-    /** Access to dynamic memory not exposed to VM instructions: */
-    void * (* SHAREMIND_ICONST allocPrivate)(SharemindModuleApi0x1SyscallContext * c, size_t nBytes);
-    int (* SHAREMIND_ICONST freePrivate)(SharemindModuleApi0x1SyscallContext * c, void * ptr);
-    int (* SHAREMIND_ICONST reservePrivate)(SharemindModuleApi0x1SyscallContext * c, size_t nBytes);
-    int (* SHAREMIND_ICONST releasePrivate)(SharemindModuleApi0x1SyscallContext * c, size_t nBytes);
+    /* Access to public dynamic memory inside the VM process: */
+    uint64_t (* SHAREMIND_ICONST publicAlloc)(
+            SharemindModuleApi0x1SyscallContext * c,
+            uint64_t nBytes);
+
+    int (* SHAREMIND_ICONST publicFree)(SharemindModuleApi0x1SyscallContext * c,
+                                        uint64_t ptr);
+
+    size_t (* SHAREMIND_ICONST publicMemPtrSize)(
+            SharemindModuleApi0x1SyscallContext * c,
+            uint64_t ptr);
+
+    void * (* SHAREMIND_ICONST publicMemPtrData)(
+            SharemindModuleApi0x1SyscallContext * c,
+            uint64_t ptr);
+
+
+    /* Access to dynamic memory not exposed to VM instructions: */
+    void * (* SHAREMIND_ICONST allocPrivate)(
+            SharemindModuleApi0x1SyscallContext * c,
+            size_t nBytes);
+
+    int (* SHAREMIND_ICONST freePrivate)(
+            SharemindModuleApi0x1SyscallContext * c,
+            void * ptr);
+
+    int (* SHAREMIND_ICONST reservePrivate)(
+            SharemindModuleApi0x1SyscallContext * c,
+            size_t nBytes);
+
+    int (* SHAREMIND_ICONST releasePrivate)(
+            SharemindModuleApi0x1SyscallContext * c,
+            size_t nBytes);
 
     /* OTHER STUFF */
 
@@ -278,19 +315,21 @@ typedef SharemindModuleApi0x1Error (* SharemindModuleApi0x1Syscall)(
     /** Additional system call context. */
     SharemindModuleApi0x1SyscallContext * c
 );
-#define SHAREMIND_MODULE_API_0x1_SYSCALL(name,args,num_args,refs,crefs,returnValue,c) \
+#define SHAREMIND_MODULE_API_0x1_SYSCALL(name,args,argc,refs,crefs,retVal,c) \
     SharemindModuleApi0x1Error name( \
         SharemindCodeBlock * args, \
-        size_t num_args, \
+        size_t argc, \
         const SharemindModuleApi0x1Reference * refs, \
         const SharemindModuleApi0x1CReference * crefs, \
-        SharemindCodeBlock * returnValue, \
+        SharemindCodeBlock * retVal, \
         SharemindModuleApi0x1SyscallContext * c)
 
 /** System call list item:*/
 typedef struct {
 
-    /** Unique non-empty name of the system call (optionally zero-terminated): */
+    /**
+      Unique non-empty name of the system call (optionally zero-terminated):
+    */
     const char signature[256];
 
     /** Pointer to the system call implementation: */
@@ -301,9 +340,13 @@ typedef struct {
     { (signature), (fptr) }
 
 /** System call list: */
-typedef SharemindModuleApi0x1SyscallDefinition const SharemindModuleApi0x1SyscallDefinitions[];
+typedef SharemindModuleApi0x1SyscallDefinition const
+        SharemindModuleApi0x1SyscallDefinitions[];
+
 #define SHAREMIND_MODULE_API_0x1_SYSCALL_DEFINITIONS(...) \
-    extern const SharemindModuleApi0x1SyscallDefinitions sharemindModuleApi0x1SyscallDefinitions = { \
+    extern const SharemindModuleApi0x1SyscallDefinitions \
+            sharemindModuleApi0x1SyscallDefinitions = \
+    { \
         __VA_ARGS__ , \
         { "", NULL } \
     }
@@ -359,16 +402,21 @@ struct SharemindModuleApi0x1PdWrapper_ {
       \param wrapper Pointer to this SharemindModuleApi0x1PdWrapper instance.
       \param[in] name Name of the facility.
       \returns a pointer to the facility and its context.
-      \retval NULL if no such facility is associated with this protection domain.
+      \retval NULL if no such facility is associated with this protection
+                   domain.
     */
-    const SharemindModuleApi0x1Facility * (* SHAREMIND_ICONST getPdFacility)(SharemindModuleApi0x1PdWrapper * w, const char * name);
+    const SharemindModuleApi0x1Facility * (* SHAREMIND_ICONST getPdFacility)(
+            SharemindModuleApi0x1PdWrapper * w,
+            const char * name);
 
     /* OTHER STUFF */
 
 };
 
 /** Protection-domain instance process instance specific data wrapper. */
-typedef struct SharemindModuleApi0x1PdpiWrapper_ SharemindModuleApi0x1PdpiWrapper;
+typedef struct SharemindModuleApi0x1PdpiWrapper_
+        SharemindModuleApi0x1PdpiWrapper;
+
 struct SharemindModuleApi0x1PdpiWrapper_ {
 
     /** Internal pointer, do not use in modules! Please! */
@@ -379,47 +427,67 @@ struct SharemindModuleApi0x1PdpiWrapper_ {
 
     /**
       A handle for protection domain instance data. This is the same handle as
-      provided to SharemindModuleApi0x1PdWrapper on protection domain initialization.
+      provided to SharemindModuleApi0x1PdWrapper on protection domain
+      initialization.
     */
     void * SHAREMIND_ICONST pdHandle;
 
     /**
-      \brief Finds a system facility specific to the protection domain and process.
+      \brief Finds a system facility specific to the protection domain and
+             process.
       \param wrapper Pointer to this SharemindModuleApi0x1PdpiWrapper instance.
       \param[in] name Name of the facility.
       \returns a pointer to the facility and its context.
-      \retval NULL if no such facility is associated with this protection domain process instance.
+      \retval NULL if no such facility is associated with this protection domain
+              process instance.
     */
-    const SharemindModuleApi0x1Facility * (* SHAREMIND_ICONST getPdpiFacility)(SharemindModuleApi0x1PdpiWrapper * w, const char * name);
+    const SharemindModuleApi0x1Facility * (* SHAREMIND_ICONST getPdpiFacility)(
+            SharemindModuleApi0x1PdpiWrapper * w,
+            const char * name);
 
     /* OTHER STUFF */
 
 };
 
 /** Protection domain initialization function signature */
-typedef SharemindModuleApi0x1Error (* SharemindModuleApi0x1PdStartup)(SharemindModuleApi0x1PdWrapper *);
+typedef SharemindModuleApi0x1Error (* SharemindModuleApi0x1PdStartup)(
+        SharemindModuleApi0x1PdWrapper *);
+
 #define SHAREMIND_MODULE_API_0x1_PD_STARTUP(name,wrapper) \
     SharemindModuleApi0x1Error name(SharemindModuleApi0x1PdWrapper * wrapper)
 
+
 /** Protection domain deinitialization function signature */
-typedef void (* SharemindModuleApi0x1PdShutdown)(SharemindModuleApi0x1PdWrapper *);
+typedef void (* SharemindModuleApi0x1PdShutdown)(
+        SharemindModuleApi0x1PdWrapper *);
+
 #define SHAREMIND_MODULE_API_0x1_PD_SHUTDOWN(name,wrapper) \
     void name(SharemindModuleApi0x1PdWrapper * wrapper)
 
+
 /** Protection domain process initialization function signature */
-typedef SharemindModuleApi0x1Error (* SharemindModuleApi0x1PdpiStartup)(SharemindModuleApi0x1PdpiWrapper *);
+typedef SharemindModuleApi0x1Error (* SharemindModuleApi0x1PdpiStartup)(
+        SharemindModuleApi0x1PdpiWrapper *);
+
 #define SHAREMIND_MODULE_API_0x1_PDPI_STARTUP(name,wrapper) \
     SharemindModuleApi0x1Error name(SharemindModuleApi0x1PdpiWrapper * wrapper)
 
+
 /** Protection domain process deinitialization function signature */
-typedef void (* SharemindModuleApi0x1PdpiShutdown)(SharemindModuleApi0x1PdpiWrapper *);
+typedef void (* SharemindModuleApi0x1PdpiShutdown)(
+        SharemindModuleApi0x1PdpiWrapper *);
+
 #define SHAREMIND_MODULE_API_0x1_PDPI_SHUTDOWN(name,wrapper) \
     void name(SharemindModuleApi0x1PdpiWrapper * wrapper)
+
 
 /** Protection domain kind list item: */
 typedef struct {
 
-    /** Unique non-empty name of the protection domain kind (optionally zero-terminated): */
+    /**
+      Unique non-empty name of the protection domain kind (optionally zero-
+      terminated):
+    */
     const char name[256];
 
     /** Pointer to the protection domain initialization implementation: */
@@ -428,20 +496,30 @@ typedef struct {
     /** Pointer to the protection domain deinitialization implementation: */
     const SharemindModuleApi0x1PdShutdown pd_shutdown_f;
 
-    /** Pointer to the protection domain process initialization implementation: */
+    /**
+      Pointer to the protection domain process initialization implementation:
+    */
     const SharemindModuleApi0x1PdpiStartup pdpi_startup_f;
 
-    /** Pointer to the protection domain process deinitialization implementation: */
+    /**
+      Pointer to the protection domain process deinitialization implementation:
+    */
     const SharemindModuleApi0x1PdpiShutdown pdpi_shutdown_f;
 
 } const SharemindModuleApi0x1PdkDefinition;
-#define SHAREMIND_MODULE_API_0x1_PDK_DEFINITION(name,pdStartup,pdShutdown,pdpiStartup,pdpiShutdown) \
-    { (name), (pdStartup), (pdShutdown), (pdpiStartup), (pdpiShutdown) }
+
+#define SHAREMIND_MODULE_API_0x1_PDK_DEFINITION(name,pdC,pdD,pdpiC,pdpiD) \
+    { (name), (pdC), (pdD), (pdpiC), (pdpiD) }
+
 
 /** Protection domain kind list: */
-typedef SharemindModuleApi0x1PdkDefinition const SharemindModuleApi0x1PdkDefinitions[];
+typedef SharemindModuleApi0x1PdkDefinition const
+        SharemindModuleApi0x1PdkDefinitions[];
+
 #define SHAREMIND_MODULE_API_0x1_PDK_DEFINITIONS(...) \
-    extern const SharemindModuleApi0x1PdkDefinitions sharemindModuleApi0x1PdkDefinitions = { \
+    extern const SharemindModuleApi0x1PdkDefinitions \
+            sharemindModuleApi0x1PdkDefinitions = \
+    { \
         __VA_ARGS__, \
         { "", NULL, NULL, NULL, NULL } \
     }

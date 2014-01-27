@@ -24,25 +24,38 @@ extern "C" {
 #endif
 
 typedef struct {
+
     SharemindModuleApiError (* const module_load)(SharemindModule * m);
     void (* const module_unload)(SharemindModule * m);
+
 
     SharemindModuleApiError (* const module_init)(SharemindModule * m);
     void (* const module_deinit)(SharemindModule * m);
 
+
     size_t (* const module_get_num_syscalls)(const SharemindModule * m);
-    SharemindSyscall * (* const module_get_syscall)(const SharemindModule * m, size_t index);
-    SharemindSyscall * (* const module_find_syscall)(const SharemindModule * m, const char * signature);
+    SharemindSyscall * (* const module_get_syscall)(const SharemindModule * m,
+                                                    size_t index);
+
+    SharemindSyscall * (* const module_find_syscall)(const SharemindModule * m,
+                                                     const char * signature);
+
 
     size_t (* const module_get_num_pdks)(const SharemindModule * m);
-    SharemindPdk * (* const module_get_pdk)(const SharemindModule * m, size_t index);
-    SharemindPdk * (* const module_find_pdk)(const SharemindModule * m, const char * name);
+
+    SharemindPdk * (* const module_get_pdk)(const SharemindModule * m,
+                                            size_t index);
+
+    SharemindPdk * (* const module_find_pdk)(const SharemindModule * m,
+                                             const char * name);
+
 
     bool (* const pd_start)(SharemindPd * pd);
     void (* const pd_stop)(SharemindPd * pd);
 
     bool (* const pdpi_start)(SharemindPdpi * pd);
     void (* const pdpi_stop)(SharemindPdpi * pd);
+
 } SharemindApi;
 
 #ifdef __cplusplus

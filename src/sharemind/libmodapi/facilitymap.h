@@ -23,7 +23,12 @@
 
 SHAREMIND_STRINGMAP_DECLARE(SharemindFacilityMapInner,SharemindFacility,inline)
 #ifndef SHAREMIND_LIBMODAPI_FACILITYMAP_C
-SHAREMIND_STRINGMAP_DEFINE(SharemindFacilityMapInner,SharemindFacility,malloc,free,strdup,inline)
+SHAREMIND_STRINGMAP_DEFINE(SharemindFacilityMapInner,
+                           SharemindFacility,
+                           malloc,
+                           free,
+                           strdup,
+                           inline)
 #endif /* SHAREMIND_LIBMODAPI_FACILITYMAP_C */
 
 
@@ -36,15 +41,33 @@ typedef struct SharemindFacilityMap_ {
     struct SharemindFacilityMap_ * nextMap;
 } SharemindFacilityMap;
 
-inline void SharemindFacilityMap_init(SharemindFacilityMap * fm, SharemindFacilityMap * nextMap) __attribute__ ((nonnull(1)));
-inline void SharemindFacilityMap_destroy(SharemindFacilityMap * fm) __attribute__ ((nonnull(1)));
-inline bool SharemindFacilityMap_set(SharemindFacilityMap * fm, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
-inline const SharemindFacility * SharemindFacilityMap_get(const SharemindFacilityMap * fm, const char * name) __attribute__ ((nonnull(1,2)));
-inline const SharemindFacility * SharemindFacilityMap_get_norecurse(const SharemindFacilityMap * fm, const char * name) __attribute__ ((nonnull(1,2)));
+
+inline void SharemindFacilityMap_init(SharemindFacilityMap * fm,
+                                      SharemindFacilityMap * nextMap)
+        __attribute__ ((nonnull(1)));
+
+inline void SharemindFacilityMap_destroy(SharemindFacilityMap * fm)
+        __attribute__ ((nonnull(1)));
+
+inline bool SharemindFacilityMap_set(SharemindFacilityMap * fm,
+                                     const char * name,
+                                     void * facility,
+                                     void * context)
+        __attribute__ ((nonnull(1,2)));
+
+inline const SharemindFacility * SharemindFacilityMap_get(
+            const SharemindFacilityMap * fm,
+            const char * name) __attribute__ ((nonnull(1,2)));
+
+inline const SharemindFacility * SharemindFacilityMap_get_norecurse(
+            const SharemindFacilityMap * fm,
+            const char * name) __attribute__ ((nonnull(1,2)));
 
 
 #define SHAREMIND_FACILITYMAP_DEFINE(qualifiers) \
-    qualifiers void SharemindFacilityMap_init(SharemindFacilityMap * fm, SharemindFacilityMap * nextMap) { \
+    qualifiers void SharemindFacilityMap_init(SharemindFacilityMap * fm, \
+                                              SharemindFacilityMap * nextMap) \
+    { \
         assert(fm); \
         fm->nextMap = nextMap; \
         SharemindFacilityMapInner_init(&fm->realMap); \
@@ -53,29 +76,43 @@ inline const SharemindFacility * SharemindFacilityMap_get_norecurse(const Sharem
         assert(fm); \
         SharemindFacilityMapInner_destroy(&fm->realMap); \
     } \
-    qualifiers bool SharemindFacilityMap_set(SharemindFacilityMap * fm, const char * name, void * facility, void * context) { \
+    qualifiers bool SharemindFacilityMap_set(SharemindFacilityMap * fm, \
+                                             const char * name, \
+                                             void * facility, \
+                                             void * context) \
+    { \
         assert(fm); \
         assert(name); \
         assert(name[0]); \
-        SharemindFacility * value = SharemindFacilityMapInner_get_or_insert(&fm->realMap, name); \
+        SharemindFacility * value = SharemindFacilityMapInner_get_or_insert( \
+                                        &fm->realMap, \
+                                        name); \
         if (unlikely(!value)) \
             return false; \
         value->facility = facility; \
         value->context = context; \
         return true; \
     } \
-    qualifiers const SharemindFacility * SharemindFacilityMap_get(const SharemindFacilityMap * fm, const char * name) { \
+    qualifiers const SharemindFacility * SharemindFacilityMap_get( \
+            const SharemindFacilityMap * fm, \
+            const char * name) \
+    { \
         assert(fm); \
         assert(name); \
         assert(name[0]); \
-        const SharemindFacility * value = SharemindFacilityMapInner_get_const(&fm->realMap, name); \
+        const SharemindFacility * value = SharemindFacilityMapInner_get_const( \
+                                              &fm->realMap, \
+                                              name); \
         if (value) \
             return value; \
         if (fm->nextMap) \
             return SharemindFacilityMap_get(fm->nextMap, name); \
         return NULL; \
     } \
-    qualifiers const SharemindFacility * SharemindFacilityMap_get_norecurse(const SharemindFacilityMap * fm, const char * name) { \
+    qualifiers const SharemindFacility * SharemindFacilityMap_get_norecurse( \
+            const SharemindFacilityMap * fm, \
+            const char * name) \
+    { \
         assert(fm); \
         assert(name); \
         assert(name[0]); \

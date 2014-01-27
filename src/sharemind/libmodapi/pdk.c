@@ -134,28 +134,47 @@ size_t SharemindPdk_get_index(const SharemindPdk * pdk) {
     return pdk->pdk_index;
 }
 
-bool SharemindPdk_set_pd_facility(SharemindPdk * pdk, const char * name, void * facility, void * context) {
+bool SharemindPdk_set_pd_facility(SharemindPdk * pdk,
+                                  const char * name,
+                                  void * facility,
+                                  void * context)
+{
     assert(pdk);
     assert(name);
     assert(name[0]);
-    return SharemindFacilityMap_set(&pdk->pdFacilityMap, name, facility, context);
+    return SharemindFacilityMap_set(&pdk->pdFacilityMap,
+                                    name,
+                                    facility,
+                                    context);
 }
 
-const SharemindFacility * SharemindPdk_get_pd_facility(const SharemindPdk * pdk, const char * name) {
+const SharemindFacility * SharemindPdk_get_pd_facility(const SharemindPdk * pdk,
+                                                       const char * name)
+{
     assert(pdk);
     assert(name);
     assert(name[0]);
     return SharemindFacilityMap_get(&pdk->pdFacilityMap, name);
 }
 
-bool SharemindPdk_set_pdpi_facility(SharemindPdk * pdk, const char * name, void * facility, void * context) {
+bool SharemindPdk_set_pdpi_facility(SharemindPdk * pdk,
+                                    const char * name,
+                                    void * facility,
+                                    void * context)
+{
     assert(pdk);
     assert(name);
     assert(name[0]);
-    return SharemindFacilityMap_set(&pdk->pdpiFacilityMap, name, facility, context);
+    return SharemindFacilityMap_set(&pdk->pdpiFacilityMap,
+                                    name,
+                                    facility,
+                                    context);
 }
 
-const SharemindFacility * SharemindPdk_get_pdpi_facility(const SharemindPdk * pdk, const char * name) {
+const SharemindFacility * SharemindPdk_get_pdpi_facility(
+        const SharemindPdk * pdk,
+        const char * name)
+{
     assert(pdk);
     assert(name);
     assert(name[0]);

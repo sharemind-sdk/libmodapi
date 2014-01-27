@@ -30,7 +30,8 @@ SharemindPdpi * SharemindPdpi_new(SharemindPd * pd) {
         return NULL;
     }
 
-    SharemindPdpi * const pdpi = (SharemindPdpi *) malloc(sizeof(SharemindPdpi));
+    SharemindPdpi * const pdpi =
+            (SharemindPdpi *) malloc(sizeof(SharemindPdpi));
     if (unlikely(!pdpi)) {
         OOM(pd->pdk->module->modapi);
         SharemindPd_refs_unref(pd);
@@ -142,14 +143,23 @@ SharemindModuleApi * SharemindPdpi_get_modapi(const SharemindPdpi * pdpi) {
     return pdpi->pd->pdk->module->modapi;
 }
 
-bool SharemindPdpi_set_facility(SharemindPdpi * pdpi, const char * name, void * facility, void * context) {
+bool SharemindPdpi_set_facility(SharemindPdpi * pdpi,
+                                const char * name,
+                                void * facility,
+                                void * context)
+{
     assert(pdpi);
     assert(name);
     assert(name[0]);
-    return SharemindFacilityMap_set(&pdpi->pdpiFacilityMap, name, facility, context);
+    return SharemindFacilityMap_set(&pdpi->pdpiFacilityMap,
+                                    name,
+                                    facility,
+                                    context);
 }
 
-const SharemindFacility * SharemindPdpi_get_facility(const SharemindPdpi * pdpi, const char * name) {
+const SharemindFacility * SharemindPdpi_get_facility(const SharemindPdpi * pdpi,
+                                                     const char * name)
+{
     assert(pdpi);
     assert(name);
     assert(name[0]);

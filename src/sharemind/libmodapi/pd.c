@@ -21,7 +21,10 @@
 #include "apis.c"
 
 
-SharemindPd * SharemindPd_new(SharemindPdk * pdk, const char * name, const char * conf) {
+SharemindPd * SharemindPd_new(SharemindPdk * pdk,
+                              const char * name,
+                              const char * conf)
+{
     assert(pdk);
     assert(pdk->module);
     assert(pdk->module->modapi);
@@ -170,28 +173,46 @@ void * SharemindPd_get_handle(const SharemindPd * pd) {
     return pd->pdHandle;
 }
 
-bool SharemindPd_set_facility(SharemindPd * pd, const char * name, void * facility, void * context) {
+bool SharemindPd_set_facility(SharemindPd * pd,
+                              const char * name,
+                              void * facility,
+                              void * context)
+{
     assert(pd);
     assert(name);
     assert(name[0]);
-    return SharemindFacilityMap_set(&pd->pdFacilityMap, name, facility, context);
+    return SharemindFacilityMap_set(&pd->pdFacilityMap,
+                                    name,
+                                    facility,
+                                    context);
 }
 
-const SharemindFacility * SharemindPd_get_facility(const SharemindPd * pd, const char * name) {
+const SharemindFacility * SharemindPd_get_facility(const SharemindPd * pd,
+                                                   const char * name)
+{
     assert(pd);
     assert(name);
     assert(name[0]);
     return SharemindFacilityMap_get(&pd->pdFacilityMap, name);
 }
 
-bool SharemindPd_set_pdpi_facility(SharemindPd * pd, const char * name, void * facility, void * context) {
+bool SharemindPd_set_pdpi_facility(SharemindPd * pd,
+                                   const char * name,
+                                   void * facility,
+                                   void * context)
+{
     assert(pd);
     assert(name);
     assert(name[0]);
-    return SharemindFacilityMap_set(&pd->pdpiFacilityMap, name, facility, context);
+    return SharemindFacilityMap_set(&pd->pdpiFacilityMap,
+                                    name,
+                                    facility,
+                                    context);
 }
 
-const SharemindFacility * SharemindPd_get_pdpi_facility(const SharemindPd * pd, const char * name) {
+const SharemindFacility * SharemindPd_get_pdpi_facility(const SharemindPd * pd,
+                                                        const char * name)
+{
     assert(pd);
     assert(name);
     assert(name[0]);

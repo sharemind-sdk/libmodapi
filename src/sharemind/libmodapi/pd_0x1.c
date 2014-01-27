@@ -69,7 +69,9 @@ bool SharemindPd_start_0x1(SharemindPd * pd) {
     const SharemindPdk * const pdk = pd->pdk;
     pdWrapper.internal = pd;
 
-    const SharemindModuleApi0x1Error r = (*((SharemindModuleApi0x1PdStartup) pdk->pd_startup_impl_or_wrapper))(&pdWrapper);
+    typedef SharemindModuleApi0x1PdStartup PdStartup;
+    const SharemindModuleApi0x1Error r =
+            (*((PdStartup) pdk->pd_startup_impl_or_wrapper))(&pdWrapper);
     if (likely(r == SHAREMIND_MODULE_API_0x1_OK)) {
         pd->pdHandle = pdWrapper.pdHandle;
         pd->isStarted = true;
@@ -95,5 +97,6 @@ void SharemindPd_stop_0x1(SharemindPd * pd) {
     const SharemindPdk * const pdk = pd->pdk;
     pdWrapper.internal = pd;
 
-    (*((SharemindModuleApi0x1PdShutdown) pdk->pd_shutdown_impl_or_wrapper))(&pdWrapper);
+    (*((SharemindModuleApi0x1PdShutdown) pdk->pd_shutdown_impl_or_wrapper))(
+                &pdWrapper);
 }

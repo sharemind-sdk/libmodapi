@@ -35,25 +35,37 @@ struct SharemindPdk_ {
     /** Protection domain kind name. */
     char * name;
 
-    /** Pointer to implementation function if current API, otherwise to a wrapper function. */
+    /**
+      Pointer to implementation function if current API, otherwise to a wrapper
+      function.
+    */
     void (* pd_startup_impl_or_wrapper)(void);
 
     /** NULL if current API, otherwise pointer to implementation function. */
     void (* pd_startup_null_or_impl)(void);
 
-    /** Pointer to implementation function if current API, otherwise to a wrapper function. */
+    /**
+      Pointer to implementation function if current API, otherwise to a wrapper
+      function.
+    */
     void (* pd_shutdown_impl_or_wrapper)(void);
 
     /** NULL if current API, otherwise pointer to implementation function. */
     void (* pd_shutdown_null_or_impl)(void);
 
-    /** Pointer to implementation function if current API, otherwise to a wrapper function. */
+    /**
+      Pointer to implementation function if current API, otherwise to a wrapper
+      function.
+    */
     void (* pdpi_startup_impl_or_wrapper)(void);
 
     /** NULL if current API, otherwise pointer to implementation function. */
     void (* pdpi_startup_null_or_impl)(void);
 
-    /** Pointer to implementation function if current API, otherwise to a wrapper function. */
+    /**
+      Pointer to implementation function if current API, otherwise to a wrapper
+      function.
+    */
     void (* pdpi_shutdown_impl_or_wrapper)(void);
 
     /** NULL if current API, otherwise pointer to implementation function. */
@@ -72,6 +84,7 @@ struct SharemindPdk_ {
 
 };
 
+
 int SharemindPdk_init(SharemindPdk * pdk,
                   size_t pdk_index,
                   const char * name,
@@ -83,7 +96,9 @@ int SharemindPdk_init(SharemindPdk * pdk,
                   void (* pd_process_startup_wrapper)(void),
                   void (* pd_process_shutdown_impl)(void),
                   void (* pd_process_shutdown_wrapper)(void),
-                  SharemindModule * module) __attribute__ ((nonnull(1, 3, 4, 6, 8, 10, 12)));
+                  SharemindModule * module)
+        __attribute__ ((nonnull(1, 3, 4, 6, 8, 10, 12)));
+
 void SharemindPdk_destroy(SharemindPdk * pdk) __attribute__ ((nonnull(1)));
 
 SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindPdk)

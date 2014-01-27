@@ -38,13 +38,14 @@ struct SharemindSyscall_ {
 };
 
 int SharemindSyscall_init(SharemindSyscall * sc,
-                      const char * name,
-                      void (* impl)(void),
-                      SharemindSyscallCallable wrapper,
-                      SharemindModule * m)
-     __attribute__ ((nonnull(1, 2, 3, 5)));
+                          const char * name,
+                          void (* impl)(void),
+                          SharemindSyscallCallable wrapper,
+                          SharemindModule * m)
+        __attribute__ ((nonnull(1, 2, 3, 5)));
 
-void SharemindSyscall_destroy(SharemindSyscall * sc) __attribute__ ((nonnull(1)));
+void SharemindSyscall_destroy(SharemindSyscall * sc)
+        __attribute__ ((nonnull(1)));
 
 SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindSyscall)
 

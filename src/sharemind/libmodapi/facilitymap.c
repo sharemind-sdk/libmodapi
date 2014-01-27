@@ -12,5 +12,11 @@
 
 #include "facilitymap.h"
 
-SHAREMIND_STRINGMAP_DEFINE(SharemindFacilityMapInner,SharemindFacility,malloc,free,strdup,extern)
+SHAREMIND_STRINGMAP_DEFINE(SharemindFacilityMapInner,
+                           SharemindFacility,
+                           malloc,
+                           free,
+                           strdup,
+                           extern)
+
 SHAREMIND_FACILITYMAP_DEFINE(extern)

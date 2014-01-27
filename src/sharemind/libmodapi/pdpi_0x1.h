@@ -22,8 +22,11 @@ extern "C" {
 #endif
 
 
-bool SharemindPdpi_start_0x1(SharemindPdpi * pdpi) __attribute__ ((nonnull(1), visibility("internal")));
-void SharemindPdpi_stop_0x1(SharemindPdpi * pdpi) __attribute__ ((nonnull(1), visibility("internal")));
+bool SharemindPdpi_start_0x1(SharemindPdpi * pdpi)
+        __attribute__ ((nonnull(1), visibility("internal")));
+
+void SharemindPdpi_stop_0x1(SharemindPdpi * pdpi)
+        __attribute__ ((nonnull(1), visibility("internal")));
 
 
 #ifdef __cplusplus

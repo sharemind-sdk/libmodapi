@@ -23,11 +23,14 @@ ADD_COMPILE_OPTIONS(
   "$<$<STREQUAL:$<CONFIGURATION>,Release>:-fomit-frame-pointer>"
 )
 
-# Find boost - seems to be required since the variables aren't populated otherwise
 FIND_PACKAGE(Boost REQUIRED)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 
-SET(CMAKE_C_FLAGS "-std=c99 -Wall -Wextra -fstrict-aliasing -Wstrict-aliasing=1 -fwrapv -Wabi -Wbad-function-cast -Wc++-compat -Wformat -Wswitch-default -Wunused -Wfloat-equal -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wconversion -Wsign-conversion -Wunused-macros -D_POSIX_C_SOURCE=200809L")
+SET(W "-Wall -Wextra -fstrict-aliasing -Wstrict-aliasing=1 -Wabi")
+SET(W "${W} -Wbad-function-cast -Wc++-compat -Wformat -Wswitch-default")
+SET(W "${W} -Wunused -Wfloat-equal -Wshadow -Wpointer-arith -Wcast-qual")
+SET(W "${W} -Wstrict-prototypes -Wconversion -Wsign-conversion -Wunused-macros")
+SET(CMAKE_C_FLAGS "-std=c99 -fwrapv -D_POSIX_C_SOURCE=200809L ${W}")
 
 INCLUDE(CheckCCompilerFlag)
 MACRO(FLAGS_MAGIC flags)
@@ -100,15 +103,21 @@ INSTALL(FILES ${SHAREMIND_LIBMODAPI_HEADERS}
         DESTINATION "include/sharemind/libmodapi")
 
 # Install cmake files:
-FILE(GLOB_RECURSE sharemind_libmodapi_in_files "${CMAKE_CURRENT_SOURCE_DIR}/*.in")
-ADD_CUSTOM_TARGET("include_sharemind_libmodapi_in_files_in_IDE" SOURCES ${sharemind_libmodapi_in_files})
-SET(LIBMODAPI_INSTALL_LINK_LIBRARIES "-L${CMAKE_INSTALL_PREFIX}/lib" "-lsharemind_modapi")
+FILE(GLOB_RECURSE sharemind_libmodapi_in_files
+     "${CMAKE_CURRENT_SOURCE_DIR}/*.in")
+ADD_CUSTOM_TARGET("include_sharemind_libmodapi_in_files_in_IDE"
+                  SOURCES ${sharemind_libmodapi_in_files})
+SET(LIBMODAPI_INSTALL_LINK_LIBRARIES "-L${CMAKE_INSTALL_PREFIX}/lib"
+                                     "-lsharemind_modapi")
 SET(LIBMODAPI_INSTALL_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include")
 
 CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/SharemindLibmodapiConfig.cmake.in"
-               "${CMAKE_CURRENT_BINARY_DIR}/SharemindLibmodapiConfig.cmake" @ONLY)
-CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/SharemindLibmodapiConfigVersion.cmake.in"
-               "${CMAKE_CURRENT_BINARY_DIR}/SharemindLibmodapiConfigVersion.cmake" @ONLY)
-INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/SharemindLibmodapiConfig.cmake"
-              "${CMAKE_CURRENT_BINARY_DIR}/SharemindLibmodapiConfigVersion.cmake"
+               "${CMAKE_CURRENT_BINARY_DIR}/SharemindLibmodapiConfig.cmake"
+               @ONLY)
+CONFIGURE_FILE(
+    "${CMAKE_CURRENT_SOURCE_DIR}/SharemindLibmodapiConfigVersion.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/SharemindLibmodapiConfigVersion.cmake" @ONLY)
+INSTALL(FILES
+            "${CMAKE_CURRENT_BINARY_DIR}/SharemindLibmodapiConfig.cmake"
+            "${CMAKE_CURRENT_BINARY_DIR}/SharemindLibmodapiConfigVersion.cmake"
         DESTINATION "lib/SharemindLibmodapi")

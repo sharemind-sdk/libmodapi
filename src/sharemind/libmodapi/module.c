@@ -20,7 +20,10 @@
 #include "apis.c"
 
 
-SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * filename, const char * conf) {
+SharemindModule * SharemindModule_new(SharemindModuleApi * modapi,
+                                      const char * filename,
+                                      const char * conf)
+{
     assert(modapi);
     assert(filename);
     assert(filename[0]);
@@ -62,20 +65,30 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
     (void) dlerror();
     m->libHandle = dlopen(filename, RTLD_NOW | RTLD_LOCAL);
     if (unlikely(!m->libHandle)) {
-        SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODULE_API_UNABLE_TO_OPEN_MODULE, dlerror());
+        SharemindModuleApi_set_error_with_dynamic_string(
+                    modapi,
+                    SHAREMIND_MODULE_API_UNABLE_TO_OPEN_MODULE,
+                    dlerror());
         goto SharemindModule_new_fail_2;
     }
 
     /* Read module info: */
-    moduleInfo = (const SharemindModuleInfo *) dlsym(m->libHandle, "sharemindModuleInfo");
+    moduleInfo = (const SharemindModuleInfo *) dlsym(m->libHandle,
+                                                     "sharemindModuleInfo");
     if (unlikely(!moduleInfo)) {
-        SharemindModuleApi_set_error_with_dynamic_string(modapi, SHAREMIND_MODULE_API_INVALID_MODULE, dlerror());
+        SharemindModuleApi_set_error_with_dynamic_string(
+                    modapi,
+                    SHAREMIND_MODULE_API_INVALID_MODULE,
+                    dlerror());
         goto SharemindModule_new_fail_3;
     }
 
     /* Verify module name: */
     if (unlikely(!moduleInfo->moduleName[0])) {
-        SharemindModuleApi_set_error_with_static_string(modapi, SHAREMIND_MODULE_API_API_NOT_SUPPORTED, "Invalid module name!");
+        SharemindModuleApi_set_error_with_static_string(
+                    modapi,
+                    SHAREMIND_MODULE_API_API_NOT_SUPPORTED,
+                    "Invalid module name!");
         goto SharemindModule_new_fail_3;
     }
 
@@ -84,21 +97,29 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
       select API version to use:
     */
     if (unlikely(moduleInfo->supportedVersions[0] == 0u)) {
-        SharemindModuleApi_set_error_with_static_string(modapi, SHAREMIND_MODULE_API_API_NOT_SUPPORTED, "Invalid supported API list!");
+        SharemindModuleApi_set_error_with_static_string(
+                    modapi,
+                    SHAREMIND_MODULE_API_API_NOT_SUPPORTED,
+                    "Invalid supported API list!");
         goto SharemindModule_new_fail_3;
     }
     i = 0u;
     m->apiVersion = 0u;
     do {
         if (moduleInfo->supportedVersions[i] > m->apiVersion
-            && moduleInfo->supportedVersions[i] >= SHAREMIND_MODULE_API_API_MIN_VERSION
-            && moduleInfo->supportedVersions[i] <= SHAREMIND_MODULE_API_API_VERSION)
+            && moduleInfo->supportedVersions[i]
+               >= SHAREMIND_MODULE_API_API_MIN_VERSION
+            && moduleInfo->supportedVersions[i]
+               <= SHAREMIND_MODULE_API_API_VERSION)
         {
             m->apiVersion = moduleInfo->supportedVersions[i];
         }
     } while (moduleInfo->supportedVersions[++i] == 0u);
     if (unlikely(m->apiVersion <= 0u)) {
-        SharemindModuleApi_set_error_with_static_string(modapi, SHAREMIND_MODULE_API_API_NOT_SUPPORTED, "API not supported!");
+        SharemindModuleApi_set_error_with_static_string(
+                    modapi,
+                    SHAREMIND_MODULE_API_API_NOT_SUPPORTED,
+                    "API not supported!");
         goto SharemindModule_new_fail_3;
     }
     m->api = &SharemindApis[m->apiVersion - 1u];
@@ -118,13 +139,18 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi, const char * 
         SHAREMIND_REFS_INIT(m);
         SharemindModuleApiError status = (*(m->api->module_load))(m);
         if (unlikely(status != SHAREMIND_MODULE_API_OK)) {
-            SharemindModuleApi_set_error_with_static_string(modapi, status, NULL);
+            SharemindModuleApi_set_error_with_static_string(modapi,
+                                                            status,
+                                                            NULL);
             goto SharemindModule_new_fail_4;
         }
 
-        SharemindFacilityMap_init(&m->moduleFacilityMap, &modapi->moduleFacilityMap);
-        SharemindFacilityMap_init(&m->pdFacilityMap, &modapi->pdFacilityMap);
-        SharemindFacilityMap_init(&m->pdpiFacilityMap, &modapi->pdpiFacilityMap);
+        SharemindFacilityMap_init(&m->moduleFacilityMap,
+                                  &modapi->moduleFacilityMap);
+        SharemindFacilityMap_init(&m->pdFacilityMap,
+                                  &modapi->pdFacilityMap);
+        SharemindFacilityMap_init(&m->pdpiFacilityMap,
+                                  &modapi->pdpiFacilityMap);
         return m;
     }
 
@@ -232,12 +258,16 @@ size_t SharemindModule_get_num_syscalls(const SharemindModule * m) {
     return (*(m->api->module_get_num_syscalls))(m);
 }
 
-SharemindSyscall * SharemindModule_get_syscall(const SharemindModule * m, size_t index) {
+SharemindSyscall * SharemindModule_get_syscall(const SharemindModule * m,
+                                               size_t index)
+{
     assert(m);
     return (*(m->api->module_get_syscall))(m, index);
 }
 
-SharemindSyscall * SharemindModule_find_syscall(const SharemindModule * m, const char * signature) {
+SharemindSyscall * SharemindModule_find_syscall(const SharemindModule * m,
+                                                const char * signature)
+{
     assert(m);
     return (*(m->api->module_find_syscall))(m, signature);
 }
@@ -247,52 +277,83 @@ size_t SharemindModule_get_num_pdks(const SharemindModule * m) {
     return (*(m->api->module_get_num_pdks))(m);
 }
 
-SharemindPdk * SharemindModule_get_pdk(const SharemindModule * m, size_t index) {
+SharemindPdk * SharemindModule_get_pdk(const SharemindModule * m,
+                                       size_t index)
+{
     assert(m);
     return (*(m->api->module_get_pdk))(m, index);
 }
 
-SharemindPdk * SharemindModule_find_pdk(const SharemindModule * m, const char * name) {
+SharemindPdk * SharemindModule_find_pdk(const SharemindModule * m,
+                                        const char * name)
+{
     assert(m);
     return (*(m->api->module_find_pdk))(m, name);
 }
 
-bool SharemindModule_set_facility(SharemindModule * m, const char * name, void * facility, void * context) {
+bool SharemindModule_set_facility(SharemindModule * m,
+                                  const char * name,
+                                  void * facility,
+                                  void * context)
+{
     assert(m);
     assert(name);
     assert(name[0]);
-    return SharemindFacilityMap_set(&m->moduleFacilityMap, name, facility, context);
+    return SharemindFacilityMap_set(&m->moduleFacilityMap,
+                                    name,
+                                    facility,
+                                    context);
 }
 
-const SharemindFacility * SharemindModule_get_facility(const SharemindModule * m, const char * name) {
+const SharemindFacility * SharemindModule_get_facility(
+        const SharemindModule * m,
+        const char * name)
+{
     assert(m);
     assert(name);
     assert(name[0]);
     return SharemindFacilityMap_get(&m->moduleFacilityMap, name);
 }
 
-bool SharemindModule_set_pd_facility(SharemindModule * m, const char * name, void * facility, void * context) {
+bool SharemindModule_set_pd_facility(SharemindModule * m,
+                                     const char * name,
+                                     void * facility,
+                                     void * context)
+{
     assert(m);
     assert(name);
     assert(name[0]);
     return SharemindFacilityMap_set(&m->pdFacilityMap, name, facility, context);
 }
 
-const SharemindFacility * SharemindModule_get_pd_facility(const SharemindModule * m, const char * name) {
+const SharemindFacility * SharemindModule_get_pd_facility(
+        const SharemindModule * m,
+        const char * name)
+{
     assert(m);
     assert(name);
     assert(name[0]);
     return SharemindFacilityMap_get(&m->pdFacilityMap, name);
 }
 
-bool SharemindModule_set_pdpi_facility(SharemindModule * m, const char * name, void * facility, void * context) {
+bool SharemindModule_set_pdpi_facility(SharemindModule * m,
+                                       const char * name,
+                                       void * facility,
+                                       void * context)
+{
     assert(m);
     assert(name);
     assert(name[0]);
-    return SharemindFacilityMap_set(&m->pdpiFacilityMap, name, facility, context);
+    return SharemindFacilityMap_set(&m->pdpiFacilityMap,
+                                    name,
+                                    facility,
+                                    context);
 }
 
-const SharemindFacility * SharemindModule_get_pdpi_facility(const SharemindModule * m, const char * name) {
+const SharemindFacility * SharemindModule_get_pdpi_facility(
+        const SharemindModule * m,
+        const char * name)
+{
     assert(m);
     assert(name);
     assert(name[0]);

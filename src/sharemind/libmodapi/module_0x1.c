@@ -246,7 +246,6 @@ SharemindModuleApiError SharemindModule_init_0x1(SharemindModule * const m) {
         case SHAREMIND_MODULE_API_0x1_GENERAL_ERROR:
             return SHAREMIND_MODULE_API_MODULE_ERROR;
         default:
-            /** \todo Log invalid return code. */
             return SHAREMIND_MODULE_API_API_ERROR;
     }
 }

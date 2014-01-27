@@ -20,6 +20,16 @@
 #include "pdpi.h"
 
 
+static SHAREMIND_ENUM_DECLARE_TOSTRING_CUSTOMNAME(
+        pdpiStartupErrorToString,
+        SharemindModuleApi0x1Error);
+static SHAREMIND_ENUM_CUSTOM_DEFINE_CUSTOM_TOSTRING_CUSTOMNAME(
+        pdpiStartupErrorToString,
+        SharemindModuleApi0x1Error,
+        SHAREMIND_MODULE_API_0x1_ERROR_ENUM,
+        "PDPI startup failed with code ",
+        " from the module!")
+
 static const SharemindFacility * SHAREMIND_PDPI_get_facility_wrapper(SharemindModuleApi0x1PdpiWrapper * w, const char * name) {
     assert(w);
     assert(w->internal);
@@ -51,15 +61,10 @@ bool SharemindPdpi_start_0x1(SharemindPdpi * pdpi) {
         return true;
     }
 
-    /** \todo log return status. */
-#if 0
-    const char * const errorFormatString = "PDPI startup failed with code %d from the module!";
-    const size_t len = strlen(errorFormatString) + sizeof(int) * 3; /* -"%d" + '\0' + '-' + 3 for each byte of int */
-    char * const errorString = (char *) malloc(len);
-    if (likely(errorString))
-        snprintf(errorString, len, errorFormatString, r);
-    SharemindModuleApi_set_error_with_dynamic_string(pdk->module->modapi, SHAREMIND_MODULE_API_PDPI_STARTUP_FAILED, errorString);
-#endif
+    SharemindModuleApi_set_error_with_static_string(
+                pdk->module->modapi,
+                SHAREMIND_MODULE_API_PDPI_STARTUP_FAILED,
+                pdpiStartupErrorToString(r));
     return false;
 }
 

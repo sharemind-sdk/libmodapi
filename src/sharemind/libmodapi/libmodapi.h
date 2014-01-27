@@ -84,11 +84,11 @@ SharemindModuleApiError SharemindModuleApi_get_last_error(const SharemindModuleA
 const char * SharemindModuleApi_get_last_error_string(const SharemindModuleApi * modapi) __attribute__ ((nonnull(1)));
 void SharemindModuleApi_clear_error(SharemindModuleApi * modapi) __attribute__ ((nonnull(1)));
 
-int SharemindModuleApi_set_module_facility(SharemindModuleApi * modapi, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+bool SharemindModuleApi_set_module_facility(SharemindModuleApi * modapi, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
 const SharemindFacility * SharemindModuleApi_get_module_facility(const SharemindModuleApi * modapi, const char * name) __attribute__ ((nonnull(1,2)));
-int SharemindModuleApi_set_pd_facility(SharemindModuleApi * modapi, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+bool SharemindModuleApi_set_pd_facility(SharemindModuleApi * modapi, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
 const SharemindFacility * SharemindModuleApi_get_pd_facility(const SharemindModuleApi * modapi, const char * name) __attribute__ ((nonnull(1,2)));
-int SharemindModuleApi_set_pdpi_facility(SharemindModuleApi * modapi, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+bool SharemindModuleApi_set_pdpi_facility(SharemindModuleApi * modapi, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
 const SharemindFacility * SharemindModuleApi_get_pdpi_facility(const SharemindModuleApi * modapi, const char * name) __attribute__ ((nonnull(1,2)));
 
 
@@ -119,11 +119,11 @@ size_t SharemindModule_get_num_pdks(const SharemindModule * m) __attribute__ ((n
 SharemindPdk * SharemindModule_get_pdk(const SharemindModule * m, size_t index) __attribute__ ((nonnull(1)));
 SharemindPdk * SharemindModule_find_pdk(const SharemindModule * m, const char * name) __attribute__ ((nonnull(1, 2)));
 
-int SharemindModule_set_facility(SharemindModule * m, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+bool SharemindModule_set_facility(SharemindModule * m, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
 const SharemindFacility * SharemindModule_get_facility(const SharemindModule * m, const char * name) __attribute__ ((nonnull(1,2)));
-int SharemindModule_set_pd_facility(SharemindModule * m, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+bool SharemindModule_set_pd_facility(SharemindModule * m, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
 const SharemindFacility * SharemindModule_get_pd_facility(const SharemindModule * m, const char * name) __attribute__ ((nonnull(1,2)));
-int SharemindModule_set_pdpi_facility(SharemindModule * m, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+bool SharemindModule_set_pdpi_facility(SharemindModule * m, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
 const SharemindFacility * SharemindModule_get_pdpi_facility(const SharemindModule * m, const char * name) __attribute__ ((nonnull(1,2)));
 
 
@@ -152,9 +152,9 @@ SharemindModule * SharemindPdk_get_module(const SharemindPdk * pdk) __attribute_
 SharemindModuleApi * SharemindPdk_get_modapi(const SharemindPdk * pdk) __attribute__ ((nonnull(1)));
 size_t SharemindPdk_get_index(const SharemindPdk * pdk) __attribute__ ((nonnull(1)));
 
-int SharemindPdk_set_pd_facility(SharemindPdk * pdk, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+bool SharemindPdk_set_pd_facility(SharemindPdk * pdk, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
 const SharemindFacility * SharemindPdk_get_pd_facility(const SharemindPdk * pdk, const char * name) __attribute__ ((nonnull(1,2)));
-int SharemindPdk_set_pdpi_facility(SharemindPdk * pdk, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+bool SharemindPdk_set_pdpi_facility(SharemindPdk * pdk, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
 const SharemindFacility * SharemindPdk_get_pdpi_facility(const SharemindPdk * pdk, const char * name) __attribute__ ((nonnull(1,2)));
 
 
@@ -178,9 +178,9 @@ bool SharemindPd_is_started(const SharemindPd * pd) __attribute__ ((nonnull(1)))
 bool SharemindPd_start(SharemindPd * pd) __attribute__ ((nonnull(1)));
 void SharemindPd_stop(SharemindPd * pd) __attribute__ ((nonnull(1)));
 
-int SharemindPd_set_facility(SharemindPd * pd, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+bool SharemindPd_set_facility(SharemindPd * pd, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
 const SharemindFacility * SharemindPd_get_facility(const SharemindPd * pd, const char * name) __attribute__ ((nonnull(1,2)));
-int SharemindPd_set_pdpi_facility(SharemindPd * pd, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+bool SharemindPd_set_pdpi_facility(SharemindPd * pd, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
 const SharemindFacility * SharemindPd_get_pdpi_facility(const SharemindPd * pd, const char * name) __attribute__ ((nonnull(1,2)));
 
 
@@ -201,7 +201,7 @@ bool SharemindPdpi_is_started(const SharemindPdpi * pdpi) __attribute__ ((nonnul
 bool SharemindPdpi_start(SharemindPdpi * pdpi) __attribute__ ((nonnull(1)));
 void SharemindPdpi_stop(SharemindPdpi * pdpi) __attribute__ ((nonnull(1)));
 
-int SharemindPdpi_set_facility(SharemindPdpi * pdpi, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+bool SharemindPdpi_set_facility(SharemindPdpi * pdpi, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
 const SharemindFacility * SharemindPdpi_get_facility(const SharemindPdpi * pdpi, const char * name) __attribute__ ((nonnull(1,2)));
 
 #ifdef __cplusplus

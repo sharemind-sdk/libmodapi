@@ -170,7 +170,7 @@ void * SharemindPd_get_handle(const SharemindPd * pd) {
     return pd->pdHandle;
 }
 
-int SharemindPd_set_facility(SharemindPd * pd, const char * name, void * facility, void * context) {
+bool SharemindPd_set_facility(SharemindPd * pd, const char * name, void * facility, void * context) {
     assert(pd);
     assert(name);
     assert(name[0]);
@@ -184,7 +184,7 @@ const SharemindFacility * SharemindPd_get_facility(const SharemindPd * pd, const
     return SharemindFacilityMap_get(&pd->pdFacilityMap, name);
 }
 
-int SharemindPd_set_pdpi_facility(SharemindPd * pd, const char * name, void * facility, void * context) {
+bool SharemindPd_set_pdpi_facility(SharemindPd * pd, const char * name, void * facility, void * context) {
     assert(pd);
     assert(name);
     assert(name[0]);

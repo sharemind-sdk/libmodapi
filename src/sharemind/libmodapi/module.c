@@ -257,7 +257,7 @@ SharemindPdk * SharemindModule_find_pdk(const SharemindModule * m, const char * 
     return (*(m->api->module_find_pdk))(m, name);
 }
 
-int SharemindModule_set_facility(SharemindModule * m, const char * name, void * facility, void * context) {
+bool SharemindModule_set_facility(SharemindModule * m, const char * name, void * facility, void * context) {
     assert(m);
     assert(name);
     assert(name[0]);
@@ -271,7 +271,7 @@ const SharemindFacility * SharemindModule_get_facility(const SharemindModule * m
     return SharemindFacilityMap_get(&m->moduleFacilityMap, name);
 }
 
-int SharemindModule_set_pd_facility(SharemindModule * m, const char * name, void * facility, void * context) {
+bool SharemindModule_set_pd_facility(SharemindModule * m, const char * name, void * facility, void * context) {
     assert(m);
     assert(name);
     assert(name[0]);
@@ -285,7 +285,7 @@ const SharemindFacility * SharemindModule_get_pd_facility(const SharemindModule 
     return SharemindFacilityMap_get(&m->pdFacilityMap, name);
 }
 
-int SharemindModule_set_pdpi_facility(SharemindModule * m, const char * name, void * facility, void * context) {
+bool SharemindModule_set_pdpi_facility(SharemindModule * m, const char * name, void * facility, void * context) {
     assert(m);
     assert(name);
     assert(name[0]);

@@ -15,6 +15,7 @@
 #endif
 
 #include <sharemind/stringmap.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include "libmodapi.h"
@@ -37,7 +38,7 @@ typedef struct SharemindFacilityMap_ {
 
 inline void SharemindFacilityMap_init(SharemindFacilityMap * fm, SharemindFacilityMap * nextMap) __attribute__ ((nonnull(1)));
 inline void SharemindFacilityMap_destroy(SharemindFacilityMap * fm) __attribute__ ((nonnull(1)));
-inline int SharemindFacilityMap_set(SharemindFacilityMap * fm, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
+inline bool SharemindFacilityMap_set(SharemindFacilityMap * fm, const char * name, void * facility, void * context) __attribute__ ((nonnull(1,2)));
 inline const SharemindFacility * SharemindFacilityMap_get(const SharemindFacilityMap * fm, const char * name) __attribute__ ((nonnull(1,2)));
 inline const SharemindFacility * SharemindFacilityMap_get_norecurse(const SharemindFacilityMap * fm, const char * name) __attribute__ ((nonnull(1,2)));
 
@@ -52,16 +53,16 @@ inline const SharemindFacility * SharemindFacilityMap_get_norecurse(const Sharem
         assert(fm); \
         SharemindFacilityMapInner_destroy(&fm->realMap); \
     } \
-    qualifiers int SharemindFacilityMap_set(SharemindFacilityMap * fm, const char * name, void * facility, void * context) { \
+    qualifiers bool SharemindFacilityMap_set(SharemindFacilityMap * fm, const char * name, void * facility, void * context) { \
         assert(fm); \
         assert(name); \
         assert(name[0]); \
         SharemindFacility * value = SharemindFacilityMapInner_get_or_insert(&fm->realMap, name); \
         if (unlikely(!value)) \
-            return 0; \
+            return false; \
         value->facility = facility; \
         value->context = context; \
-        return 1; \
+        return true; \
     } \
     qualifiers const SharemindFacility * SharemindFacilityMap_get(const SharemindFacilityMap * fm, const char * name) { \
         assert(fm); \

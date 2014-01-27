@@ -142,7 +142,7 @@ SharemindModuleApi * SharemindPdpi_get_modapi(const SharemindPdpi * pdpi) {
     return pdpi->pd->pdk->module->modapi;
 }
 
-int SharemindPdpi_set_facility(SharemindPdpi * pdpi, const char * name, void * facility, void * context) {
+bool SharemindPdpi_set_facility(SharemindPdpi * pdpi, const char * name, void * facility, void * context) {
     assert(pdpi);
     assert(name);
     assert(name[0]);

@@ -117,7 +117,7 @@ bool SharemindModuleApi_set_error_with_dynamic_string(SharemindModuleApi * modap
 
 SHAREMIND_REFS_DEFINE_FUNCTIONS(SharemindModuleApi)
 
-int SharemindModuleApi_set_module_facility(SharemindModuleApi * modapi, const char * name, void * facility, void * context) {
+bool SharemindModuleApi_set_module_facility(SharemindModuleApi * modapi, const char * name, void * facility, void * context) {
     assert(modapi);
     assert(name);
     assert(name[0]);
@@ -131,7 +131,7 @@ const SharemindFacility * SharemindModuleApi_get_module_facility(const Sharemind
     return SharemindFacilityMap_get(&modapi->moduleFacilityMap, name);
 }
 
-int SharemindModuleApi_set_pd_facility(SharemindModuleApi * modapi, const char * name, void * facility, void * context) {
+bool SharemindModuleApi_set_pd_facility(SharemindModuleApi * modapi, const char * name, void * facility, void * context) {
     assert(modapi);
     assert(name);
     assert(name[0]);
@@ -145,7 +145,8 @@ const SharemindFacility * SharemindModuleApi_get_pd_facility(const SharemindModu
     return SharemindFacilityMap_get(&modapi->pdFacilityMap, name);
 }
 
-int SharemindModuleApi_set_pdpi_facility(SharemindModuleApi * modapi, const char * name, void * facility, void *context) {
+bool SharemindModuleApi_set_pdpi_facility(SharemindModuleApi * modapi, const char * name, void * facility, void * context)
+{
     assert(modapi);
     assert(name);
     assert(name[0]);

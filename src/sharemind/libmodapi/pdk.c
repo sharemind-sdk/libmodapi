@@ -134,7 +134,7 @@ size_t SharemindPdk_get_index(const SharemindPdk * pdk) {
     return pdk->pdk_index;
 }
 
-int SharemindPdk_set_pd_facility(SharemindPdk * pdk, const char * name, void * facility, void * context) {
+bool SharemindPdk_set_pd_facility(SharemindPdk * pdk, const char * name, void * facility, void * context) {
     assert(pdk);
     assert(name);
     assert(name[0]);
@@ -148,7 +148,7 @@ const SharemindFacility * SharemindPdk_get_pd_facility(const SharemindPdk * pdk,
     return SharemindFacilityMap_get(&pdk->pdFacilityMap, name);
 }
 
-int SharemindPdk_set_pdpi_facility(SharemindPdk * pdk, const char * name, void * facility, void * context) {
+bool SharemindPdk_set_pdpi_facility(SharemindPdk * pdk, const char * name, void * facility, void * context) {
     assert(pdk);
     assert(name);
     assert(name[0]);

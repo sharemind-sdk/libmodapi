@@ -11,6 +11,7 @@
 #define SHAREMIND_LIBMODAPI_API_0x1_H
 
 #include <sharemind/codeblock.h>
+#include <sharemind/preprocessor.h>
 #include <stddef.h>
 #include "api.h"
 
@@ -45,6 +46,7 @@ struct SharemindModuleApi0x1PdpiWrapper_;
 struct SharemindModuleApi0x1PdkDefinition_;
 
 
+#if 0
 /** Possible return codes returned by the procedures in Sharemind modules. */
 typedef enum {
 
@@ -76,6 +78,19 @@ typedef enum {
     SHAREMIND_MODULE_API_0x1_INVALID_MODULE_CONFIGURATION
 
 } SharemindModuleApi0x1Error;
+#endif
+
+#define SHAREMIND_MODULE_API_0x1_ERROR_ENUM \
+    ((SHAREMIND_MODULE_API_0x1_OK, = 0)) \
+    ((SHAREMIND_MODULE_API_0x1_OUT_OF_MEMORY,)) \
+    ((SHAREMIND_MODULE_API_0x1_SHAREMIND_ERROR,)) \
+    ((SHAREMIND_MODULE_API_0x1_MODULE_ERROR,)) \
+    ((SHAREMIND_MODULE_API_0x1_GENERAL_ERROR,)) \
+    ((SHAREMIND_MODULE_API_0x1_INVALID_CALL,)) \
+    ((SHAREMIND_MODULE_API_0x1_MISSING_FACILITY,)) \
+    ((SHAREMIND_MODULE_API_0x1_INVALID_PD_CONFIGURATION,)) \
+    ((SHAREMIND_MODULE_API_0x1_INVALID_MODULE_CONFIGURATION,))
+SHAREMIND_ENUM_CUSTOM_DEFINE(SharemindModuleApi0x1Error,SHAREMIND_MODULE_API_0x1_ERROR_ENUM);
 
 /** A facility with a context. */
 typedef struct {

@@ -81,8 +81,5 @@ void SharemindPdpi_stop_0x1(SharemindPdpi * pdpi) {
         .getPdpiFacility = &SHAREMIND_PDPI_get_facility_wrapper,
         .internal = pdpi
     };
-    const SharemindModuleApi0x1Error r = (*((SharemindModuleApi0x1PdpiShutdown) pd->pdk->pdpi_shutdown_impl_or_wrapper))(&pdpiWrapper);
-    if (r != SHAREMIND_MODULE_API_0x1_OK) {
-        /** \todo log return status. */
-    }
+    (*((SharemindModuleApi0x1PdpiShutdown) pd->pdk->pdpi_shutdown_impl_or_wrapper))(&pdpiWrapper);
 }

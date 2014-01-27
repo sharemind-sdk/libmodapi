@@ -260,11 +260,7 @@ void SharemindModule_deinit_0x1(SharemindModule * const m) {
         .internal = m,
         .conf = m->conf
     };
-
-    SharemindModuleApi0x1Error r = apiData->deinitializer(&context);
-    if (r != SHAREMIND_MODULE_API_0x1_OK) {
-        /** \todo Log return status. */
-    }
+    apiData->deinitializer(&context);
 }
 
 size_t SharemindModule_get_num_syscalls_0x1(const SharemindModule * m) {

@@ -89,15 +89,11 @@ void SharemindPd_stop_0x1(SharemindPd * pd) {
     assert(pd->pdk);
     assert(pd->pdk->pd_shutdown_impl_or_wrapper);
 
-
     SharemindModuleApi0x1PdConf pdConf;
     SharemindModuleApi0x1PdWrapper pdWrapper;
     SHAREMIND_PD_init_start_stop_wrappers(pd, &pdConf, &pdWrapper);
     const SharemindPdk * const pdk = pd->pdk;
     pdWrapper.internal = pd;
 
-    const SharemindModuleApi0x1Error r = (*((SharemindModuleApi0x1PdShutdown) pdk->pd_shutdown_impl_or_wrapper))(&pdWrapper);
-    if (r != SHAREMIND_MODULE_API_0x1_OK) {
-        /** \todo log return status. */
-    }
+    (*((SharemindModuleApi0x1PdShutdown) pdk->pd_shutdown_impl_or_wrapper))(&pdWrapper);
 }

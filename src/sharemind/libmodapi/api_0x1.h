@@ -134,9 +134,9 @@ typedef SharemindModuleApi0x1Error (*SharemindModuleApi0x1ModuleInitializer)(Sha
     SharemindModuleApi0x1Error sharemind_module_api_0x1_module_init(SharemindModuleApi0x1ModuleContext * c)
 
 /** Module deinitializer function signature: */
-typedef SharemindModuleApi0x1Error (*SharemindModuleApi0x1ModuleDeinitializer)(SharemindModuleApi0x1ModuleContext * c);
+typedef void (*SharemindModuleApi0x1ModuleDeinitializer)(SharemindModuleApi0x1ModuleContext * c);
 #define SHAREMIND_MODULE_API_0x1_DEINITIALIZER(c) \
-    SharemindModuleApi0x1Error sharemind_module_api_0x1_module_deinit(SharemindModuleApi0x1ModuleContext * c)
+    void sharemind_module_api_0x1_module_deinit(SharemindModuleApi0x1ModuleContext * c)
 
 
 /*******************************************************************************
@@ -402,9 +402,9 @@ typedef SharemindModuleApi0x1Error (* SharemindModuleApi0x1PdStartup)(SharemindM
     SharemindModuleApi0x1Error name(SharemindModuleApi0x1PdWrapper * wrapper)
 
 /** Protection domain deinitialization function signature */
-typedef SharemindModuleApi0x1Error (* SharemindModuleApi0x1PdShutdown)(SharemindModuleApi0x1PdWrapper *);
+typedef void (* SharemindModuleApi0x1PdShutdown)(SharemindModuleApi0x1PdWrapper *);
 #define SHAREMIND_MODULE_API_0x1_PD_SHUTDOWN(name,wrapper) \
-    SharemindModuleApi0x1Error name(SharemindModuleApi0x1PdWrapper * wrapper)
+    void name(SharemindModuleApi0x1PdWrapper * wrapper)
 
 /** Protection domain process initialization function signature */
 typedef SharemindModuleApi0x1Error (* SharemindModuleApi0x1PdpiStartup)(SharemindModuleApi0x1PdpiWrapper *);
@@ -412,9 +412,9 @@ typedef SharemindModuleApi0x1Error (* SharemindModuleApi0x1PdpiStartup)(Sharemin
     SharemindModuleApi0x1Error name(SharemindModuleApi0x1PdpiWrapper * wrapper)
 
 /** Protection domain process deinitialization function signature */
-typedef SharemindModuleApi0x1Error (* SharemindModuleApi0x1PdpiShutdown)(SharemindModuleApi0x1PdpiWrapper *);
+typedef void (* SharemindModuleApi0x1PdpiShutdown)(SharemindModuleApi0x1PdpiWrapper *);
 #define SHAREMIND_MODULE_API_0x1_PDPI_SHUTDOWN(name,wrapper) \
-    SharemindModuleApi0x1Error name(SharemindModuleApi0x1PdpiWrapper * wrapper)
+    void name(SharemindModuleApi0x1PdpiWrapper * wrapper)
 
 /** Protection domain kind list item: */
 typedef struct {

@@ -273,9 +273,7 @@ SharemindModuleApiError SharemindModule_init_0x1(SharemindModule * const m) {
         .internal = m,
         .conf = m->conf
     };
-    const SharemindModuleApi0x1Error r = apiData->initializer(&context);
-    SHAREMIND_STATIC_ASSERT(sizeof(r) <= sizeof(int));
-    switch ((int) r) {
+    switch (apiData->initializer(&context)) {
         case SHAREMIND_MODULE_API_0x1_OK:
             if (!context.moduleHandle) {
                 apiData->deinitializer(&context);

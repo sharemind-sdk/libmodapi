@@ -122,7 +122,7 @@ void SharemindPd_stop(SharemindPd * pd) {
     assert(pd->pdk);
     assert(pd->pdk->module);
     assert(pd->pdk->module->api);
-    assert(pd->pdk->module->api->pd_start);
+    assert(pd->pdk->module->api->pd_stop);
 
     if (!pd->isStarted)
         return;

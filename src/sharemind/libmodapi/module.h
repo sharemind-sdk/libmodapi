@@ -15,6 +15,7 @@
 #endif
 
 
+#include <sharemind/recursivemutex.h>
 #include <sharemind/refs.h>
 #include <stdint.h>
 #include "apis.h"
@@ -28,6 +29,9 @@ extern "C" {
 
 
 struct SharemindModule_ {
+
+    SharemindRecursiveMutex mutex;
+
     void * libHandle;
     char * filename;
     char * name;
@@ -51,12 +55,15 @@ struct SharemindModule_ {
     /** PDPI facility name to pointer mapping: */
     SharemindFacilityMap pdpiFacilityMap;
 
-
+    #ifndef NDEBUG
     SHAREMIND_REFS_DECLARE_FIELDS
+    #endif
+
 };
 
+#ifndef NDEBUG
 SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindModule)
-
+#endif
 
 #ifdef __cplusplus
 } /* extern "C" { */

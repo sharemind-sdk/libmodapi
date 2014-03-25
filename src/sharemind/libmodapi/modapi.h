@@ -15,6 +15,7 @@
 #endif
 
 
+#include <sharemind/mutex.h>
 #include <sharemind/refs.h>
 #include <stdbool.h>
 #include "facilitymap.h"
@@ -27,6 +28,9 @@ extern "C" {
 
 
 struct SharemindModuleApi_ {
+
+    SharemindMutex mutex;
+
     SharemindModuleApiError lastError;
     const char * lastErrorStaticString;
     char * lastErrorDynamicString;
@@ -62,6 +66,14 @@ void SharemindModuleApi_set_error_with_static_string(
                 (modapi), \
                 SHAREMIND_MODULE_API_REFERENCE_OVERFLOW, \
                 "Too many references!"); \
+    } else (void) 0
+
+#define MIE(modapi) \
+    if (1) { \
+        SharemindModuleApi_set_error_with_static_string( \
+                (modapi), \
+                SHAREMIND_MODULE_API_MUTEX_ERROR, \
+                "Mutex initialization error!"); \
     } else (void) 0
 
 bool SharemindModuleApi_set_error_with_dynamic_string(

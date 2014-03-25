@@ -14,6 +14,7 @@
 #error including an internal header!
 #endif
 
+#include <sharemind/mutex.h>
 #include <sharemind/refs.h>
 #include "facilitymap.h"
 #include "libmodapi.h"
@@ -25,6 +26,8 @@ extern "C" {
 
 
 struct SharemindPdk_ {
+
+    SharemindMutex mutex;
 
     /**
       The index of the protection domain kind in the

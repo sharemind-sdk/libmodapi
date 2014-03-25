@@ -17,6 +17,7 @@ INCLUDE_DIRECTORIES(BEFORE SYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/../")
 
 ADD_COMPILE_OPTIONS(
   "-O2"
+  "-pthread"
   "$<$<NOT:$<STREQUAL:$<CONFIGURATION>,Release>>:-ggdb>"
   "$<$<NOT:$<STREQUAL:$<CONFIGURATION>,Release>>:-fno-omit-frame-pointer>"
   "$<$<STREQUAL:$<CONFIGURATION>,Release>:-DNDEBUG>"
@@ -30,7 +31,7 @@ SET(W "-Wall -Wextra -fstrict-aliasing -Wstrict-aliasing=1 -Wabi")
 SET(W "${W} -Wbad-function-cast -Wc++-compat -Wformat -Wswitch-default")
 SET(W "${W} -Wunused -Wfloat-equal -Wshadow -Wpointer-arith -Wcast-qual")
 SET(W "${W} -Wstrict-prototypes -Wconversion -Wsign-conversion -Wunused-macros")
-SET(CMAKE_C_FLAGS "-std=c99 -fwrapv -D_POSIX_C_SOURCE=200809L ${W}")
+SET(CMAKE_C_FLAGS "-std=c99 -fwrapv ${W}")
 
 INCLUDE(CheckCCompilerFlag)
 MACRO(FLAGS_MAGIC flags)
@@ -42,8 +43,10 @@ ENDMACRO(FLAGS_MAGIC)
 FLAGS_MAGIC("Weverything")
 FLAGS_MAGIC("Wlogical-op")
 
-SET(LIBMODAPI_INSTALL_DEFINITIONS "-D__STDC_LIMIT_MACROS")
-ADD_DEFINITIONS("${LIBMODAPI_INSTALL_DEFINITIONS}")
+SET(LIBMODAPI_INSTALL_DEFINITIONS "-D__STDC_LIMIT_MACROS"
+                                  "-D_POSIX_C_SOURCE"
+                                  "-D_GNU_SOURCE")
+ADD_DEFINITIONS(${LIBMODAPI_INSTALL_DEFINITIONS})
 
 
 

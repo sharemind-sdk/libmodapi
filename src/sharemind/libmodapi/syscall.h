@@ -14,7 +14,9 @@
 #error including an internal header!
 #endif
 
+#ifndef NDEBUG
 #include <sharemind/refs.h>
+#endif
 #include "libmodapi.h"
 
 
@@ -25,6 +27,10 @@ extern "C" {
 
 struct SharemindSyscall_ {
 
+    #ifndef NDEBUG
+    SharemindMutex mutex;
+    #endif
+
     SharemindSyscallWrapper wrapper;
 
     /** Unique name of the system call. */
@@ -33,7 +39,9 @@ struct SharemindSyscall_ {
     /** Pointer to module providing this syscall. */
     SharemindModule * module;
 
+    #ifndef NDEBUG
     SHAREMIND_REFS_DECLARE_FIELDS
+    #endif
 
 };
 
@@ -47,7 +55,9 @@ int SharemindSyscall_init(SharemindSyscall * sc,
 void SharemindSyscall_destroy(SharemindSyscall * sc)
         __attribute__ ((nonnull(1)));
 
+#ifndef NDEBUG
 SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindSyscall)
+#endif
 
 
 #ifdef __cplusplus

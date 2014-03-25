@@ -14,6 +14,7 @@
 #error including an internal header!
 #endif
 
+#include <sharemind/recursivemutex.h>
 #include <sharemind/refs.h>
 #include <stdbool.h>
 #include "facilitymap.h"
@@ -25,6 +26,8 @@ extern "C" {
 #endif
 
 struct SharemindPdpi_ {
+
+    SharemindRecursiveMutex mutex;
 
     /** A handle for protection domain runtime data. */
     void * pdProcessHandle;

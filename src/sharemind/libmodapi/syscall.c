@@ -30,16 +30,20 @@ int SharemindSyscall_init(SharemindSyscall * sc,
     assert(m);
     assert(m->modapi);
 
+    #ifndef NDEBUG
     if (!SharemindModule_refs_ref(m)) {
         OOR(m->modapi);
         return 0;
     }
 
     SHAREMIND_REFS_INIT(sc);
+    #endif
 
     sc->name = strdup(name);
     if (!sc->name) {
+        #ifndef NDEBUG
         SharemindModule_refs_unref(m);
+        #endif
         return 0;
     }
 
@@ -59,10 +63,14 @@ void SharemindSyscall_destroy(SharemindSyscall * sc) {
     assert(sc->wrapper.callable);
     assert(sc->name);
     assert(sc->module);
+    #ifndef NDEBUG
     SHAREMIND_REFS_ASSERT_IF_REFERENCED(sc);
+    #endif
 
     free(sc->name);
+    #ifndef NDEBUG
     SharemindModule_refs_unref(sc->module);
+    #endif
 }
 
 const char * SharemindSyscall_get_signature(const SharemindSyscall * sc) {
@@ -96,4 +104,6 @@ SharemindSyscallWrapper SharemindSyscall_get_wrapper(
     return sc->wrapper;
 }
 
+#ifndef NDEBUG
 SHAREMIND_REFS_DEFINE_FUNCTIONS(SharemindSyscall)
+#endif

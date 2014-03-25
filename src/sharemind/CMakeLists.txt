@@ -44,8 +44,7 @@ FLAGS_MAGIC("Weverything")
 FLAGS_MAGIC("Wlogical-op")
 
 SET(LIBMODAPI_INSTALL_DEFINITIONS "-D__STDC_LIMIT_MACROS"
-                                  "-D_POSIX_C_SOURCE"
-                                  "-D_GNU_SOURCE")
+                                  "-D_XOPEN_SOURCE=700")
 ADD_DEFINITIONS(${LIBMODAPI_INSTALL_DEFINITIONS})
 
 

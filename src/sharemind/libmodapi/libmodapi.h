@@ -102,6 +102,10 @@ bool SharemindModuleApi_set_module_facility(SharemindModuleApi * modapi,
                                             void * context)
         __attribute__ ((nonnull(1,2)));
 
+bool SharemindModuleApi_unset_module_facility(SharemindModuleApi * modapi,
+                                              const char * name)
+        __attribute__ ((nonnull(1,2)));
+
 const SharemindFacility * SharemindModuleApi_get_module_facility(
         const SharemindModuleApi * modapi,
         const char * name) __attribute__ ((nonnull(1,2)));
@@ -112,6 +116,10 @@ bool SharemindModuleApi_set_pd_facility(SharemindModuleApi * modapi,
                                         void * context)
         __attribute__ ((nonnull(1,2)));
 
+bool SharemindModuleApi_unset_pd_facility(SharemindModuleApi * modapi,
+                                          const char * name)
+        __attribute__ ((nonnull(1,2)));
+
 const SharemindFacility * SharemindModuleApi_get_pd_facility(
         const SharemindModuleApi * modapi,
         const char * name) __attribute__ ((nonnull(1,2)));
@@ -120,6 +128,10 @@ bool SharemindModuleApi_set_pdpi_facility(SharemindModuleApi * modapi,
                                           const char * name,
                                           void * facility,
                                           void * context)
+        __attribute__ ((nonnull(1,2)));
+
+bool SharemindModuleApi_unset_pdpi_facility(SharemindModuleApi * modapi,
+                                            const char * name)
         __attribute__ ((nonnull(1,2)));
 
 const SharemindFacility * SharemindModuleApi_get_pdpi_facility(
@@ -199,6 +211,9 @@ bool SharemindModule_set_facility(SharemindModule * m,
                                   void * context)
         __attribute__ ((nonnull(1,2)));
 
+bool SharemindModule_unset_facility(SharemindModule * m, const char * name)
+        __attribute__ ((nonnull(1,2)));
+
 const SharemindFacility * SharemindModule_get_facility(
         const SharemindModule * m,
         const char * name) __attribute__ ((nonnull(1,2)));
@@ -209,6 +224,9 @@ bool SharemindModule_set_pd_facility(SharemindModule * m,
                                      void * context)
         __attribute__ ((nonnull(1,2)));
 
+bool SharemindModule_unset_pd_facility(SharemindModule * m, const char * name)
+        __attribute__ ((nonnull(1,2)));
+
 const SharemindFacility * SharemindModule_get_pd_facility(
         const SharemindModule * m,
         const char * name) __attribute__ ((nonnull(1,2)));
@@ -217,6 +235,9 @@ bool SharemindModule_set_pdpi_facility(SharemindModule * m,
                                        const char * name,
                                        void * facility,
                                        void * context)
+        __attribute__ ((nonnull(1,2)));
+
+bool SharemindModule_unset_pdpi_facility(SharemindModule * m, const char * name)
         __attribute__ ((nonnull(1,2)));
 
 const SharemindFacility * SharemindModule_get_pdpi_facility(
@@ -270,6 +291,9 @@ bool SharemindPdk_set_pd_facility(SharemindPdk * pdk,
                                   void * context)
         __attribute__ ((nonnull(1,2)));
 
+bool SharemindPdk_unset_pd_facility(SharemindPdk * pdk, const char * name)
+        __attribute__ ((nonnull(1,2)));
+
 const SharemindFacility * SharemindPdk_get_pd_facility(const SharemindPdk * pdk,
                                                        const char * name)
         __attribute__ ((nonnull(1,2)));
@@ -278,6 +302,9 @@ bool SharemindPdk_set_pdpi_facility(SharemindPdk * pdk,
                                     const char * name,
                                     void * facility,
                                     void * context)
+        __attribute__ ((nonnull(1,2)));
+
+bool SharemindPdk_unset_pdpi_facility(SharemindPdk * pdk, const char * name)
         __attribute__ ((nonnull(1,2)));
 
 const SharemindFacility * SharemindPdk_get_pdpi_facility(
@@ -330,6 +357,9 @@ bool SharemindPd_set_facility(SharemindPd * pd,
                               void * facility,
                               void * context) __attribute__ ((nonnull(1,2)));
 
+bool SharemindPd_unset_facility(SharemindPd * pd, const char * name)
+        __attribute__ ((nonnull(1,2)));
+
 const SharemindFacility * SharemindPd_get_facility(const SharemindPd * pd,
                                                    const char * name)
         __attribute__ ((nonnull(1,2)));
@@ -338,6 +368,9 @@ bool SharemindPd_set_pdpi_facility(SharemindPd * pd,
                                    const char * name,
                                    void * facility,
                                    void * context)
+        __attribute__ ((nonnull(1,2)));
+
+bool SharemindPd_unset_pdpi_facility(SharemindPd * pd, const char * name)
         __attribute__ ((nonnull(1,2)));
 
 const SharemindFacility * SharemindPd_get_pdpi_facility(const SharemindPd * pd,
@@ -383,6 +416,10 @@ bool SharemindPdpi_set_facility(SharemindPdpi * pdpi,
                                 const char * name,
                                 void * facility,
                                 void * context) __attribute__ ((nonnull(1,2)));
+
+bool SharemindPdpi_unset_facility(SharemindPdpi * pdpi,
+                                  const char * name)
+        __attribute__ ((nonnull(1,2)));
 
 const SharemindFacility * SharemindPdpi_get_facility(const SharemindPdpi * pdpi,
                                                      const char * name)

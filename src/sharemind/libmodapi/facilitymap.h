@@ -55,6 +55,10 @@ inline bool SharemindFacilityMap_set(SharemindFacilityMap * fm,
                                      void * context)
         __attribute__ ((nonnull(1,2)));
 
+inline bool SharemindFacilityMap_unset(SharemindFacilityMap * fm,
+                                       const char * name)
+        __attribute__ ((nonnull(1,2)));
+
 inline const SharemindFacility * SharemindFacilityMap_get(
             const SharemindFacilityMap * fm,
             const char * name) __attribute__ ((nonnull(1,2)));
@@ -92,6 +96,14 @@ inline const SharemindFacility * SharemindFacilityMap_get_norecurse(
         value->facility = facility; \
         value->context = context; \
         return true; \
+    } \
+    qualifiers bool SharemindFacilityMap_unset(SharemindFacilityMap * fm, \
+                                               const char * name) \
+    { \
+        assert(fm); \
+        assert(name); \
+        assert(name[0]); \
+        return SharemindFacilityMapInner_remove(&fm->realMap, name); \
     } \
     qualifiers const SharemindFacility * SharemindFacilityMap_get( \
             const SharemindFacilityMap * fm, \

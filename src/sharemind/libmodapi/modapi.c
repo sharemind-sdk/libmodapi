@@ -191,6 +191,18 @@ bool SharemindModuleApi_set_module_facility(SharemindModuleApi * modapi,
     return r;
 }
 
+bool SharemindModuleApi_unset_module_facility(SharemindModuleApi * modapi,
+                                              const char * name)
+{
+    assert(modapi);
+    assert(name);
+    assert(name[0]);
+    LOCK(modapi);
+    const bool r = SharemindFacilityMap_unset(&modapi->moduleFacilityMap, name);
+    UNLOCK(modapi);
+    return r;
+}
+
 const SharemindFacility * SharemindModuleApi_get_module_facility(
         const SharemindModuleApi * modapi,
         const char * name)
@@ -222,6 +234,18 @@ bool SharemindModuleApi_set_pd_facility(SharemindModuleApi * modapi,
     return r;
 }
 
+bool SharemindModuleApi_unset_pd_facility(SharemindModuleApi * modapi,
+                                          const char * name)
+{
+    assert(modapi);
+    assert(name);
+    assert(name[0]);
+    LOCK(modapi);
+    const bool r = SharemindFacilityMap_unset(&modapi->pdFacilityMap, name);
+    UNLOCK(modapi);
+    return r;
+}
+
 const SharemindFacility * SharemindModuleApi_get_pd_facility(
         const SharemindModuleApi * modapi,
         const char * name)
@@ -249,6 +273,18 @@ bool SharemindModuleApi_set_pdpi_facility(SharemindModuleApi * modapi,
                                             name,
                                             facility,
                                             context);
+    UNLOCK(modapi);
+    return r;
+}
+
+bool SharemindModuleApi_unset_pdpi_facility(SharemindModuleApi * modapi,
+                                            const char * name)
+{
+    assert(modapi);
+    assert(name);
+    assert(name[0]);
+    LOCK(modapi);
+    const bool r = SharemindFacilityMap_unset(&modapi->pdpiFacilityMap, name);
     UNLOCK(modapi);
     return r;
 }

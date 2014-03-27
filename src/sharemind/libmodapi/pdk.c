@@ -186,6 +186,16 @@ bool SharemindPdk_set_pd_facility(SharemindPdk * pdk,
     return r;
 }
 
+bool SharemindPdk_unset_pd_facility(SharemindPdk * pdk, const char * name) {
+    assert(pdk);
+    assert(name);
+    assert(name[0]);
+    LOCK(pdk);
+    const bool r = SharemindFacilityMap_unset(&pdk->pdFacilityMap, name);
+    UNLOCK(pdk);
+    return r;
+}
+
 const SharemindFacility * SharemindPdk_get_pd_facility(const SharemindPdk * pdk,
                                                        const char * name)
 {
@@ -212,6 +222,16 @@ bool SharemindPdk_set_pdpi_facility(SharemindPdk * pdk,
                                             name,
                                             facility,
                                             context);
+    UNLOCK(pdk);
+    return r;
+}
+
+bool SharemindPdk_unset_pdpi_facility(SharemindPdk * pdk, const char * name) {
+    assert(pdk);
+    assert(name);
+    assert(name[0]);
+    LOCK(pdk);
+    const bool r = SharemindFacilityMap_unset(&pdk->pdpiFacilityMap, name);
     UNLOCK(pdk);
     return r;
 }

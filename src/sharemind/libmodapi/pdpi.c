@@ -206,6 +206,18 @@ bool SharemindPdpi_set_facility(SharemindPdpi * pdpi,
     return r;
 }
 
+bool SharemindPdpi_unset_facility(SharemindPdpi * pdpi,
+                                  const char * name)
+{
+    assert(pdpi);
+    assert(name);
+    assert(name[0]);
+    LOCK(pdpi);
+    const bool r = SharemindFacilityMap_unset(&pdpi->pdpiFacilityMap, name);
+    UNLOCK(pdpi);
+    return r;
+}
+
 const SharemindFacility * SharemindPdpi_get_facility(const SharemindPdpi * pdpi,
                                                      const char * name)
 {

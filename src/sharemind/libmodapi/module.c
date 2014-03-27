@@ -357,6 +357,16 @@ bool SharemindModule_set_facility(SharemindModule * m,
     return r;
 }
 
+bool SharemindModule_unset_facility(SharemindModule * m, const char * name) {
+    assert(m);
+    assert(name);
+    assert(name[0]);
+    LOCK(m);
+    const bool r = SharemindFacilityMap_unset(&m->moduleFacilityMap, name);
+    UNLOCK(m);
+    return r;
+}
+
 const SharemindFacility * SharemindModule_get_facility(
         const SharemindModule * m,
         const char * name)
@@ -388,6 +398,16 @@ bool SharemindModule_set_pd_facility(SharemindModule * m,
     return r;
 }
 
+bool SharemindModule_unset_pd_facility(SharemindModule * m, const char * name) {
+    assert(m);
+    assert(name);
+    assert(name[0]);
+    LOCK(m);
+    const bool r = SharemindFacilityMap_unset(&m->pdFacilityMap, name);
+    UNLOCK(m);
+    return r;
+}
+
 const SharemindFacility * SharemindModule_get_pd_facility(
         const SharemindModule * m,
         const char * name)
@@ -415,6 +435,17 @@ bool SharemindModule_set_pdpi_facility(SharemindModule * m,
                                             name,
                                             facility,
                                             context);
+    UNLOCK(m);
+    return r;
+}
+
+bool SharemindModule_unset_pdpi_facility(SharemindModule * m, const char * name)
+{
+    assert(m);
+    assert(name);
+    assert(name[0]);
+    LOCK(m);
+    const bool r = SharemindFacilityMap_unset(&m->pdpiFacilityMap, name);
     UNLOCK(m);
     return r;
 }

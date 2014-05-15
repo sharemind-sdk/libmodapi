@@ -28,7 +28,7 @@ FIND_PACKAGE(Boost REQUIRED)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 
 SET(W "-Wall -Wextra -fstrict-aliasing -Wstrict-aliasing=1 -Wabi")
-SET(W "${W} -Wbad-function-cast -Wc++-compat -Wformat -Wswitch-default")
+SET(W "${W} -Wbad-function-cast -Wformat -Wswitch-default")
 SET(W "${W} -Wunused -Wfloat-equal -Wshadow -Wpointer-arith -Wcast-qual")
 SET(W "${W} -Wstrict-prototypes -Wconversion -Wsign-conversion -Wunused-macros")
 SET(CMAKE_C_FLAGS "-std=c99 -fwrapv ${W}")

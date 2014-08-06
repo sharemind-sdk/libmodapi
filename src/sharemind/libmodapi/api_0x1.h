@@ -216,8 +216,8 @@ struct SharemindModuleApi0x1SyscallContext_ {
     /** System call specific data, do not use in modules! Ever! */
     void * syscall_internal;
 
-    /** Process specific data, do not use in modules! Never Ever! */
-    SHAREMIND_ICONST void * SHAREMIND_ICONST process_internal;
+    /** Process specific data. */
+    void * SHAREMIND_ICONST process_internal;
 
     /**
       A handle to the private data of the module instance. This is the same

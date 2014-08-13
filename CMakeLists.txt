@@ -7,12 +7,117 @@
 # code is subject to the appropriate license agreement.
 #
 
-CMAKE_MINIMUM_REQUIRED(VERSION "2.8")
-PROJECT("SHAREMIND_LIBMODAPI" "C" "CXX")
+CMAKE_MINIMUM_REQUIRED(VERSION "2.8.12")
+PROJECT("SHAREMIND_LIBMODAPI" "C")
 
-SET(SHAREMIND_LIB_DIR "${CMAKE_CURRENT_BINARY_DIR}/lib/")
-SET(SHAREMIND_INCLUDE_DESTINATION "include/sharemind")
+INCLUDE("${CMAKE_CURRENT_SOURCE_DIR}/config.local" OPTIONAL)
+INCLUDE("${CMAKE_CURRENT_BINARY_DIR}/config.local" OPTIONAL)
 
-ENABLE_TESTING()
+FIND_PACKAGE(Boost REQUIRED)
+FIND_PACKAGE(SharemindVmGlobals REQUIRED)
+INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS}
+                    ${SharemindVmGlobals_INCLUDE_DIRS})
 
-ADD_SUBDIRECTORY("src/sharemind/")
+ADD_COMPILE_OPTIONS(
+    "-std=c99" "-O2" "-fwrapv" "-Wall" "-Wextra" "-Wunused" "-Wabi"
+    "-Wstrict-aliasing=1" "-Wbad-function-cast" "-Wformat" "-Wswitch-default"
+    "-Wfloat-equal" "-Wshadow" "-Wpointer-arith" "-Wcast-qual"
+    "-Wstrict-prototypes" "-Wconversion" "-Wsign-conversion" "-Wunused-macros"
+    "$<$<NOT:$<STREQUAL:$<CONFIGURATION>,Release>>:-ggdb>"
+    "$<$<NOT:$<STREQUAL:$<CONFIGURATION>,Release>>:-fno-omit-frame-pointer>"
+    "$<$<STREQUAL:$<CONFIGURATION>,Release>:-DNDEBUG>"
+    "$<$<STREQUAL:$<CONFIGURATION>,Release>:-fomit-frame-pointer>"
+)
+
+INCLUDE(CheckCCompilerFlag)
+FUNCTION(CHECK_ADD_COMPILER_FLAG flag)
+    STRING(SUBSTRING "${flag}" 1 -1 FlagName)
+    CHECK_C_COMPILER_FLAG("${flag}" C_COMPILER_HAS_${FlagName}_FLAG)
+    IF(C_COMPILER_HAS_${FlagName}_FLAG)
+        ADD_COMPILE_OPTIONS("${flag}")
+    ENDIF()
+ENDFUNCTION()
+CHECK_ADD_COMPILER_FLAG("-Weverything")
+CHECK_ADD_COMPILER_FLAG("-Wlogical-op")
+
+SET(LIBMODAPI_INSTALL_DEFINITIONS "-D__STDC_LIMIT_MACROS"
+                                  "-D_XOPEN_SOURCE=700")
+ADD_DEFINITIONS(${SharemindVmGlobals_DEFINITIONS}
+                ${LIBMODAPI_INSTALL_DEFINITIONS})
+
+
+
+################################################################################
+# libmodapi
+################################################################################
+
+SET(SHAREMIND_LIBMODAPI_HEADERS
+    "src/libmodapi.h"
+    "src/api.h"
+    "src/api_0x1.h"
+)
+
+SET(SHAREMIND_LIBMODAPI_HEADERS_P
+    "src/apis.h"
+    "src/facilitymap.h"
+    "src/modapi.h"
+    "src/module.h"
+    "src/module_0x1.h"
+    "src/pd.h"
+    "src/pd_0x1.h"
+    "src/pdk.h"
+    "src/pdpi.h"
+    "src/pdpi_0x1.h"
+    "src/syscall.h")
+
+IF(NOT SHAREMIND_LIBMODAPI_LINKING_MODE)
+    SET(SHAREMIND_LIBMODAPI_LINKING_MODE SHARED)
+ENDIF()
+
+ADD_LIBRARY("libmodapi" ${SHAREMIND_LIBMODAPI_LINKING_MODE}
+            "src/apis.c"
+            "src/facilitymap.c"
+            "src/modapi.c"
+            "src/module.c"
+            "src/module_0x1.c"
+            "src/pd.c"
+            "src/pd_0x1.c"
+            "src/pdk.c"
+            "src/pdpi.c"
+            "src/pdpi_0x1.c"
+            "src/syscall.c"
+            ${SHAREMIND_LIBMODAPI_HEADERS}
+            ${SHAREMIND_LIBMODAPI_HEADERS_P}
+)
+
+SET(LIBMODAPI_VERSION "0.1.0.0")
+SET_TARGET_PROPERTIES("libmodapi" PROPERTIES
+                      OUTPUT_NAME "sharemind_modapi"
+                      VERSION "${LIBMODAPI_VERSION}"
+                      SOVERSION "0.1")
+
+INSTALL(TARGETS "libmodapi"
+        LIBRARY DESTINATION "lib")
+
+INSTALL(FILES ${SHAREMIND_LIBMODAPI_HEADERS}
+        DESTINATION "include/sharemind/libmodapi")
+
+# Install cmake files:
+FILE(GLOB_RECURSE sharemind_libmodapi_in_files
+     "${CMAKE_CURRENT_SOURCE_DIR}/*.in")
+ADD_CUSTOM_TARGET("include_sharemind_libmodapi_in_files_in_IDE"
+                  SOURCES ${sharemind_libmodapi_in_files})
+SET(LIBMODAPI_INSTALL_LINK_LIBRARIES "-L${CMAKE_INSTALL_PREFIX}/lib"
+                                     "-lsharemind_modapi")
+SET(LIBMODAPI_INSTALL_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include")
+
+CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/SharemindLibmodapiConfig.cmake.in"
+               "${CMAKE_CURRENT_BINARY_DIR}/SharemindLibmodapiConfig.cmake"
+               @ONLY)
+CONFIGURE_FILE(
+    "${CMAKE_CURRENT_SOURCE_DIR}/SharemindLibmodapiConfigVersion.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/SharemindLibmodapiConfigVersion.cmake" @ONLY)
+INSTALL(FILES
+            "${CMAKE_CURRENT_BINARY_DIR}/SharemindLibmodapiConfig.cmake"
+            "${CMAKE_CURRENT_BINARY_DIR}/SharemindLibmodapiConfigVersion.cmake"
+        DESTINATION "lib/SharemindLibmodapi")

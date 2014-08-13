@@ -15,33 +15,30 @@ FOREACH(dir IN LISTS CMAKE_PREFIX_PATH)
 ENDFOREACH()
 INCLUDE_DIRECTORIES(BEFORE SYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/../")
 
-ADD_COMPILE_OPTIONS(
-  "-O2"
-  "-pthread"
-  "$<$<NOT:$<STREQUAL:$<CONFIGURATION>,Release>>:-ggdb>"
-  "$<$<NOT:$<STREQUAL:$<CONFIGURATION>,Release>>:-fno-omit-frame-pointer>"
-  "$<$<STREQUAL:$<CONFIGURATION>,Release>:-DNDEBUG>"
-  "$<$<STREQUAL:$<CONFIGURATION>,Release>:-fomit-frame-pointer>"
-)
-
 FIND_PACKAGE(Boost REQUIRED)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 
-SET(W "-Wall -Wextra -fstrict-aliasing -Wstrict-aliasing=1 -Wabi")
-SET(W "${W} -Wbad-function-cast -Wformat -Wswitch-default")
-SET(W "${W} -Wunused -Wfloat-equal -Wshadow -Wpointer-arith -Wcast-qual")
-SET(W "${W} -Wstrict-prototypes -Wconversion -Wsign-conversion -Wunused-macros")
-SET(CMAKE_C_FLAGS "-std=c99 -fwrapv ${W}")
+ADD_COMPILE_OPTIONS(
+    "-std=c99" "-O2" "-fwrapv" "-Wall" "-Wextra" "-Wunused" "-Wabi"
+    "-Wstrict-aliasing=1" "-Wbad-function-cast" "-Wformat" "-Wswitch-default"
+    "-Wfloat-equal" "-Wshadow" "-Wpointer-arith" "-Wcast-qual"
+    "-Wstrict-prototypes" "-Wconversion" "-Wsign-conversion" "-Wunused-macros"
+    "$<$<NOT:$<STREQUAL:$<CONFIGURATION>,Release>>:-ggdb>"
+    "$<$<NOT:$<STREQUAL:$<CONFIGURATION>,Release>>:-fno-omit-frame-pointer>"
+    "$<$<STREQUAL:$<CONFIGURATION>,Release>:-DNDEBUG>"
+    "$<$<STREQUAL:$<CONFIGURATION>,Release>:-fomit-frame-pointer>"
+)
 
 INCLUDE(CheckCCompilerFlag)
-MACRO(FLAGS_MAGIC flags)
-    CHECK_C_COMPILER_FLAG("-${flags}" SHAREMIND_HAS_CFLAGS__${flags})
-    IF(SHAREMIND_HAS_CFLAGS__${flags})
-        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -${flags}")
-    ENDIF(SHAREMIND_HAS_CFLAGS__${flags})
-ENDMACRO(FLAGS_MAGIC)
-FLAGS_MAGIC("Weverything")
-FLAGS_MAGIC("Wlogical-op")
+FUNCTION(CHECK_ADD_COMPILER_FLAG flag)
+    STRING(SUBSTRING "${flag}" 1 -1 FlagName)
+    CHECK_C_COMPILER_FLAG("${flag}" C_COMPILER_HAS_${FlagName}_FLAG)
+    IF(C_COMPILER_HAS_${FlagName}_FLAG)
+        ADD_COMPILE_OPTIONS("${flag}")
+    ENDIF()
+ENDFUNCTION()
+CHECK_ADD_COMPILER_FLAG("-Weverything")
+CHECK_ADD_COMPILER_FLAG("-Wlogical-op")
 
 SET(LIBMODAPI_INSTALL_DEFINITIONS "-D__STDC_LIMIT_MACROS"
                                   "-D_XOPEN_SOURCE=700")

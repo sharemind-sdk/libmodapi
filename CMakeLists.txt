@@ -52,40 +52,23 @@ ADD_DEFINITIONS(${SharemindVmGlobals_DEFINITIONS}
 ################################################################################
 
 SET(SHAREMIND_LIBMODAPI_HEADERS
-    "src/libmodapi.h"
-    "src/api.h"
-    "src/api_0x1.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/libmodapi.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/api.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/api_0x1.h"
 )
 
-SET(SHAREMIND_LIBMODAPI_HEADERS_P
-    "src/apis.h"
-    "src/facilitymap.h"
-    "src/modapi.h"
-    "src/module.h"
-    "src/module_0x1.h"
-    "src/pd.h"
-    "src/pd_0x1.h"
-    "src/pdk.h"
-    "src/pdpi.h"
-    "src/pdpi_0x1.h"
-    "src/syscall.h")
+FILE(GLOB_RECURSE SHAREMIND_LIBMODAPI_HEADERS_P
+     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
+LIST(REMOVE_ITEM SHAREMIND_LIBMODAPI_HEADERS_P ${SHAREMIND_LIBMODAPI_HEADERS})
 
 IF(NOT SHAREMIND_LIBMODAPI_LINKING_MODE)
     SET(SHAREMIND_LIBMODAPI_LINKING_MODE SHARED)
 ENDIF()
 
+FILE(GLOB_RECURSE SHAREMIND_LIBMODAPI_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c")
 ADD_LIBRARY("libmodapi" ${SHAREMIND_LIBMODAPI_LINKING_MODE}
-            "src/apis.c"
-            "src/facilitymap.c"
-            "src/modapi.c"
-            "src/module.c"
-            "src/module_0x1.c"
-            "src/pd.c"
-            "src/pd_0x1.c"
-            "src/pdk.c"
-            "src/pdpi.c"
-            "src/pdpi_0x1.c"
-            "src/syscall.c"
+            ${SHAREMIND_LIBMODAPI_SOURCES}
             ${SHAREMIND_LIBMODAPI_HEADERS}
             ${SHAREMIND_LIBMODAPI_HEADERS_P}
 )

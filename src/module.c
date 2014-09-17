@@ -146,7 +146,7 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi,
         #ifndef NDEBUG
         SHAREMIND_REFS_INIT(m);
         #endif
-        SharemindModuleApiError status = (*(m->api->module_load))(m);
+        const SharemindModuleApiError status = (*(m->api->module_load))(m);
         if (unlikely(status != SHAREMIND_MODULE_API_OK)) {
             SharemindModuleApi_set_error_with_static_string(modapi,
                                                             status,

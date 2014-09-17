@@ -73,10 +73,10 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi,
     (void) dlerror();
     m->libHandle = dlopen(filename, RTLD_NOW | RTLD_LOCAL);
     if (unlikely(!m->libHandle)) {
-        SharemindModuleApi_set_error_with_dynamic_string(
+        SharemindModuleApi_set_error_with_static_string(
                     modapi,
                     SHAREMIND_MODULE_API_UNABLE_TO_OPEN_MODULE,
-                    dlerror());
+                    "dlopen() failed!");
         goto SharemindModule_new_fail_5;
     }
 
@@ -84,10 +84,10 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi,
     moduleInfo = (const SharemindModuleInfo *) dlsym(m->libHandle,
                                                      "sharemindModuleInfo");
     if (unlikely(!moduleInfo)) {
-        SharemindModuleApi_set_error_with_dynamic_string(
+        SharemindModuleApi_set_error_with_static_string(
                     modapi,
                     SHAREMIND_MODULE_API_INVALID_MODULE,
-                    dlerror());
+                    "The \"sharemindModuleInfo\" symbol was not found!");
         goto SharemindModule_new_fail_6;
     }
 

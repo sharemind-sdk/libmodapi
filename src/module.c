@@ -70,7 +70,6 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi,
     }
 
     /* Load module: */
-    (void) dlerror();
     m->libHandle = dlopen(filename, RTLD_NOW | RTLD_LOCAL);
     if (unlikely(!m->libHandle)) {
         SharemindModuleApi_set_error_with_static_string(

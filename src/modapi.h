@@ -33,7 +33,6 @@ struct SharemindModuleApi_ {
 
     SharemindModuleApiError lastError;
     const char * lastErrorStaticString;
-    char * lastErrorDynamicString;
 
     /** Module facility name to pointer mapping: */
     SharemindFacilityMap moduleFacilityMap;
@@ -75,11 +74,6 @@ void SharemindModuleApi_set_error_with_static_string(
                 SHAREMIND_MODULE_API_MUTEX_ERROR, \
                 "Mutex initialization error!"); \
     } else (void) 0
-
-bool SharemindModuleApi_set_error_with_dynamic_string(
-        SharemindModuleApi * modapi,
-        SharemindModuleApiError error,
-        const char * errorString) __attribute__ ((nonnull(1)));
 
 SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindModuleApi)
 

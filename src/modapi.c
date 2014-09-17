@@ -41,7 +41,6 @@ SharemindModuleApi * SharemindModuleApi_new() {
         goto SharemindModuleApi_new_error2;
 
     modapi->lastError = SHAREMIND_MODULE_API_OK;
-    modapi->lastErrorDynamicString = NULL;
     modapi->lastErrorStaticString = NULL;
 
     SharemindFacilityMap_init(&modapi->moduleFacilityMap, NULL);
@@ -67,8 +66,6 @@ void SharemindModuleApi_free(SharemindModuleApi * modapi) {
         abort();
 
     SHAREMIND_REFS_ASSERT_IF_REFERENCED(modapi);
-    if (modapi->lastErrorDynamicString)
-        free(modapi->lastErrorDynamicString);
 
     SharemindFacilityMap_destroy(&modapi->moduleFacilityMap);
     SharemindFacilityMap_destroy(&modapi->pdFacilityMap);
@@ -104,10 +101,9 @@ const char * SharemindModuleApi_get_last_error_string(
     LOCK_CONST(modapi);
     if (unlikely(modapi->lastError == SHAREMIND_MODULE_API_OK)) {
         r = NULL;
-    } else if (modapi->lastErrorStaticString) {
-        r = modapi->lastErrorStaticString;
     } else {
-        r = modapi->lastErrorDynamicString;
+        assert(modapi->lastErrorStaticString);
+        r = modapi->lastErrorStaticString;
     }
     UNLOCK_CONST(modapi);
     return r;
@@ -135,43 +131,9 @@ void SharemindModuleApi_set_error_with_static_string(
     assert(errorString[0]);
 
     LOCK(modapi);
-    modapi->lastErrorStaticString = errorString;
     modapi->lastError = error;
+    modapi->lastErrorStaticString = errorString;
     UNLOCK(modapi);
-}
-
-bool SharemindModuleApi_set_error_with_dynamic_string(
-        SharemindModuleApi * modapi,
-        SharemindModuleApiError error,
-        const char * errorString)
-{
-    assert(modapi);
-    assert(error != SHAREMIND_MODULE_API_OK);
-
-    const bool hasErrorString = errorString && errorString[0];
-    if (likely(hasErrorString)) {
-        const size_t errorStringLength = strlen(errorString);
-        assert(errorStringLength > 0);
-
-        LOCK(modapi);
-        modapi->lastError = error;
-        char * const newErrorString =
-                (char *) realloc(modapi->lastErrorDynamicString,
-                                 errorStringLength + 1);
-        if (likely(newErrorString)) {
-            strcpy(newErrorString, errorString);
-            modapi->lastErrorDynamicString = newErrorString;
-            modapi->lastErrorStaticString = NULL;
-            UNLOCK(modapi);
-            return true;
-        }
-    } else {
-        LOCK(modapi);
-    }
-    modapi->lastErrorStaticString =
-            sharemindModuleApiOomErrorStrings[(int) error];
-    UNLOCK(modapi);
-    return !hasErrorString;
 }
 
 bool SharemindModuleApi_set_module_facility(SharemindModuleApi * modapi,

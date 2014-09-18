@@ -121,7 +121,7 @@ SharemindModule * SharemindModule_new(SharemindModuleApi * modapi,
         {
             m->apiVersion = moduleInfo->supportedVersions[i];
         }
-    } while (moduleInfo->supportedVersions[++i] == 0u);
+    } while (moduleInfo->supportedVersions[++i] != 0u);
     if (unlikely(m->apiVersion <= 0u)) {
         SharemindModuleApi_set_error_with_static_string(
                     modapi,

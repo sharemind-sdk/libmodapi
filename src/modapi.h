@@ -19,6 +19,7 @@
 #include <sharemind/refs.h>
 #include <stdbool.h>
 #include "facilitymap.h"
+#include "lasterror.h"
 #include "libmodapi.h"
 
 
@@ -31,8 +32,7 @@ struct SharemindModuleApi_ {
 
     SharemindMutex mutex;
 
-    SharemindModuleApiError lastError;
-    const char * lastErrorStaticString;
+    SHAREMIND_LASTERROR_DECLARE_FIELDS
 
     /** Module facility name to pointer mapping: */
     SharemindFacilityMap moduleFacilityMap;
@@ -46,35 +46,7 @@ struct SharemindModuleApi_ {
     SHAREMIND_REFS_DECLARE_FIELDS
 };
 
-void SharemindModuleApi_set_error_with_static_string(
-        SharemindModuleApi * modapi,
-        SharemindModuleApiError error,
-        const char * errorString) __attribute__ ((nonnull(1)));
-
-#define OOM(modapi) \
-    if (1) { \
-        SharemindModuleApi_set_error_with_static_string( \
-                (modapi), \
-                SHAREMIND_MODULE_API_OUT_OF_MEMORY, \
-                "Out of memory!"); \
-    } else (void) 0
-
-#define OOR(modapi) \
-    if (1) { \
-        SharemindModuleApi_set_error_with_static_string( \
-                (modapi), \
-                SHAREMIND_MODULE_API_REFERENCE_OVERFLOW, \
-                "Too many references!"); \
-    } else (void) 0
-
-#define MIE(modapi) \
-    if (1) { \
-        SharemindModuleApi_set_error_with_static_string( \
-                (modapi), \
-                SHAREMIND_MODULE_API_MUTEX_ERROR, \
-                "Mutex initialization error!"); \
-    } else (void) 0
-
+SHAREMIND_LASTERROR_DECLARE_PRIVATE_FUNCTIONS(SharemindModuleApi)
 SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindModuleApi)
 
 

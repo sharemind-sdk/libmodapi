@@ -16,47 +16,48 @@
 
 #include "libmodapi.h"
 
+#include <stdbool.h>
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
-SharemindModuleApiError SharemindModule_load_0x1(SharemindModule * m)
+bool SharemindModule_load_0x1(SharemindModule * m)
         __attribute__ ((nonnull(1), visibility("internal")));
 
 void SharemindModule_unload_0x1(SharemindModule * m)
         __attribute__ ((nonnull(1), visibility("internal")));
 
 
-SharemindModuleApiError SharemindModule_init_0x1(SharemindModule * m)
+bool SharemindModule_init_0x1(SharemindModule * m)
         __attribute__ ((nonnull(1), visibility("internal")));
 
 void SharemindModule_deinit_0x1(SharemindModule * m)
         __attribute__ ((nonnull(1), visibility("internal")));
 
 
-size_t SharemindModule_get_num_syscalls_0x1(const SharemindModule * m)
+size_t SharemindModule_numSyscalls_0x1(const SharemindModule * m)
         __attribute__ ((nonnull(1), visibility("internal")));
 
-SharemindSyscall * SharemindModule_get_syscall_0x1(const SharemindModule * m,
-                                                   size_t index)
+SharemindSyscall * SharemindModule_syscall_0x1(const SharemindModule * m,
+                                               size_t index)
         __attribute__ ((nonnull(1), visibility("internal")));
 
-SharemindSyscall * SharemindModule_find_syscall_0x1(const SharemindModule * m,
-                                                    const char * signature)
+SharemindSyscall * SharemindModule_findSyscall_0x1(const SharemindModule * m,
+                                                   const char * signature)
         __attribute__ ((nonnull(1, 2), visibility("internal")));
 
 
-size_t SharemindModule_get_num_pdks_0x1(const SharemindModule * m)
+size_t SharemindModule_numPdks_0x1(const SharemindModule * m)
         __attribute__ ((nonnull(1), visibility("internal")));
 
-SharemindPdk * SharemindModule_get_pdk_0x1(const SharemindModule * m,
-                                           size_t index)
+SharemindPdk * SharemindModule_pdk_0x1(const SharemindModule * m, size_t index)
         __attribute__ ((nonnull(1), visibility("internal")));
 
-SharemindPdk * SharemindModule_find_pdk_0x1(const SharemindModule * m,
-                                            const char * name)
+SharemindPdk * SharemindModule_findPdk_0x1(const SharemindModule * m,
+                                           const char * name)
         __attribute__ ((nonnull(1, 2), visibility("internal")));
 
 

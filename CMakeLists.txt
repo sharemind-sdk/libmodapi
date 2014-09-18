@@ -73,11 +73,12 @@ ADD_LIBRARY("libmodapi" ${SHAREMIND_LIBMODAPI_LINKING_MODE}
             ${SHAREMIND_LIBMODAPI_HEADERS_P}
 )
 
-SET(LIBMODAPI_VERSION "0.1.0.0")
+SET(LIBMODAPI_VERSION "0.2.0.0")
+SET(LIBMODAPI_COMPAT_VERSION "0.2.0.0")
 SET_TARGET_PROPERTIES("libmodapi" PROPERTIES
                       OUTPUT_NAME "sharemind_modapi"
                       VERSION "${LIBMODAPI_VERSION}"
-                      SOVERSION "0.1")
+                      SOVERSION "0.2")
 
 INSTALL(TARGETS "libmodapi"
         LIBRARY DESTINATION "lib")

@@ -14,6 +14,7 @@
 #include <assert.h>
 #include <dlfcn.h>
 #include <sharemind/stringmap.h>
+#include "modapi.h"
 #include "module.h"
 #include "pdk.h"
 #include "syscall.h"
@@ -40,7 +41,7 @@ typedef SharemindModuleApi0x1SyscallDefinitions SyscallDefinitions;
 typedef SharemindModuleApi0x1PdkDefinitions PdkDefinitions;
 
 
-static const SharemindFacility * SharemindModule_get_facility_wrapper(
+static const SharemindFacility * SharemindModule_facilityWrapper(
         ModuleContext * w,
         const char * name)
 {
@@ -48,7 +49,7 @@ static const SharemindFacility * SharemindModule_get_facility_wrapper(
     assert(w->internal);
     assert(name);
     assert(name[0]);
-    return SharemindModule_get_facility((SharemindModule *) w->internal, name);
+    return SharemindModule_facility((SharemindModule *) w->internal, name);
 }
 
 static void SharemindSyscallMap_destroyer(const char * const * key,
@@ -74,16 +75,15 @@ typedef struct {
     SharemindPdkMap pdks;
 } ApiData;
 
-SharemindModuleApiError SharemindModule_load_0x1(SharemindModule * m) {
+bool SharemindModule_load_0x1(SharemindModule * m) {
     assert(m);
 
-    SharemindModuleApiError status;
     const PdkDefinitions * pdks;
     const SyscallDefinitions * scs;
 
     ApiData * const apiData = (ApiData *) malloc(sizeof(ApiData));
     if (unlikely(!apiData)) {
-        status = SHAREMIND_MODULE_API_OUT_OF_MEMORY;
+        SharemindModuleApi_setErrorOom(m->modapi);
         goto loadModule_0x1_fail_0;
     }
 
@@ -92,7 +92,10 @@ SharemindModuleApiError SharemindModule_load_0x1(SharemindModule * m) {
                                                      "sharemind_module_api_0x1_"
                                                      "module_init");
     if (unlikely(!apiData->initializer)) {
-        status = SHAREMIND_MODULE_API_API_ERROR;
+        SharemindModuleApi_setError(m->modapi,
+                                    SHAREMIND_MODULE_API_API_ERROR,
+                                    "Missing required symbol \"sharemind_"
+                                    "module_api_0x1_module_init\"!");
         goto loadModule_0x1_fail_1;
     }
 
@@ -101,7 +104,11 @@ SharemindModuleApiError SharemindModule_load_0x1(SharemindModule * m) {
                                                          "sharemind_module_api_"
                                                          "0x1_module_deinit");
     if (unlikely(!apiData->deinitializer)) {
-        status = SHAREMIND_MODULE_API_API_ERROR;
+
+        SharemindModuleApi_setError(m->modapi,
+                                    SHAREMIND_MODULE_API_API_ERROR,
+                                    "Missing required symbol \"sharemind_"
+                                    "module_api_0x1_module_deinit\"!");
         goto loadModule_0x1_fail_1;
     }
 
@@ -121,7 +128,11 @@ SharemindModuleApiError SharemindModule_load_0x1(SharemindModule * m) {
                    syscallSignatureBufSize);
 
             if (unlikely(!(*scs)[i].fptr)) {
-                status = SHAREMIND_MODULE_API_API_ERROR;
+                SharemindModuleApi_setError(
+                            m->modapi,
+                            SHAREMIND_MODULE_API_API_ERROR,
+                            "A system call definition in module has a NULL "
+                            "function pointer!");
                 goto loadModule_0x1_fail_2;
             }
 
@@ -132,11 +143,14 @@ SharemindModuleApiError SharemindModule_load_0x1(SharemindModule * m) {
             assert(oldSize <= apiData->syscalls.size
                    && apiData->syscalls.size - oldSize <= 1u);
             if (unlikely(!sc)) {
-                status = SHAREMIND_MODULE_API_OUT_OF_MEMORY;
+                SharemindModuleApi_setErrorOom(m->modapi);
                 goto loadModule_0x1_fail_2;
             }
             if (unlikely(oldSize == apiData->syscalls.size)) {
-                status = SHAREMIND_MODULE_API_DUPLICATE_SYSCALL;
+                SharemindModuleApi_setError(
+                            m->modapi,
+                            SHAREMIND_MODULE_API_DUPLICATE_SYSCALL,
+                            "Duplicate system call definitions in module!");
                 goto loadModule_0x1_fail_2;
             }
             assert(apiData->syscalls.size - oldSize == 1u);
@@ -146,7 +160,7 @@ SharemindModuleApiError SharemindModule_load_0x1(SharemindModule * m) {
                                                 NULL,
                                                 m)))
             {
-                status = SHAREMIND_MODULE_API_OUT_OF_MEMORY;
+                SharemindModuleApi_setErrorOom(m->modapi);
                 int r = SharemindSyscallMap_remove(&apiData->syscalls,
                                                    syscallSignatureBuffer);
                 assert(r == 1); (void) r;
@@ -156,7 +170,11 @@ SharemindModuleApiError SharemindModule_load_0x1(SharemindModule * m) {
             i++;
         }
         if (unlikely((*scs)[i].fptr)) {
-            status = SHAREMIND_MODULE_API_API_ERROR;
+            SharemindModuleApi_setError(
+                        m->modapi,
+                        SHAREMIND_MODULE_API_API_ERROR,
+                        "The system call definition list in module did not end "
+                        "properly!");
             goto loadModule_0x1_fail_2;
         }
     }
@@ -178,7 +196,11 @@ SharemindModuleApiError SharemindModule_load_0x1(SharemindModule * m) {
                          || !(*pdks)[i].pdpi_startup_f
                          || !(*pdks)[i].pdpi_shutdown_f))
             {
-                status = SHAREMIND_MODULE_API_API_ERROR;
+                SharemindModuleApi_setError(
+                            m->modapi,
+                            SHAREMIND_MODULE_API_API_ERROR,
+                            "An invalid item in protection domain kind "
+                            "definitions list in module!");
                 goto loadModule_0x1_fail_3;
             }
 
@@ -189,11 +211,15 @@ SharemindModuleApiError SharemindModule_load_0x1(SharemindModule * m) {
             assert(oldSize <= apiData->pdks.size
                    && apiData->pdks.size - oldSize <= 1u);
             if (unlikely(!pdk)) {
-                status = SHAREMIND_MODULE_API_OUT_OF_MEMORY;
+                SharemindModuleApi_setErrorOom(m->modapi);
                 goto loadModule_0x1_fail_3;
             }
             if (unlikely(oldSize == apiData->pdks.size)) {
-                status = SHAREMIND_MODULE_API_DUPLICATE_PROTECTION_DOMAIN;
+                SharemindModuleApi_setError(
+                            m->modapi,
+                            SHAREMIND_MODULE_API_DUPLICATE_PROTECTION_DOMAIN,
+                            "Duplicate protection domain kind definitions in "
+                            "module!");
                 goto loadModule_0x1_fail_3;
             }
             assert(apiData->pdks.size - oldSize == 1u);
@@ -211,7 +237,8 @@ SharemindModuleApiError SharemindModule_load_0x1(SharemindModule * m) {
                              (void (*)(void)) NULL,
                              m)))
             {
-                status = SHAREMIND_MODULE_API_OUT_OF_MEMORY;
+                /* Note that SharemindPdk_init calls the
+                 * SharemindModuleApi_setError*() functions itself. */
                 int r = SharemindPdkMap_remove(&apiData->pdks, pdkNameBuffer);
                 assert(r == 1); (void) r;
                 goto loadModule_0x1_fail_3;
@@ -224,14 +251,18 @@ SharemindModuleApiError SharemindModule_load_0x1(SharemindModule * m) {
                      || (*pdks)[i].pdpi_startup_f
                      || (*pdks)[i].pdpi_shutdown_f))
         {
-            status = SHAREMIND_MODULE_API_API_ERROR;
+            SharemindModuleApi_setError(
+                        m->modapi,
+                        SHAREMIND_MODULE_API_API_ERROR,
+                        "The protection domain kind definition list in module "
+                        "did not end properly!");
             goto loadModule_0x1_fail_3;
         }
     }
 
     m->apiData = (void *) apiData;
 
-    return SHAREMIND_MODULE_API_OK;
+    return true;
 
 loadModule_0x1_fail_3:
 
@@ -248,7 +279,7 @@ loadModule_0x1_fail_1:
 
 loadModule_0x1_fail_0:
 
-    return status;
+    return false;
 }
 
 void SharemindModule_unload_0x1(SharemindModule * const m) {
@@ -264,12 +295,12 @@ void SharemindModule_unload_0x1(SharemindModule * const m) {
     free(apiData);
 }
 
-SharemindModuleApiError SharemindModule_init_0x1(SharemindModule * const m) {
+bool SharemindModule_init_0x1(SharemindModule * const m) {
     ApiData * const apiData = (ApiData *) m->apiData;
 
     ModuleContext context = {
         .moduleHandle = NULL, /* Just in case */
-        .getModuleFacility = &SharemindModule_get_facility_wrapper,
+        .getModuleFacility = &SharemindModule_facilityWrapper,
         .internal = m,
         .conf = m->conf
     };
@@ -277,20 +308,36 @@ SharemindModuleApiError SharemindModule_init_0x1(SharemindModule * const m) {
         case SHAREMIND_MODULE_API_0x1_OK:
             if (!context.moduleHandle) {
                 apiData->deinitializer(&context);
-                return SHAREMIND_MODULE_API_API_ERROR;
+                SharemindModule_setError(m,
+                                         SHAREMIND_MODULE_API_API_ERROR,
+                                         "Module handle was not initialized!");
+                return false;
             }
             m->moduleHandle = context.moduleHandle;
-            return SHAREMIND_MODULE_API_OK;
+            return true;
         case SHAREMIND_MODULE_API_0x1_OUT_OF_MEMORY:
-            return SHAREMIND_MODULE_API_OUT_OF_MEMORY;
+            SharemindModule_setErrorOom(m);
+            return false;
         case SHAREMIND_MODULE_API_0x1_SHAREMIND_ERROR:
-            return SHAREMIND_MODULE_API_SHAREMIND_ERROR;
+            SharemindModule_setError(m,
+                                     SHAREMIND_MODULE_API_SHAREMIND_ERROR,
+                                     "Module notified a Sharemind fault!");
+            return false;
         case SHAREMIND_MODULE_API_0x1_MODULE_ERROR:
-            return SHAREMIND_MODULE_API_MODULE_ERROR;
+            SharemindModule_setError(m,
+                                     SHAREMIND_MODULE_API_MODULE_ERROR,
+                                     "Module notified a module error!");
+            return false;
         case SHAREMIND_MODULE_API_0x1_GENERAL_ERROR:
-            return SHAREMIND_MODULE_API_MODULE_ERROR;
+            SharemindModule_setError(m,
+                                     SHAREMIND_MODULE_API_MODULE_ERROR,
+                                     "Module notified a general error!");
+            return false;
         default:
-            return SHAREMIND_MODULE_API_API_ERROR;
+            SharemindModule_setError(m,
+                                     SHAREMIND_MODULE_API_API_ERROR,
+                                     "Module returned an unexpected error!");
+            return false;
     }
 }
 
@@ -299,21 +346,21 @@ void SharemindModule_deinit_0x1(SharemindModule * const m) {
 
     ModuleContext context = {
         .moduleHandle = m->moduleHandle,
-        .getModuleFacility = &SharemindModule_get_facility_wrapper,
+        .getModuleFacility = &SharemindModule_facilityWrapper,
         .internal = m,
         .conf = m->conf
     };
     apiData->deinitializer(&context);
 }
 
-size_t SharemindModule_get_num_syscalls_0x1(const SharemindModule * m) {
+size_t SharemindModule_numSyscalls_0x1(const SharemindModule * m) {
     ApiData * const apiData = (ApiData *) m->apiData;
 
     return apiData->syscalls.size;
 }
 
-SharemindSyscall * SharemindModule_get_syscall_0x1(const SharemindModule * m,
-                                                   size_t index)
+SharemindSyscall * SharemindModule_syscall_0x1(const SharemindModule * m,
+                                               size_t index)
 {
     ApiData * const apiData = (ApiData *) m->apiData;
 
@@ -321,22 +368,21 @@ SharemindSyscall * SharemindModule_get_syscall_0x1(const SharemindModule * m,
 }
 
 
-SharemindSyscall * SharemindModule_find_syscall_0x1(const SharemindModule * m,
-                                                    const char * signature)
+SharemindSyscall * SharemindModule_findSyscall_0x1(const SharemindModule * m,
+                                                   const char * signature)
 {
     ApiData * const apiData = (ApiData *) m->apiData;
 
     return SharemindSyscallMap_get(&apiData->syscalls, signature);
 }
 
-size_t SharemindModule_get_num_pdks_0x1(const SharemindModule * m) {
+size_t SharemindModule_numPdks_0x1(const SharemindModule * m) {
     ApiData * const apiData = (ApiData *) m->apiData;
 
     return apiData->pdks.size;
 }
 
-SharemindPdk * SharemindModule_get_pdk_0x1(const SharemindModule * m,
-                                           size_t index)
+SharemindPdk * SharemindModule_pdk_0x1(const SharemindModule * m, size_t index)
 {
     ApiData * const apiData = (ApiData *) m->apiData;
 
@@ -344,8 +390,8 @@ SharemindPdk * SharemindModule_get_pdk_0x1(const SharemindModule * m,
 }
 
 
-SharemindPdk * SharemindModule_find_pdk_0x1(const SharemindModule * m,
-                                            const char * name)
+SharemindPdk * SharemindModule_findPdk_0x1(const SharemindModule * m,
+                                           const char * name)
 {
     ApiData * const apiData = (ApiData *) m->apiData;
 

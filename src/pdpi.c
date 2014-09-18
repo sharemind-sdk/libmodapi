@@ -19,7 +19,7 @@
 #include "pdk.h"
 
 
-SharemindPdpi * SharemindPdpi_new(SharemindPd * pd) {
+SharemindPdpi * SharemindPd_newPdpi(SharemindPd * pd) {
     assert(pd);
     assert(pd->pdk);
     assert(pd->pdk->module);
@@ -28,18 +28,18 @@ SharemindPdpi * SharemindPdpi_new(SharemindPd * pd) {
     SharemindPdpi * pdpi;
 
     if (!SharemindPd_refs_ref(pd)) {
-        OOR(pd->pdk->module->modapi);
+        SharemindPd_setErrorOor(pd);
         goto SharemindPdpi_new_error_0;
     }
 
     pdpi = (SharemindPdpi *) malloc(sizeof(SharemindPdpi));
     if (unlikely(!pdpi)) {
-        OOM(pd->pdk->module->modapi);
+        SharemindPd_setErrorOom(pd);
         goto SharemindPdpi_new_error_1;
     }
 
     if (unlikely(SharemindRecursiveMutex_init(&pdpi->mutex) != SHAREMIND_MUTEX_OK)) {
-        MIE(pd->pdk->module->modapi);
+        SharemindPd_setErrorMie(pd);
         goto SharemindPdpi_new_error_2;
     }
 
@@ -47,7 +47,7 @@ SharemindPdpi * SharemindPdpi_new(SharemindPd * pd) {
     pdpi->pd = pd;
     pdpi->isStarted = false;
     pdpi->facilityContext = NULL; /* Just in case */
-    SharemindFacilityMap_init(&pdpi->pdpiFacilityMap, &pd->pdpiFacilityMap);
+    SharemindFacilityMap_init(&pdpi->facilityMap, &pd->pdpiFacilityMap);
     SHAREMIND_REFS_INIT(pdpi);
     SHAREMIND_NAMED_REFS_INIT(pdpi,startedRefs);
     return pdpi;
@@ -78,7 +78,7 @@ void SharemindPdpi_free(SharemindPdpi * pdpi) {
         SharemindPdpi_stop(pdpi);
 
     SharemindPd_refs_unref(pdpi->pd);
-    SharemindFacilityMap_destroy(&pdpi->pdpiFacilityMap);
+    SharemindFacilityMap_destroy(&pdpi->facilityMap);
     if (unlikely(SharemindRecursiveMutex_destroy(&pdpi->mutex) != SHAREMIND_MUTEX_OK))
         abort();
     free(pdpi);
@@ -93,7 +93,9 @@ void SharemindPdpi_free(SharemindPdpi * pdpi) {
 #define LOCK_CONST(pdpi) DOLOCK((pdpi),lock_const)
 #define UNLOCK_CONST(pdpi) DOLOCK((pdpi),unlock_const)
 
-bool SharemindPdpi_is_started(const SharemindPdpi * pdpi) {
+SHAREMIND_LASTERROR_DEFINE_FUNCTIONS(Pdpi)
+
+bool SharemindPdpi_isStarted(const SharemindPdpi * pdpi) {
     assert(pdpi);
     LOCK_CONST(pdpi);
     const bool r = pdpi->isStarted;
@@ -118,12 +120,12 @@ bool SharemindPdpi_start(SharemindPdpi * pdpi) {
     SharemindPd * const pd = pdpi->pd;
     const SharemindModule * const module = pd->pdk->module;
     if (!SharemindPd_startedRefs_ref(pd)) {
-        OOR(module->modapi);
+        SharemindPdpi_setErrorOor(pdpi);
         UNLOCK(pdpi);
         return false;
     }
 
-    const bool r = (*(module->api->pdpi_start))(pdpi);
+    const bool r = (*(module->api->startPdpi))(pdpi);
     if (r) {
         pdpi->isStarted = r;
     } else {
@@ -143,14 +145,14 @@ void SharemindPdpi_stop(SharemindPdpi * pdpi) {
     LOCK(pdpi);
     SHAREMIND_NAMED_REFS_ASSERT_IF_REFERENCED(pdpi,startedRefs);
 
-    (*(pdpi->pd->pdk->module->api->pdpi_stop))(pdpi);
+    (*(pdpi->pd->pdk->module->api->stopPdpi))(pdpi);
 
     pdpi->isStarted = false;
     UNLOCK(pdpi);
     SharemindPd_startedRefs_unref(pdpi->pd);
 }
 
-void * SharemindPdpi_get_handle(const SharemindPdpi * pdpi) {
+void * SharemindPdpi_handle(const SharemindPdpi * pdpi) {
     assert(pdpi);
     LOCK_CONST(pdpi);
     void * const r = pdpi->pdProcessHandle;
@@ -158,20 +160,20 @@ void * SharemindPdpi_get_handle(const SharemindPdpi * pdpi) {
     return r;
 }
 
-SharemindPd * SharemindPdpi_get_pd(const SharemindPdpi * pdpi) {
+SharemindPd * SharemindPdpi_pd(const SharemindPdpi * pdpi) {
     assert(pdpi);
     assert(pdpi->pd);
     return pdpi->pd; // No locking: const after SharemindPdpi_new
 }
 
-SharemindPdk * SharemindPdpi_get_pdk(const SharemindPdpi * pdpi) {
+SharemindPdk * SharemindPdpi_pdk(const SharemindPdpi * pdpi) {
     assert(pdpi);
     assert(pdpi->pd);
     assert(pdpi->pd->pdk);
     return pdpi->pd->pdk; // No locking: const after SharemindPdpi_new
 }
 
-SharemindModule * SharemindPdpi_get_module(const SharemindPdpi * pdpi) {
+SharemindModule * SharemindPdpi_module(const SharemindPdpi * pdpi) {
     assert(pdpi);
     assert(pdpi->pd);
     assert(pdpi->pd->pdk);
@@ -179,7 +181,7 @@ SharemindModule * SharemindPdpi_get_module(const SharemindPdpi * pdpi) {
     return pdpi->pd->pdk->module; // No locking: const after SharemindPdpi_new
 }
 
-SharemindModuleApi * SharemindPdpi_get_modapi(const SharemindPdpi * pdpi) {
+SharemindModuleApi * SharemindPdpi_modapi(const SharemindPdpi * pdpi) {
     assert(pdpi);
     assert(pdpi->pd);
     assert(pdpi->pd->pdk);
@@ -189,47 +191,7 @@ SharemindModuleApi * SharemindPdpi_get_modapi(const SharemindPdpi * pdpi) {
     return pdpi->pd->pdk->module->modapi;
 }
 
-bool SharemindPdpi_set_facility(SharemindPdpi * pdpi,
-                                const char * name,
-                                void * facility,
-                                void * context)
-{
-    assert(pdpi);
-    assert(name);
-    assert(name[0]);
-    LOCK(pdpi);
-    const bool r = SharemindFacilityMap_set(&pdpi->pdpiFacilityMap,
-                                            name,
-                                            facility,
-                                            context);
-    UNLOCK(pdpi);
-    return r;
-}
-
-bool SharemindPdpi_unset_facility(SharemindPdpi * pdpi,
-                                  const char * name)
-{
-    assert(pdpi);
-    assert(name);
-    assert(name[0]);
-    LOCK(pdpi);
-    const bool r = SharemindFacilityMap_unset(&pdpi->pdpiFacilityMap, name);
-    UNLOCK(pdpi);
-    return r;
-}
-
-const SharemindFacility * SharemindPdpi_get_facility(const SharemindPdpi * pdpi,
-                                                     const char * name)
-{
-    assert(pdpi);
-    assert(name);
-    assert(name[0]);
-    LOCK_CONST(pdpi);
-    const SharemindFacility * const r =
-            SharemindFacilityMap_get(&pdpi->pdpiFacilityMap, name);
-    UNLOCK_CONST(pdpi);
-    return r;
-}
+SHAREMIND_DEFINE_SELF_FACILITYMAP_ACCESSORS(Pdpi)
 
 SHAREMIND_REFS_DEFINE_FUNCTIONS_WITH_RECURSIVE_MUTEX(SharemindPdpi)
 SHAREMIND_NAMED_REFS_DEFINE_FUNCTIONS_WITH_RECURSIVE_MUTEX(SharemindPdpi,startedRefs)

@@ -25,36 +25,40 @@ extern "C" {
 
 typedef struct {
 
-    SharemindModuleApiError (* const module_load)(SharemindModule * m);
-    void (* const module_unload)(SharemindModule * m);
+    bool (* const moduleLoad)(SharemindModule * m);
+
+    void (* const moduleUnload)(SharemindModule * m);
 
 
-    SharemindModuleApiError (* const module_init)(SharemindModule * m);
-    void (* const module_deinit)(SharemindModule * m);
+    bool (* const moduleInit)(SharemindModule * m);
+
+    void (* const moduleDeinit)(SharemindModule * m);
 
 
-    size_t (* const module_get_num_syscalls)(const SharemindModule * m);
-    SharemindSyscall * (* const module_get_syscall)(const SharemindModule * m,
-                                                    size_t index);
+    size_t (* const numSyscalls)(const SharemindModule * m);
 
-    SharemindSyscall * (* const module_find_syscall)(const SharemindModule * m,
-                                                     const char * signature);
+    SharemindSyscall * (* const syscall)(const SharemindModule * m,
+                                         size_t index);
 
-
-    size_t (* const module_get_num_pdks)(const SharemindModule * m);
-
-    SharemindPdk * (* const module_get_pdk)(const SharemindModule * m,
-                                            size_t index);
-
-    SharemindPdk * (* const module_find_pdk)(const SharemindModule * m,
-                                             const char * name);
+    SharemindSyscall * (* const findSyscall)(const SharemindModule * m,
+                                             const char * signature);
 
 
-    bool (* const pd_start)(SharemindPd * pd);
-    void (* const pd_stop)(SharemindPd * pd);
+    size_t (* const numPdks)(const SharemindModule * m);
 
-    bool (* const pdpi_start)(SharemindPdpi * pd);
-    void (* const pdpi_stop)(SharemindPdpi * pd);
+    SharemindPdk * (* const pdk)(const SharemindModule * m, size_t index);
+
+    SharemindPdk * (* const findPdk)(const SharemindModule * m,
+                                     const char * name);
+
+
+    bool (* const startPd)(SharemindPd * pd);
+
+    void (* const stopPd)(SharemindPd * pd);
+
+    bool (* const startPdpi)(SharemindPdpi * pd);
+
+    void (* const stopPdpi)(SharemindPdpi * pd);
 
 } SharemindApi;
 

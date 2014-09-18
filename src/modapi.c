@@ -12,33 +12,33 @@
 #include "modapi.h"
 
 #include <stdlib.h>
+#include "lasterror.h"
 
 
 SHAREMIND_ENUM_CUSTOM_DEFINE_TOSTRING(SharemindModuleApiError,
                                       SHAREMIND_MODULE_API_ERROR_ENUM)
 
-#define SHAREMIND_MODULE_API_DEFINE_ERRORSTRING(unused,unused2,e) \
-    [(int) SHAREMIND_T(2,0,e)] = "Out of memory while generating error " \
-                                 "message for error with code " \
-                                 SHAREMIND_2S(SHAREMIND_T(2,0,e)) "!",
-
-static const char * const sharemindModuleApiOomErrorStrings[
-        SHAREMIND_MODULE_API_ERROR_COUNT + 1] =
+SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiError * error,
+                                            const char ** errorStr)
 {
-    BOOST_PP_SEQ_FOR_EACH(SHAREMIND_MODULE_API_DEFINE_ERRORSTRING,
-                          _,
-                          SHAREMIND_MODULE_API_ERROR_ENUM)
-};
-
-
-SharemindModuleApi * SharemindModuleApi_new() {
     SharemindModuleApi * const modapi =
             (SharemindModuleApi *) malloc(sizeof(SharemindModuleApi));
-    if (unlikely(!modapi))
-        goto SharemindModuleApi_new_error;
+    if (unlikely(!modapi)) {
+        if (error)
+            (*error) = SHAREMIND_MODULE_API_OUT_OF_MEMORY;
+        if (errorStr)
+            (*errorStr) = "Out of memory!";
+        return NULL;
+    }
 
-    if (unlikely(SharemindMutex_init(&modapi->mutex) != SHAREMIND_MUTEX_OK))
-        goto SharemindModuleApi_new_error2;
+    if (unlikely(SharemindMutex_init(&modapi->mutex) != SHAREMIND_MUTEX_OK)) {
+        free(modapi);
+        if (error)
+            (*error) = SHAREMIND_MODULE_API_MUTEX_ERROR;
+        if (errorStr)
+            (*errorStr) = "Mutex initialization error!";
+        return NULL;
+    }
 
     modapi->lastError = SHAREMIND_MODULE_API_OK;
     modapi->lastErrorStaticString = NULL;
@@ -49,15 +49,6 @@ SharemindModuleApi * SharemindModuleApi_new() {
 
     SHAREMIND_REFS_INIT(modapi);
     return modapi;
-
-SharemindModuleApi_new_error2:
-
-    free(modapi);
-
-SharemindModuleApi_new_error:
-
-    return NULL;
-
 }
 
 void SharemindModuleApi_free(SharemindModuleApi * modapi) {
@@ -83,186 +74,10 @@ void SharemindModuleApi_free(SharemindModuleApi * modapi) {
 #define LOCK_CONST(modapi) DOLOCK((modapi),lock_const)
 #define UNLOCK_CONST(modapi) DOLOCK((modapi),unlock_const)
 
-SharemindModuleApiError SharemindModuleApi_get_last_error(
-        const SharemindModuleApi * modapi)
-{
-    assert(modapi);
-    LOCK_CONST(modapi);
-    const SharemindModuleApiError r = modapi->lastError;
-    UNLOCK_CONST(modapi);
-    return r;
-}
+SHAREMIND_LASTERROR_DEFINE_FUNCTIONS(ModuleApi)
 
-const char * SharemindModuleApi_get_last_error_string(
-        const SharemindModuleApi * modapi)
-{
-    assert(modapi);
-    const char * r;
-    LOCK_CONST(modapi);
-    if (unlikely(modapi->lastError == SHAREMIND_MODULE_API_OK)) {
-        r = NULL;
-    } else {
-        assert(modapi->lastErrorStaticString);
-        r = modapi->lastErrorStaticString;
-    }
-    UNLOCK_CONST(modapi);
-    return r;
-}
-
-void SharemindModuleApi_clear_error(SharemindModuleApi * modapi) {
-    assert(modapi);
-    LOCK(modapi);
-    modapi->lastError = SHAREMIND_MODULE_API_OK;
-    UNLOCK(modapi);
-}
-
-void SharemindModuleApi_set_error_with_static_string(
-        SharemindModuleApi * modapi,
-        SharemindModuleApiError error,
-        const char * errorString)
-{
-    assert(modapi);
-    assert(error != SHAREMIND_MODULE_API_OK);
-
-    if (unlikely(!errorString || !errorString[0]))
-        errorString = SharemindModuleApiError_toString(error);
-
-    assert(errorString);
-    assert(errorString[0]);
-
-    LOCK(modapi);
-    modapi->lastError = error;
-    modapi->lastErrorStaticString = errorString;
-    UNLOCK(modapi);
-}
-
-bool SharemindModuleApi_set_module_facility(SharemindModuleApi * modapi,
-                                            const char * name,
-                                            void * facility,
-                                            void * context)
-{
-    assert(modapi);
-    assert(name);
-    assert(name[0]);
-    LOCK(modapi);
-    const bool r = SharemindFacilityMap_set(&modapi->moduleFacilityMap,
-                                            name,
-                                            facility,
-                                            context);
-    UNLOCK(modapi);
-    return r;
-}
-
-bool SharemindModuleApi_unset_module_facility(SharemindModuleApi * modapi,
-                                              const char * name)
-{
-    assert(modapi);
-    assert(name);
-    assert(name[0]);
-    LOCK(modapi);
-    const bool r = SharemindFacilityMap_unset(&modapi->moduleFacilityMap, name);
-    UNLOCK(modapi);
-    return r;
-}
-
-const SharemindFacility * SharemindModuleApi_get_module_facility(
-        const SharemindModuleApi * modapi,
-        const char * name)
-{
-    assert(modapi);
-    assert(name);
-    assert(name[0]);
-    LOCK_CONST(modapi);
-    const SharemindFacility * const r =
-            SharemindFacilityMap_get(&modapi->moduleFacilityMap, name);
-    UNLOCK_CONST(modapi);
-    return r;
-}
-
-bool SharemindModuleApi_set_pd_facility(SharemindModuleApi * modapi,
-                                        const char * name,
-                                        void * facility,
-                                        void * context)
-{
-    assert(modapi);
-    assert(name);
-    assert(name[0]);
-    LOCK(modapi);
-    const bool r = SharemindFacilityMap_set(&modapi->pdFacilityMap,
-                                            name,
-                                            facility,
-                                            context);
-    UNLOCK(modapi);
-    return r;
-}
-
-bool SharemindModuleApi_unset_pd_facility(SharemindModuleApi * modapi,
-                                          const char * name)
-{
-    assert(modapi);
-    assert(name);
-    assert(name[0]);
-    LOCK(modapi);
-    const bool r = SharemindFacilityMap_unset(&modapi->pdFacilityMap, name);
-    UNLOCK(modapi);
-    return r;
-}
-
-const SharemindFacility * SharemindModuleApi_get_pd_facility(
-        const SharemindModuleApi * modapi,
-        const char * name)
-{
-    assert(modapi);
-    assert(name);
-    assert(name[0]);
-    LOCK_CONST(modapi);
-    const SharemindFacility * const r =
-            SharemindFacilityMap_get(&modapi->pdFacilityMap, name);
-    UNLOCK_CONST(modapi);
-    return r;
-}
-
-bool SharemindModuleApi_set_pdpi_facility(SharemindModuleApi * modapi,
-                                          const char * name,
-                                          void * facility,
-                                          void * context)
-{
-    assert(modapi);
-    assert(name);
-    assert(name[0]);
-    LOCK(modapi);
-    const bool r = SharemindFacilityMap_set(&modapi->pdpiFacilityMap,
-                                            name,
-                                            facility,
-                                            context);
-    UNLOCK(modapi);
-    return r;
-}
-
-bool SharemindModuleApi_unset_pdpi_facility(SharemindModuleApi * modapi,
-                                            const char * name)
-{
-    assert(modapi);
-    assert(name);
-    assert(name[0]);
-    LOCK(modapi);
-    const bool r = SharemindFacilityMap_unset(&modapi->pdpiFacilityMap, name);
-    UNLOCK(modapi);
-    return r;
-}
-
-const SharemindFacility * SharemindModuleApi_get_pdpi_facility(
-        const SharemindModuleApi * modapi,
-        const char * name)
-{
-    assert(modapi);
-    assert(name);
-    assert(name[0]);
-    LOCK_CONST(modapi);
-    const SharemindFacility * const r =
-            SharemindFacilityMap_get(&modapi->pdpiFacilityMap, name);
-    UNLOCK_CONST(modapi);
-    return r;
-}
+SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(ModuleApi,module,Module)
+SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(ModuleApi,pd,Pd)
+SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(ModuleApi,pdpi,Pdpi)
 
 SHAREMIND_REFS_DEFINE_FUNCTIONS_WITH_MUTEX(SharemindModuleApi)

@@ -30,7 +30,7 @@ static SHAREMIND_ENUM_CUSTOM_DEFINE_CUSTOM_TOSTRING_CUSTOMNAME(
         "PDPI startup failed with code ",
         " from the module!")
 
-static const SharemindFacility * SHAREMIND_PDPI_get_facility_wrapper(
+static const SharemindFacility * SharemindPdpi_facilityWrapper(
         SharemindModuleApi0x1PdpiWrapper * w,
         const char * name)
 {
@@ -38,7 +38,7 @@ static const SharemindFacility * SHAREMIND_PDPI_get_facility_wrapper(
     assert(w->internal);
     assert(name);
     assert(name[0]);
-    return SharemindPdpi_get_facility((SharemindPdpi *) w->internal, name);
+    return SharemindPdpi_facility((SharemindPdpi *) w->internal, name);
 }
 
 bool SharemindPdpi_start_0x1(SharemindPdpi * pdpi) {
@@ -53,7 +53,7 @@ bool SharemindPdpi_start_0x1(SharemindPdpi * pdpi) {
     SharemindModuleApi0x1PdpiWrapper pdpiWrapper = {
         .pdProcessHandle = NULL, /* Just in case */
         .pdHandle = pd->pdHandle,
-        .getPdpiFacility = &SHAREMIND_PDPI_get_facility_wrapper,
+        .getPdpiFacility = &SharemindPdpi_facilityWrapper,
         .internal = pdpi
     };
 
@@ -66,7 +66,7 @@ bool SharemindPdpi_start_0x1(SharemindPdpi * pdpi) {
         return true;
     }
 
-    SharemindModuleApi_set_error_with_static_string(
+    SharemindModuleApi_setError(
                 pdk->module->modapi,
                 SHAREMIND_MODULE_API_PDPI_STARTUP_FAILED,
                 pdpiStartupErrorToString(r));
@@ -83,7 +83,7 @@ void SharemindPdpi_stop_0x1(SharemindPdpi * pdpi) {
     SharemindModuleApi0x1PdpiWrapper pdpiWrapper = {
         .pdProcessHandle = pdpi->pdProcessHandle,
         .pdHandle = pd->pdHandle,
-        .getPdpiFacility = &SHAREMIND_PDPI_get_facility_wrapper,
+        .getPdpiFacility = &SharemindPdpi_facilityWrapper,
         .internal = pdpi
     };
     typedef SharemindModuleApi0x1PdpiShutdown PdpiShutdown;

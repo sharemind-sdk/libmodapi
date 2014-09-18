@@ -18,6 +18,7 @@
 #include <sharemind/refs.h>
 #include <stdbool.h>
 #include "facilitymap.h"
+#include "lasterror.h"
 #include "libmodapi.h"
 
 
@@ -28,6 +29,8 @@ extern "C" {
 struct SharemindPdpi_ {
 
     SharemindRecursiveMutex mutex;
+
+    SHAREMIND_LASTERROR_DECLARE_FIELDS
 
     /** A handle for protection domain runtime data. */
     void * pdProcessHandle;
@@ -41,13 +44,14 @@ struct SharemindPdpi_ {
     void * facilityContext;
 
     /** PDPI facility name to pointer mapping: */
-    SharemindFacilityMap pdpiFacilityMap;
+    SharemindFacilityMap facilityMap;
 
     SHAREMIND_REFS_DECLARE_FIELDS
     SHAREMIND_NAMED_REFS_DECLARE_FIELDS(startedRefs)
 
 };
 
+SHAREMIND_LASTERROR_DECLARE_PRIVATE_FUNCTIONS(SharemindPdpi)
 SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindPdpi)
 SHAREMIND_NAMED_REFS_DECLARE_FUNCTIONS(SharemindPdpi,startedRefs)
 

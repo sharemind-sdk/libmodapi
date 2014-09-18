@@ -28,7 +28,7 @@ static SHAREMIND_ENUM_CUSTOM_DEFINE_CUSTOM_TOSTRING_CUSTOMNAME(
         "PD startup failed with code ",
         " from the module!")
 
-static const SharemindFacility * SHAREMIND_PD_get_facility_wrapper(
+static const SharemindFacility * SharemindPd_facilityWrapper(
         SharemindModuleApi0x1PdWrapper * w,
         const char * name)
 {
@@ -36,10 +36,10 @@ static const SharemindFacility * SHAREMIND_PD_get_facility_wrapper(
     assert(w->internal);
     assert(name);
     assert(name[0]);
-    return SharemindPd_get_facility((SharemindPd *) w->internal, name);
+    return SharemindPd_facility((SharemindPd *) w->internal, name);
 }
 
-static inline void SHAREMIND_PD_init_start_stop_wrappers(
+static inline void SharemindPd_initStartStopWrappers(
         SharemindPd * pd,
         SharemindModuleApi0x1PdConf * pdConf,
         SharemindModuleApi0x1PdWrapper * pdWrapper)
@@ -56,7 +56,7 @@ static inline void SHAREMIND_PD_init_start_stop_wrappers(
     pdWrapper->moduleHandle = pdk->module->moduleHandle;
     assert(pdWrapper->moduleHandle);
     pdWrapper->conf = pdConf;
-    pdWrapper->getPdFacility = &SHAREMIND_PD_get_facility_wrapper;
+    pdWrapper->getPdFacility = &SharemindPd_facilityWrapper;
 }
 
 bool SharemindPd_start_0x1(SharemindPd * pd) {
@@ -65,7 +65,7 @@ bool SharemindPd_start_0x1(SharemindPd * pd) {
 
     SharemindModuleApi0x1PdConf pdConf;
     SharemindModuleApi0x1PdWrapper pdWrapper;
-    SHAREMIND_PD_init_start_stop_wrappers(pd, &pdConf, &pdWrapper);
+    SharemindPd_initStartStopWrappers(pd, &pdConf, &pdWrapper);
     const SharemindPdk * const pdk = pd->pdk;
     pdWrapper.internal = pd;
 
@@ -78,7 +78,7 @@ bool SharemindPd_start_0x1(SharemindPd * pd) {
         return true;
     }
 
-    SharemindModuleApi_set_error_with_static_string(
+    SharemindModuleApi_setError(
                 pdk->module->modapi,
                 SHAREMIND_MODULE_API_PD_STARTUP_FAILED,
                 pdStartupErrorToString(r));
@@ -93,7 +93,7 @@ void SharemindPd_stop_0x1(SharemindPd * pd) {
 
     SharemindModuleApi0x1PdConf pdConf;
     SharemindModuleApi0x1PdWrapper pdWrapper;
-    SHAREMIND_PD_init_start_stop_wrappers(pd, &pdConf, &pdWrapper);
+    SharemindPd_initStartStopWrappers(pd, &pdConf, &pdWrapper);
     const SharemindPdk * const pdk = pd->pdk;
     pdWrapper.internal = pd;
 

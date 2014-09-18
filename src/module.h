@@ -20,6 +20,7 @@
 #include <stdint.h>
 #include "apis.h"
 #include "facilitymap.h"
+#include "lasterror.h"
 #include "libmodapi.h"
 
 
@@ -31,6 +32,8 @@ extern "C" {
 struct SharemindModule_ {
 
     SharemindRecursiveMutex mutex;
+
+    SHAREMIND_LASTERROR_DECLARE_FIELDS
 
     void * libHandle;
     char * filename;
@@ -47,7 +50,7 @@ struct SharemindModule_ {
     SharemindModuleApi * modapi;
 
     /** Module facility name to pointer mapping: */
-    SharemindFacilityMap moduleFacilityMap;
+    SharemindFacilityMap facilityMap;
 
     /** PD facility name to pointer mapping: */
     SharemindFacilityMap pdFacilityMap;
@@ -60,6 +63,8 @@ struct SharemindModule_ {
     #endif
 
 };
+
+SHAREMIND_LASTERROR_DECLARE_PRIVATE_FUNCTIONS(SharemindModule)
 
 #ifndef NDEBUG
 SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindModule)

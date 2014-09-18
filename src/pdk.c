@@ -19,18 +19,18 @@
 #include "module.h"
 
 
-int SharemindPdk_init(SharemindPdk * pdk,
-                      size_t pdk_index,
-                      const char * name,
-                      void (* pd_startup_impl)(void),
-                      void (* pd_startup_wrapper)(void),
-                      void (* pd_shutdown_impl)(void),
-                      void (* pd_shutdown_wrapper)(void),
-                      void (* pd_process_startup_impl)(void),
-                      void (* pd_process_startup_wrapper)(void),
-                      void (* pd_process_shutdown_impl)(void),
-                      void (* pd_process_shutdown_wrapper)(void),
-                      SharemindModule * module)
+bool SharemindPdk_init(SharemindPdk * pdk,
+                       size_t pdk_index,
+                       const char * name,
+                       void (* pd_startup_impl)(void),
+                       void (* pd_startup_wrapper)(void),
+                       void (* pd_shutdown_impl)(void),
+                       void (* pd_shutdown_wrapper)(void),
+                       void (* pd_process_startup_impl)(void),
+                       void (* pd_process_startup_wrapper)(void),
+                       void (* pd_process_shutdown_impl)(void),
+                       void (* pd_process_shutdown_wrapper)(void),
+                       SharemindModule * module)
 {
     assert(pdk);
     assert(name);
@@ -43,19 +43,19 @@ int SharemindPdk_init(SharemindPdk * pdk,
 
     #ifndef NDEBUG
     if (unlikely(!SharemindModule_refs_ref(module))) {
-        OOR(module->modapi);
+        SharemindModuleApi_setErrorOor(module->modapi);
         goto SharemindPdk_init_error_0;
     }
     #endif
 
     if (unlikely(SharemindMutex_init(&pdk->mutex) != SHAREMIND_MUTEX_OK)) {
-        MIE(module->modapi);
+        SharemindModuleApi_setErrorMie(module->modapi);
         goto SharemindPdk_init_error_1;
     }
 
     pdk->name = strdup(name);
     if (unlikely(!pdk->name)) {
-        OOM(module->modapi);
+        SharemindModuleApi_setErrorOom(module->modapi);
         goto SharemindPdk_init_error_2;
     }
 
@@ -97,7 +97,7 @@ int SharemindPdk_init(SharemindPdk * pdk,
     SHAREMIND_REFS_INIT(pdk);
     SharemindFacilityMap_init(&pdk->pdFacilityMap, &module->pdFacilityMap);
     SharemindFacilityMap_init(&pdk->pdpiFacilityMap, &module->pdpiFacilityMap);
-    return 1;
+    return true;
 
 SharemindPdk_init_error_2:
 
@@ -112,7 +112,7 @@ SharemindPdk_init_error_1:
 
 SharemindPdk_init_error_0:
 
-    return 0;
+    return false;
 }
 
 void SharemindPdk_destroy(SharemindPdk * pdk) {
@@ -145,109 +145,33 @@ void SharemindPdk_destroy(SharemindPdk * pdk) {
 #define LOCK_CONST(pdk) DOLOCK((pdk),lock_const)
 #define UNLOCK_CONST(pdk) DOLOCK((pdk),unlock_const)
 
-const char * SharemindPdk_get_name(const SharemindPdk * pdk) {
+SHAREMIND_LASTERROR_DEFINE_FUNCTIONS(Pdk)
+
+const char * SharemindPdk_name(const SharemindPdk * pdk) {
     assert(pdk);
     assert(pdk->name);
     return pdk->name; // No locking: const after SharemindPdk_init
 }
 
-SharemindModule * SharemindPdk_get_module(const SharemindPdk * pdk) {
+SharemindModule * SharemindPdk_module(const SharemindPdk * pdk) {
     assert(pdk);
     assert(pdk->module);
     return pdk->module; // No locking: const after SharemindPdk_init
 }
 
-SharemindModuleApi * SharemindPdk_get_modapi(const SharemindPdk * pdk) {
+SharemindModuleApi * SharemindPdk_modapi(const SharemindPdk * pdk) {
     assert(pdk);
     assert(pdk->module);
     assert(pdk->module->modapi);
     return pdk->module->modapi; // No locking: const after SharemindPdk_init
 }
 
-size_t SharemindPdk_get_index(const SharemindPdk * pdk) {
+size_t SharemindPdk_index(const SharemindPdk * pdk) {
     assert(pdk);
     return pdk->pdk_index; // No locking: const after SharemindPdk_init
 }
 
-bool SharemindPdk_set_pd_facility(SharemindPdk * pdk,
-                                  const char * name,
-                                  void * facility,
-                                  void * context)
-{
-    assert(pdk);
-    assert(name);
-    assert(name[0]);
-    LOCK(pdk);
-    const bool r = SharemindFacilityMap_set(&pdk->pdFacilityMap,
-                                            name,
-                                            facility,
-                                            context);
-    UNLOCK(pdk);
-    return r;
-}
-
-bool SharemindPdk_unset_pd_facility(SharemindPdk * pdk, const char * name) {
-    assert(pdk);
-    assert(name);
-    assert(name[0]);
-    LOCK(pdk);
-    const bool r = SharemindFacilityMap_unset(&pdk->pdFacilityMap, name);
-    UNLOCK(pdk);
-    return r;
-}
-
-const SharemindFacility * SharemindPdk_get_pd_facility(const SharemindPdk * pdk,
-                                                       const char * name)
-{
-    assert(pdk);
-    assert(name);
-    assert(name[0]);
-    LOCK_CONST(pdk);
-    const SharemindFacility * const r =
-            SharemindFacilityMap_get(&pdk->pdFacilityMap, name);
-    UNLOCK_CONST(pdk);
-    return r;
-}
-
-bool SharemindPdk_set_pdpi_facility(SharemindPdk * pdk,
-                                    const char * name,
-                                    void * facility,
-                                    void * context)
-{
-    assert(pdk);
-    assert(name);
-    assert(name[0]);
-    LOCK(pdk);
-    const bool r = SharemindFacilityMap_set(&pdk->pdpiFacilityMap,
-                                            name,
-                                            facility,
-                                            context);
-    UNLOCK(pdk);
-    return r;
-}
-
-bool SharemindPdk_unset_pdpi_facility(SharemindPdk * pdk, const char * name) {
-    assert(pdk);
-    assert(name);
-    assert(name[0]);
-    LOCK(pdk);
-    const bool r = SharemindFacilityMap_unset(&pdk->pdpiFacilityMap, name);
-    UNLOCK(pdk);
-    return r;
-}
-
-const SharemindFacility * SharemindPdk_get_pdpi_facility(
-        const SharemindPdk * pdk,
-        const char * name)
-{
-    assert(pdk);
-    assert(name);
-    assert(name[0]);
-    LOCK_CONST(pdk);
-    const SharemindFacility * const r =
-            SharemindFacilityMap_get(&pdk->pdpiFacilityMap, name);
-    UNLOCK_CONST(pdk);
-    return r;
-}
+SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(Pdk,pd,Pd)
+SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(Pdk,pdpi,Pdpi)
 
 SHAREMIND_REFS_DEFINE_FUNCTIONS_WITH_MUTEX(SharemindPdk)

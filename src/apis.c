@@ -17,19 +17,19 @@
 
 
 static const SharemindApi SharemindApis[] = {
-    { .module_load = &SharemindModule_load_0x1,
-      .module_unload = &SharemindModule_unload_0x1,
-      .module_init = &SharemindModule_init_0x1,
-      .module_deinit = &SharemindModule_deinit_0x1,
-      .module_get_num_syscalls = &SharemindModule_get_num_syscalls_0x1,
-      .module_get_syscall = &SharemindModule_get_syscall_0x1,
-      .module_find_syscall = &SharemindModule_find_syscall_0x1,
-      .module_get_num_pdks = &SharemindModule_get_num_pdks_0x1,
-      .module_get_pdk = &SharemindModule_get_pdk_0x1,
-      .module_find_pdk = &SharemindModule_find_pdk_0x1,
-      .pd_start = &SharemindPd_start_0x1,
-      .pd_stop = &SharemindPd_stop_0x1,
-      .pdpi_start = &SharemindPdpi_start_0x1,
-      .pdpi_stop = &SharemindPdpi_stop_0x1
+    { .moduleLoad = &SharemindModule_load_0x1,
+      .moduleUnload = &SharemindModule_unload_0x1,
+      .moduleInit = &SharemindModule_init_0x1,
+      .moduleDeinit = &SharemindModule_deinit_0x1,
+      .numSyscalls = &SharemindModule_numSyscalls_0x1,
+      .syscall = &SharemindModule_syscall_0x1,
+      .findSyscall = &SharemindModule_findSyscall_0x1,
+      .numPdks = &SharemindModule_numPdks_0x1,
+      .pdk = &SharemindModule_pdk_0x1,
+      .findPdk = &SharemindModule_findPdk_0x1,
+      .startPd = &SharemindPd_start_0x1,
+      .stopPd = &SharemindPd_stop_0x1,
+      .startPdpi = &SharemindPdpi_start_0x1,
+      .stopPdpi = &SharemindPdpi_stop_0x1
     }
 };

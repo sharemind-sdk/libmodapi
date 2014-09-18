@@ -63,7 +63,7 @@ inline const SharemindFacility * SharemindFacilityMap_get(
             const SharemindFacilityMap * fm,
             const char * name) __attribute__ ((nonnull(1,2)));
 
-inline const SharemindFacility * SharemindFacilityMap_get_norecurse(
+inline const SharemindFacility * SharemindFacilityMap_getNoRecurse(
             const SharemindFacilityMap * fm,
             const char * name) __attribute__ ((nonnull(1,2)));
 
@@ -121,7 +121,7 @@ inline const SharemindFacility * SharemindFacilityMap_get_norecurse(
             return SharemindFacilityMap_get(fm->nextMap, name); \
         return NULL; \
     } \
-    qualifiers const SharemindFacility * SharemindFacilityMap_get_norecurse( \
+    qualifiers const SharemindFacility * SharemindFacilityMap_getNoRecurse( \
             const SharemindFacilityMap * fm, \
             const char * name) \
     { \
@@ -134,6 +134,60 @@ inline const SharemindFacility * SharemindFacilityMap_get_norecurse(
 #ifndef SHAREMIND_LIBMODAPI_FACILITYMAP_C
 SHAREMIND_FACILITYMAP_DEFINE(inline)
 #endif /* SHAREMIND_LIBMODAPI_FACILITYMAP_C */
+
+#define SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS__(CN,fF,FF)\
+    SharemindModuleApiError \
+    Sharemind ## CN ## _set ## FF(Sharemind ## CN * c, \
+                                  const char * name, \
+                                  void * facility, \
+                                  void * context) \
+    { \
+        assert(c); \
+        assert(name); \
+        assert(name[0]); \
+        LOCK(c); \
+        const bool r = SharemindFacilityMap_set(&c->fF ## Map, \
+                                                name, \
+                                                facility, \
+                                                context); \
+        UNLOCK(c); \
+        if (!r) { \
+            Sharemind ## CN ## _setErrorOom(c); \
+            return SHAREMIND_MODULE_API_OUT_OF_MEMORY; \
+        } \
+        return SHAREMIND_MODULE_API_OK; \
+    } \
+    bool Sharemind ## CN ## _unset ## FF(Sharemind ## CN * c, \
+                                         const char * name) \
+    { \
+        assert(c); \
+        assert(name); \
+        assert(name[0]); \
+        LOCK(c); \
+        const bool r = \
+               SharemindFacilityMap_unset(&c->fF ## Map, name); \
+        UNLOCK(c); \
+        return r; \
+    } \
+    const SharemindFacility * \
+    Sharemind ## CN ## _ ## fF(const Sharemind ## CN * c, const char * name) { \
+        assert(c); \
+        assert(name); \
+        assert(name[0]); \
+        LOCK_CONST(c); \
+        const SharemindFacility * const r = \
+                SharemindFacilityMap_get(&c->fF ## Map, name); \
+        UNLOCK_CONST(c); \
+        return r; \
+    }
+
+#define SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(ClassName,fN,FN) \
+    SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS__(ClassName, \
+                                             fN ## Facility, \
+                                             FN ## Facility)
+
+#define SHAREMIND_DEFINE_SELF_FACILITYMAP_ACCESSORS(ClassName) \
+    SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS__(ClassName, facility, Facility)
 
 #ifdef __cplusplus
 } /* extern "C" { */

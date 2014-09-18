@@ -32,7 +32,7 @@ int SharemindSyscall_init(SharemindSyscall * sc,
 
     #ifndef NDEBUG
     if (!SharemindModule_refs_ref(m)) {
-        OOR(m->modapi);
+        SharemindModule_setErrorOor(m);
         return 0;
     }
 
@@ -73,19 +73,19 @@ void SharemindSyscall_destroy(SharemindSyscall * sc) {
     #endif
 }
 
-const char * SharemindSyscall_get_signature(const SharemindSyscall * sc) {
+const char * SharemindSyscall_signature(const SharemindSyscall * sc) {
     assert(sc);
     assert(sc->name);
     return sc->name;
 }
 
-SharemindModule * SharemindSyscall_get_module(const SharemindSyscall * sc) {
+SharemindModule * SharemindSyscall_module(const SharemindSyscall * sc) {
     assert(sc);
     assert(sc->module);
     return sc->module;
 }
 
-SharemindModuleApi * SharemindSyscall_get_modapi(const SharemindSyscall * sc) {
+SharemindModuleApi * SharemindSyscall_modapi(const SharemindSyscall * sc) {
     assert(sc);
     assert(sc->module);
     assert(sc->module->modapi);
@@ -96,9 +96,7 @@ SharemindModuleApi * SharemindSyscall_get_modapi(const SharemindSyscall * sc) {
   \note According to the AMD64 ABI, returning _SHAREMIND_SyscallWrapper should
         be fast, because this struct will be returned in %rax and %rdx.
 */
-SharemindSyscallWrapper SharemindSyscall_get_wrapper(
-        const SharemindSyscall * sc)
-{
+SharemindSyscallWrapper SharemindSyscall_wrapper(const SharemindSyscall * sc) {
     assert(sc);
     assert(sc->wrapper.callable);
     return sc->wrapper;

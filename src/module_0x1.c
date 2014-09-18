@@ -149,7 +149,7 @@ bool SharemindModule_load_0x1(SharemindModule * m) {
             if (unlikely(oldSize == apiData->syscalls.size)) {
                 SharemindModuleApi_setError(
                             m->modapi,
-                            SHAREMIND_MODULE_API_DUPLICATE_SYSCALL,
+                            SHAREMIND_MODULE_API_API_ERROR,
                             "Duplicate system call definitions in module!");
                 goto loadModule_0x1_fail_2;
             }
@@ -217,7 +217,7 @@ bool SharemindModule_load_0x1(SharemindModule * m) {
             if (unlikely(oldSize == apiData->pdks.size)) {
                 SharemindModuleApi_setError(
                             m->modapi,
-                            SHAREMIND_MODULE_API_DUPLICATE_PROTECTION_DOMAIN,
+                            SHAREMIND_MODULE_API_API_ERROR,
                             "Duplicate protection domain kind definitions in "
                             "module!");
                 goto loadModule_0x1_fail_3;

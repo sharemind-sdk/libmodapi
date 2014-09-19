@@ -33,17 +33,19 @@ SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
     const SharemindModuleInfo * moduleInfo;
     size_t i;
 
-    if (!SharemindModuleApi_refs_ref(modapi)) {
-        SharemindModuleApi_setErrorOor(modapi);
-        goto SharemindModule_new_fail_0;
-    }
-
     m = (SharemindModule *) malloc(sizeof(SharemindModule));
     if (unlikely(!m)) {
         SharemindModuleApi_setErrorOom(modapi);
+        goto SharemindModule_new_fail_0;
+    }
+
+    assert(!SharemindModulesSet_contains(&modapi->modules, m));
+    if (!SharemindModulesSet_replace_or_insert(&modapi->modules, m)) {
+        SharemindModuleApi_setErrorOom(modapi);
         goto SharemindModule_new_fail_1;
     }
-    if (unlikely(SharemindRecursiveMutex_init(&m->mutex) != SHAREMIND_MUTEX_OK)) {
+
+    if (!SHAREMIND_RECURSIVE_LOCK_INIT(m)) {
         SharemindModuleApi_setErrorMie(modapi);
         goto SharemindModule_new_fail_2;
     }
@@ -179,16 +181,15 @@ SharemindModule_new_fail_4:
 
 SharemindModule_new_fail_3:
 
-    if (unlikely(SharemindRecursiveMutex_destroy(&m->mutex) != SHAREMIND_MUTEX_OK))
-        abort();
+    SHAREMIND_RECURSIVE_LOCK_DEINIT(m);
 
 SharemindModule_new_fail_2:
 
-    free(m);
+    SharemindModulesSet_remove(&modapi->modules, m);
 
 SharemindModule_new_fail_1:
 
-    SharemindModuleApi_refs_unref(modapi);
+    free(m);
 
 SharemindModule_new_fail_0:
 
@@ -209,30 +210,21 @@ void SharemindModule_free(SharemindModule * m) {
     if (likely(m->conf))
         free(m->conf);
     free(m->filename);
-    SharemindModuleApi_refs_unref(m->modapi);
+    SharemindModulesSet_remove(&m->modapi->modules, m);
 
     SharemindFacilityMap_destroy(&m->facilityMap);
     SharemindFacilityMap_destroy(&m->pdFacilityMap);
     SharemindFacilityMap_destroy(&m->pdpiFacilityMap);
-    if (unlikely(SharemindRecursiveMutex_destroy(&m->mutex) != SHAREMIND_MUTEX_OK))
-        abort();
+    SHAREMIND_RECURSIVE_LOCK_DEINIT(m);
     free(m);
 }
 
-#define DOLOCK(module,lock) \
-    if (unlikely(SharemindRecursiveMutex_ ## lock(&(module)->mutex) != SHAREMIND_MUTEX_OK)) { \
-        abort(); \
-    } else (void) 0
-#define LOCK(module) DOLOCK((module),lock)
-#define UNLOCK(module) DOLOCK((module),unlock)
-#define LOCK_CONST(module) DOLOCK((module),lock_const)
-#define UNLOCK_CONST(module) DOLOCK((module),unlock_const)
-
-SHAREMIND_LASTERROR_DEFINE_FUNCTIONS(Module)
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DEFINE(SharemindModule)
+SHAREMIND_LASTERROR_FUNCTIONS_DEFINE(SharemindModule)
 
 SharemindModuleApiError SharemindModule_init(SharemindModule * m) {
     assert(m);
-    LOCK(m);
+    SharemindModule_lock(m);
     assert(!m->isInitialized);
     SharemindModuleApiError e;
     if (likely((*(m->api->moduleInit))(m))) {
@@ -242,31 +234,31 @@ SharemindModuleApiError SharemindModule_init(SharemindModule * m) {
     } else {
         e = m->lastError;
     }
-    UNLOCK(m);
+    SharemindModule_unlock(m);
     return e;
 }
 
 void SharemindModule_deinit(SharemindModule * m) {
     assert(m);
-    LOCK(m);
+    SharemindModule_lock(m);
     (*(m->api->moduleDeinit))(m);
     m->isInitialized = false;
-    UNLOCK(m);
+    SharemindModule_unlock(m);
 }
 
 bool SharemindModule_isInitialized(const SharemindModule * m) {
     assert(m);
-    LOCK_CONST(m);
+    SharemindModule_lockConst(m);
     const bool r = m->isInitialized;
-    UNLOCK_CONST(m);
+    SharemindModule_unlockConst(m);
     return r;
 }
 
 void * SharemindModule_handle(const SharemindModule * m) {
     assert(m);
-    LOCK_CONST(m);
+    SharemindModule_lockConst(m);
     void * const r = m->moduleHandle;
-    UNLOCK_CONST(m);
+    SharemindModule_unlockConst(m);
     return r;
 }
 
@@ -339,9 +331,9 @@ SharemindPdk * SharemindModule_findPdk(const SharemindModule * m,
     return (*(m->api->findPdk))(m, name);
 }
 
-SHAREMIND_DEFINE_SELF_FACILITYMAP_ACCESSORS(Module)
-SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(Module,pd,Pd)
-SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(Module,pdpi,Pdpi)
+SHAREMIND_DEFINE_SELF_FACILITYMAP_ACCESSORS(SharemindModule)
+SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindModule,pd,Pd)
+SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindModule,pdpi,Pdpi)
 
 #ifndef NDEBUG
 SHAREMIND_REFS_DEFINE_FUNCTIONS_WITH_RECURSIVE_MUTEX(SharemindModule)

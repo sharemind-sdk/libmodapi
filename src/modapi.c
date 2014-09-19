@@ -18,6 +18,16 @@
 SHAREMIND_ENUM_CUSTOM_DEFINE_TOSTRING(SharemindModuleApiError,
                                       SHAREMIND_MODULE_API_ERROR_ENUM)
 
+SHAREMIND_SET_DEFINE(SharemindModulesSet,
+                     SharemindModule *,
+                     ((uintptr_t) key),
+                     SHAREMIND_SET_KEY_EQUALS_voidptr,
+                     SHAREMIND_SET_KEY_LESS_THAN_voidptr,
+                     SHAREMIND_SET_KEYCOPY_REGULAR,
+                     SHAREMIND_SET_KEYFREE_REGULAR,
+                     malloc,
+                     free,)
+
 SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiError * error,
                                             const char ** errorStr)
 {
@@ -31,7 +41,7 @@ SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiError * error,
         return NULL;
     }
 
-    if (unlikely(SharemindMutex_init(&modapi->mutex) != SHAREMIND_MUTEX_OK)) {
+    if (!SHAREMIND_LOCK_INIT(modapi)) {
         free(modapi);
         if (error)
             (*error) = SHAREMIND_MODULE_API_MUTEX_ERROR;
@@ -43,41 +53,32 @@ SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiError * error,
     modapi->lastError = SHAREMIND_MODULE_API_OK;
     modapi->lastErrorStaticString = NULL;
 
+    SharemindModulesSet_init(&modapi->modules);
     SharemindFacilityMap_init(&modapi->moduleFacilityMap, NULL);
     SharemindFacilityMap_init(&modapi->pdFacilityMap, NULL);
     SharemindFacilityMap_init(&modapi->pdpiFacilityMap, NULL);
 
-    SHAREMIND_REFS_INIT(modapi);
     return modapi;
 }
 
 void SharemindModuleApi_free(SharemindModuleApi * modapi) {
     assert(modapi);
-    if (unlikely(SharemindMutex_destroy(&modapi->mutex) != SHAREMIND_MUTEX_OK))
-        abort();
+    SHAREMIND_LOCK_DEINIT(modapi);
 
-    SHAREMIND_REFS_ASSERT_IF_REFERENCED(modapi);
+    assert(modapi->modules.size == 0u);
 
     SharemindFacilityMap_destroy(&modapi->moduleFacilityMap);
     SharemindFacilityMap_destroy(&modapi->pdFacilityMap);
     SharemindFacilityMap_destroy(&modapi->pdpiFacilityMap);
+    SharemindModulesSet_destroy(&modapi->modules);
 
     free(modapi);
 }
 
-#define DOLOCK(modapi,lock) \
-    if (unlikely(SharemindMutex_ ## lock(&(modapi)->mutex) != SHAREMIND_MUTEX_OK)) { \
-        abort(); \
-    } else (void) 0
-#define LOCK(modapi) DOLOCK((modapi),lock)
-#define UNLOCK(modapi) DOLOCK((modapi),unlock)
-#define LOCK_CONST(modapi) DOLOCK((modapi),lock_const)
-#define UNLOCK_CONST(modapi) DOLOCK((modapi),unlock_const)
+SHAREMIND_LOCK_FUNCTIONS_DEFINE(SharemindModuleApi)
 
-SHAREMIND_LASTERROR_DEFINE_FUNCTIONS(ModuleApi)
+SHAREMIND_LASTERROR_FUNCTIONS_DEFINE(SharemindModuleApi)
 
-SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(ModuleApi,module,Module)
-SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(ModuleApi,pd,Pd)
-SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(ModuleApi,pdpi,Pdpi)
-
-SHAREMIND_REFS_DEFINE_FUNCTIONS_WITH_MUTEX(SharemindModuleApi)
+SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindModuleApi,module,Module)
+SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindModuleApi,pd,Pd)
+SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindModuleApi,pdpi,Pdpi)

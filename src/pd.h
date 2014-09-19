@@ -20,6 +20,7 @@
 #include "facilitymap.h"
 #include "lasterror.h"
 #include "libmodapi.h"
+#include "rlocks.h"
 
 
 #ifdef __cplusplus
@@ -29,9 +30,8 @@ extern "C" {
 
 struct SharemindPd_ {
 
-    SharemindRecursiveMutex mutex;
-
-    SHAREMIND_LASTERROR_DECLARE_FIELDS
+    SHAREMIND_RECURSIVE_LOCK_DECLARE_FIELDS;
+    SHAREMIND_LASTERROR_DECLARE_FIELDS;
 
     /** Protection domain name. */
     char * name;
@@ -62,7 +62,8 @@ struct SharemindPd_ {
 
 };
 
-SHAREMIND_LASTERROR_DECLARE_PRIVATE_FUNCTIONS(SharemindPd)
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE(SharemindPd);
+SHAREMIND_LASTERROR_PRIVATE_FUNCTIONS_DECLARE(SharemindPd);
 SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindPd)
 SHAREMIND_NAMED_REFS_DECLARE_FUNCTIONS(SharemindPd,startedRefs)
 

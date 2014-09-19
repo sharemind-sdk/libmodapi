@@ -48,7 +48,7 @@ bool SharemindPdk_init(SharemindPdk * pdk,
     }
     #endif
 
-    if (unlikely(SharemindMutex_init(&pdk->mutex) != SHAREMIND_MUTEX_OK)) {
+    if (!SHAREMIND_LOCK_INIT(pdk)) {
         SharemindModuleApi_setErrorMie(module->modapi);
         goto SharemindPdk_init_error_1;
     }
@@ -101,8 +101,7 @@ bool SharemindPdk_init(SharemindPdk * pdk,
 
 SharemindPdk_init_error_2:
 
-    if (unlikely(SharemindMutex_destroy(&pdk->mutex) != SHAREMIND_MUTEX_OK))
-        abort();
+    SHAREMIND_LOCK_DEINIT(pdk);
 
 SharemindPdk_init_error_1:
 
@@ -132,20 +131,11 @@ void SharemindPdk_destroy(SharemindPdk * pdk) {
 
     SharemindFacilityMap_destroy(&pdk->pdFacilityMap);
     SharemindFacilityMap_destroy(&pdk->pdpiFacilityMap);
-    if (unlikely(SharemindMutex_destroy(&pdk->mutex) != SHAREMIND_MUTEX_OK))
-        abort();
+    SHAREMIND_LOCK_DEINIT(pdk);
 }
 
-#define DOLOCK(pdk,lock) \
-    if (unlikely(SharemindMutex_ ## lock(&(pdk)->mutex) != SHAREMIND_MUTEX_OK)) { \
-        abort(); \
-    } else (void) 0
-#define LOCK(pdk) DOLOCK((pdk),lock)
-#define UNLOCK(pdk) DOLOCK(pdk,unlock)
-#define LOCK_CONST(pdk) DOLOCK((pdk),lock_const)
-#define UNLOCK_CONST(pdk) DOLOCK((pdk),unlock_const)
-
-SHAREMIND_LASTERROR_DEFINE_FUNCTIONS(Pdk)
+SHAREMIND_LOCK_FUNCTIONS_DEFINE(SharemindPdk)
+SHAREMIND_LASTERROR_FUNCTIONS_DEFINE(SharemindPdk)
 
 const char * SharemindPdk_name(const SharemindPdk * pdk) {
     assert(pdk);
@@ -171,7 +161,7 @@ size_t SharemindPdk_index(const SharemindPdk * pdk) {
     return pdk->pdk_index; // No locking: const after SharemindPdk_init
 }
 
-SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(Pdk,pd,Pd)
-SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(Pdk,pdpi,Pdpi)
+SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindPdk,pd,Pd)
+SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindPdk,pdpi,Pdpi)
 
 SHAREMIND_REFS_DEFINE_FUNCTIONS_WITH_MUTEX(SharemindPdk)

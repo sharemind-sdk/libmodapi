@@ -20,6 +20,7 @@
 #include "facilitymap.h"
 #include "lasterror.h"
 #include "libmodapi.h"
+#include "locks.h"
 
 
 #ifdef __cplusplus
@@ -29,9 +30,8 @@ extern "C" {
 
 struct SharemindPdk_ {
 
-    SharemindMutex mutex;
-
-    SHAREMIND_LASTERROR_DECLARE_FIELDS
+    SHAREMIND_LOCK_DECLARE_FIELDS;
+    SHAREMIND_LASTERROR_DECLARE_FIELDS;
 
     /**
       The index of the protection domain kind in the
@@ -108,7 +108,8 @@ bool SharemindPdk_init(SharemindPdk * pdk,
 
 void SharemindPdk_destroy(SharemindPdk * pdk) __attribute__ ((nonnull(1)));
 
-SHAREMIND_LASTERROR_DECLARE_PRIVATE_FUNCTIONS(SharemindPdk)
+SHAREMIND_LOCK_FUNCTIONS_DECLARE(SharemindPdk);
+SHAREMIND_LASTERROR_PRIVATE_FUNCTIONS_DECLARE(SharemindPdk);
 SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindPdk)
 
 

@@ -134,6 +134,14 @@ SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(ModuleApi,module,Module)
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(ModuleApi,pd,Pd)
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(ModuleApi,pdpi,Pdpi)
 
+SharemindSyscall * SharemindModuleApi_findSyscall(const SharemindModuleApi * m,
+                                                  const char * signature)
+        __attribute__ ((nonnull(1, 2)));
+
+SharemindPdk * SharemindModuleApi_findPdk(const SharemindModuleApi * m,
+                                          const char * name)
+        __attribute__ ((nonnull(1, 2)));
+
 
 SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
                                                const char * filename,

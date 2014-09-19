@@ -137,47 +137,45 @@ SHAREMIND_FACILITYMAP_DEFINE(inline)
 
 #define SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS__(CN,fF,FF)\
     SharemindModuleApiError \
-    Sharemind ## CN ## _set ## FF(Sharemind ## CN * c, \
-                                  const char * name, \
-                                  void * facility, \
-                                  void * context) \
+    CN ## _set ## FF(CN * c, \
+                     const char * name, \
+                     void * facility, \
+                     void * context) \
     { \
         assert(c); \
         assert(name); \
         assert(name[0]); \
-        LOCK(c); \
+        CN ## _lock(c); \
         const bool r = SharemindFacilityMap_set(&c->fF ## Map, \
                                                 name, \
                                                 facility, \
                                                 context); \
-        UNLOCK(c); \
+        CN ## _unlock(c); \
         if (!r) { \
-            Sharemind ## CN ## _setErrorOom(c); \
+            CN ## _setErrorOom(c); \
             return SHAREMIND_MODULE_API_OUT_OF_MEMORY; \
         } \
         return SHAREMIND_MODULE_API_OK; \
     } \
-    bool Sharemind ## CN ## _unset ## FF(Sharemind ## CN * c, \
-                                         const char * name) \
-    { \
+    bool CN ## _unset ## FF(CN * c, const char * name) { \
         assert(c); \
         assert(name); \
         assert(name[0]); \
-        LOCK(c); \
+        CN ## _lock(c); \
         const bool r = \
                SharemindFacilityMap_unset(&c->fF ## Map, name); \
-        UNLOCK(c); \
+        CN ## _unlock(c); \
         return r; \
     } \
     const SharemindFacility * \
-    Sharemind ## CN ## _ ## fF(const Sharemind ## CN * c, const char * name) { \
+    CN ## _ ## fF(const CN * c, const char * name) { \
         assert(c); \
         assert(name); \
         assert(name[0]); \
-        LOCK_CONST(c); \
+        CN ## _lockConst(c); \
         const SharemindFacility * const r = \
                 SharemindFacilityMap_get(&c->fF ## Map, name); \
-        UNLOCK_CONST(c); \
+        CN ## _unlockConst(c); \
         return r; \
     }
 

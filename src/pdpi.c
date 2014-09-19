@@ -38,7 +38,7 @@ SharemindPdpi * SharemindPd_newPdpi(SharemindPd * pd) {
         goto SharemindPdpi_new_error_1;
     }
 
-    if (unlikely(SharemindRecursiveMutex_init(&pdpi->mutex) != SHAREMIND_MUTEX_OK)) {
+    if (!SHAREMIND_RECURSIVE_LOCK_INIT(pdpi)) {
         SharemindPd_setErrorMie(pd);
         goto SharemindPdpi_new_error_2;
     }
@@ -79,27 +79,18 @@ void SharemindPdpi_free(SharemindPdpi * pdpi) {
 
     SharemindPd_refs_unref(pdpi->pd);
     SharemindFacilityMap_destroy(&pdpi->facilityMap);
-    if (unlikely(SharemindRecursiveMutex_destroy(&pdpi->mutex) != SHAREMIND_MUTEX_OK))
-        abort();
+    SHAREMIND_RECURSIVE_LOCK_DEINIT(pdpi);
     free(pdpi);
 }
 
-#define DOLOCK(pdpi,lock) \
-    if (unlikely(SharemindRecursiveMutex_ ## lock(&(pdpi)->mutex) != SHAREMIND_MUTEX_OK)) { \
-        abort(); \
-    } else (void) 0
-#define LOCK(pdpi) DOLOCK((pdpi),lock)
-#define UNLOCK(pdpi) DOLOCK(pdpi,unlock)
-#define LOCK_CONST(pdpi) DOLOCK((pdpi),lock_const)
-#define UNLOCK_CONST(pdpi) DOLOCK((pdpi),unlock_const)
-
-SHAREMIND_LASTERROR_DEFINE_FUNCTIONS(Pdpi)
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DEFINE(SharemindPdpi)
+SHAREMIND_LASTERROR_FUNCTIONS_DEFINE(SharemindPdpi)
 
 bool SharemindPdpi_isStarted(const SharemindPdpi * pdpi) {
     assert(pdpi);
-    LOCK_CONST(pdpi);
+    SharemindPdpi_lockConst(pdpi);
     const bool r = pdpi->isStarted;
-    UNLOCK_CONST(pdpi);
+    SharemindPdpi_unlockConst(pdpi);
     return r;
 }
 
@@ -111,9 +102,9 @@ bool SharemindPdpi_start(SharemindPdpi * pdpi) {
     assert(pdpi->pd->pdk->module->api);
     assert(pdpi->pd->pdk->module->modapi);
 
-    LOCK(pdpi);
+    SharemindPdpi_lock(pdpi);
     if (pdpi->isStarted) {
-        UNLOCK(pdpi);
+        SharemindPdpi_unlock(pdpi);
         return true;
     }
 
@@ -121,7 +112,7 @@ bool SharemindPdpi_start(SharemindPdpi * pdpi) {
     const SharemindModule * const module = pd->pdk->module;
     if (!SharemindPd_startedRefs_ref(pd)) {
         SharemindPdpi_setErrorOor(pdpi);
-        UNLOCK(pdpi);
+        SharemindPdpi_unlock(pdpi);
         return false;
     }
 
@@ -131,7 +122,7 @@ bool SharemindPdpi_start(SharemindPdpi * pdpi) {
     } else {
         SharemindPd_startedRefs_unref(pd);
     }
-    UNLOCK(pdpi);
+    SharemindPdpi_unlock(pdpi);
     return r;
 }
 
@@ -142,21 +133,21 @@ void SharemindPdpi_stop(SharemindPdpi * pdpi) {
     assert(pdpi->pd->pdk->module);
     assert(pdpi->pd->pdk->module->api);
 
-    LOCK(pdpi);
+    SharemindPdpi_lock(pdpi);
     SHAREMIND_NAMED_REFS_ASSERT_IF_REFERENCED(pdpi,startedRefs);
 
     (*(pdpi->pd->pdk->module->api->stopPdpi))(pdpi);
 
     pdpi->isStarted = false;
-    UNLOCK(pdpi);
+    SharemindPdpi_unlock(pdpi);
     SharemindPd_startedRefs_unref(pdpi->pd);
 }
 
 void * SharemindPdpi_handle(const SharemindPdpi * pdpi) {
     assert(pdpi);
-    LOCK_CONST(pdpi);
+    SharemindPdpi_lockConst(pdpi);
     void * const r = pdpi->pdProcessHandle;
-    UNLOCK_CONST(pdpi);
+    SharemindPdpi_unlockConst(pdpi);
     return r;
 }
 
@@ -191,7 +182,7 @@ SharemindModuleApi * SharemindPdpi_modapi(const SharemindPdpi * pdpi) {
     return pdpi->pd->pdk->module->modapi;
 }
 
-SHAREMIND_DEFINE_SELF_FACILITYMAP_ACCESSORS(Pdpi)
+SHAREMIND_DEFINE_SELF_FACILITYMAP_ACCESSORS(SharemindPdpi)
 
 SHAREMIND_REFS_DEFINE_FUNCTIONS_WITH_RECURSIVE_MUTEX(SharemindPdpi)
 SHAREMIND_NAMED_REFS_DEFINE_FUNCTIONS_WITH_RECURSIVE_MUTEX(SharemindPdpi,startedRefs)

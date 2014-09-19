@@ -19,54 +19,54 @@
 
 #define SHAREMIND_LASTERROR_DECLARE_FIELDS \
     SharemindModuleApiError lastError; \
-    const char * lastErrorStaticString;
+    const char * lastErrorStaticString
 
-#define SHAREMIND_LASTERROR_DECLARE_PRIVATE_FUNCTIONS(className) \
-    void className ## _setError( \
-            className * c, \
+#define SHAREMIND_LASTERROR_PRIVATE_FUNCTIONS_DECLARE(ClassName) \
+    void ClassName ## _setError( \
+            ClassName * c, \
             SharemindModuleApiError error, \
             const char * errorString) __attribute__ ((nonnull(1))); \
-    void className ## _setErrorOom(className * c) \
+    void ClassName ## _setErrorOom(ClassName * c) \
             __attribute__ ((nonnull(1))); \
-    void className ## _setErrorOor(className * c) \
+    void ClassName ## _setErrorOor(ClassName * c) \
             __attribute__ ((nonnull(1))); \
-    void className ## _setErrorMie(className * c) \
-            __attribute__ ((nonnull(1))); \
+    void ClassName ## _setErrorMie(ClassName * c) \
+            __attribute__ ((nonnull(1))) \
 
-#define SHAREMIND_LASTERROR_DEFINE_FUNCTIONS(ClassName) \
-    SharemindModuleApiError Sharemind ## ClassName ## _lastError( \
-            const Sharemind ## ClassName * c) \
+#define SHAREMIND_LASTERROR_FUNCTIONS_DEFINE(ClassName) \
+    SharemindModuleApiError ClassName ## _lastError( \
+            const ClassName * c) \
     { \
         assert(c); \
-        LOCK_CONST(c); \
+        ClassName ## _lockConst(c); \
         const SharemindModuleApiError r = c->lastError; \
-        UNLOCK_CONST(c); \
+        ClassName ## _unlockConst(c); \
         return r; \
     } \
-    const char * Sharemind ## ClassName ## _lastErrorString( \
-            const Sharemind ## ClassName * c) \
+    const char * ClassName ## _lastErrorString( \
+            const ClassName * c) \
     { \
         assert(c); \
         const char * r; \
-        LOCK_CONST(c); \
+        ClassName ## _lockConst(c); \
         if (unlikely(c->lastError == SHAREMIND_MODULE_API_OK)) { \
             r = NULL; \
         } else { \
             assert(c->lastErrorStaticString); \
             r = c->lastErrorStaticString; \
         } \
-        UNLOCK_CONST(c); \
+        ClassName ## _unlockConst(c); \
         return r; \
     } \
-    void Sharemind ## ClassName ## _clearError(Sharemind ## ClassName * c) { \
+    void ClassName ## _clearError(ClassName * c) { \
         assert(c); \
-        LOCK(c); \
+        ClassName ## _lock(c); \
         c->lastError = SHAREMIND_MODULE_API_OK; \
-        UNLOCK(c); \
+        ClassName ## _unlock(c); \
     } \
-    void Sharemind ## ClassName ## _setError(Sharemind ## ClassName * c, \
-                                             SharemindModuleApiError error, \
-                                             const char * errorString) \
+    void ClassName ## _setError(ClassName * c, \
+                                SharemindModuleApiError error, \
+                                const char * errorString) \
     { \
         assert(c); \
         assert(error != SHAREMIND_MODULE_API_OK); \
@@ -74,26 +74,26 @@
             errorString = SharemindModuleApiError_toString(error); \
         assert(errorString); \
         assert(errorString[0]); \
-        LOCK(c); \
+        ClassName ## _lock(c); \
         c->lastError = error; \
         c->lastErrorStaticString = errorString; \
-        UNLOCK(c); \
+        ClassName ## _unlock(c); \
     } \
-    void Sharemind ## ClassName ## _setErrorOom(Sharemind ## ClassName * c) { \
-        Sharemind ## ClassName ## _setError(c, \
-                                            SHAREMIND_MODULE_API_OUT_OF_MEMORY,\
-                                            "Out of memory!"); \
+    void ClassName ## _setErrorOom(ClassName * c) { \
+        ClassName ## _setError(c, \
+                               SHAREMIND_MODULE_API_OUT_OF_MEMORY,\
+                               "Out of memory!"); \
     } \
-    void Sharemind ## ClassName ## _setErrorOor(Sharemind ## ClassName * c) { \
-        Sharemind ## ClassName ## _setError( \
+    void ClassName ## _setErrorOor(ClassName * c) { \
+        ClassName ## _setError( \
                 c, \
                 SHAREMIND_MODULE_API_REFERENCE_OVERFLOW, \
                 "Too many references!"); \
     } \
-    void Sharemind ## ClassName ## _setErrorMie(Sharemind ## ClassName * c) { \
-        Sharemind ## ClassName ## _setError(c, \
-                                            SHAREMIND_MODULE_API_MUTEX_ERROR, \
-                                            "Mutex initialization error!"); \
+    void ClassName ## _setErrorMie(ClassName * c) { \
+        ClassName ## _setError(c, \
+                               SHAREMIND_MODULE_API_MUTEX_ERROR, \
+                               "Mutex initialization error!"); \
     }
 
 #endif /* SHAREMIND_LIBMODAPI_LASTERROR_H */

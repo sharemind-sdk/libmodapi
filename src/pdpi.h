@@ -20,6 +20,7 @@
 #include "facilitymap.h"
 #include "lasterror.h"
 #include "libmodapi.h"
+#include "rlocks.h"
 
 
 #ifdef __cplusplus
@@ -28,9 +29,8 @@ extern "C" {
 
 struct SharemindPdpi_ {
 
-    SharemindRecursiveMutex mutex;
-
-    SHAREMIND_LASTERROR_DECLARE_FIELDS
+    SHAREMIND_RECURSIVE_LOCK_DECLARE_FIELDS;
+    SHAREMIND_LASTERROR_DECLARE_FIELDS;
 
     /** A handle for protection domain runtime data. */
     void * pdProcessHandle;
@@ -51,7 +51,8 @@ struct SharemindPdpi_ {
 
 };
 
-SHAREMIND_LASTERROR_DECLARE_PRIVATE_FUNCTIONS(SharemindPdpi)
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE(SharemindPdpi);
+SHAREMIND_LASTERROR_PRIVATE_FUNCTIONS_DECLARE(SharemindPdpi);
 SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindPdpi)
 SHAREMIND_NAMED_REFS_DECLARE_FUNCTIONS(SharemindPdpi,startedRefs)
 

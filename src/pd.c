@@ -45,7 +45,7 @@ SharemindPd * SharemindPdk_newPd(SharemindPdk * pdk,
         goto SharemindPd_new_fail_1;
     }
 
-    if (unlikely(SharemindRecursiveMutex_init(&pd->mutex) != SHAREMIND_MUTEX_OK)) {
+    if (!SHAREMIND_RECURSIVE_LOCK_INIT(pd)) {
         SharemindPdk_setErrorMie(pdk);
         goto SharemindPd_new_fail_2;
     }
@@ -82,8 +82,7 @@ SharemindPd_new_fail_4:
 
 SharemindPd_new_fail_3:
 
-    if (unlikely(SharemindRecursiveMutex_destroy(&pd->mutex) != SHAREMIND_MUTEX_OK))
-        abort();
+    SHAREMIND_RECURSIVE_LOCK_DEINIT(pd);
 
 SharemindPd_new_fail_2:
 
@@ -116,27 +115,18 @@ void SharemindPd_free(SharemindPd * pd) {
 
     SharemindFacilityMap_destroy(&pd->facilityMap);
     SharemindFacilityMap_destroy(&pd->pdpiFacilityMap);
-    if (unlikely(SharemindRecursiveMutex_destroy(&pd->mutex) != SHAREMIND_MUTEX_OK))
-        abort();
+    SHAREMIND_RECURSIVE_LOCK_DEINIT(pd);
     free(pd);
 }
 
-#define DOLOCK(pd,lock) \
-    if (unlikely(SharemindRecursiveMutex_ ## lock(&(pd)->mutex) != SHAREMIND_MUTEX_OK)) { \
-        abort(); \
-    } else (void) 0
-#define LOCK(pd) DOLOCK((pd),lock)
-#define UNLOCK(pd) DOLOCK((pd),unlock)
-#define LOCK_CONST(pd) DOLOCK((pd),lock_const)
-#define UNLOCK_CONST(pd) DOLOCK((pd),unlock_const)
-
-SHAREMIND_LASTERROR_DEFINE_FUNCTIONS(Pd)
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DEFINE(SharemindPd)
+SHAREMIND_LASTERROR_FUNCTIONS_DEFINE(SharemindPd)
 
 bool SharemindPd_isStarted(const SharemindPd * pd) {
     assert(pd);
-    LOCK_CONST(pd);
+    SharemindPd_lockConst(pd);
     const bool r = pd->isStarted;
-    UNLOCK_CONST(pd);
+    SharemindPd_unlockConst(pd);
     return r;
 }
 
@@ -147,14 +137,14 @@ bool SharemindPd_start(SharemindPd * pd) {
     assert(pd->pdk->module->api);
     assert(pd->pdk->module->api->startPd);
 
-    LOCK(pd);
+    SharemindPd_lock(pd);
     if (pd->isStarted) {
-        UNLOCK(pd);
+        SharemindPd_unlock(pd);
         return true;
     }
 
     const bool r = (*(pd->pdk->module->api->startPd))(pd);
-    UNLOCK(pd);
+    SharemindPd_unlock(pd);
     return r;
 }
 
@@ -165,14 +155,14 @@ void SharemindPd_stop(SharemindPd * pd) {
     assert(pd->pdk->module->api);
     assert(pd->pdk->module->api->stopPd);
 
-    LOCK(pd);
+    SharemindPd_lock(pd);
     if (pd->isStarted) {
         SHAREMIND_NAMED_REFS_ASSERT_IF_REFERENCED(pd,startedRefs);
 
         (*(pd->pdk->module->api->stopPd))(pd);
         pd->isStarted = false;
     }
-    UNLOCK(pd);
+    SharemindPd_unlock(pd);
 }
 
 SharemindPdk * SharemindPd_pdk(const SharemindPd * pd) {
@@ -212,14 +202,14 @@ const char * SharemindPd_conf(const SharemindPd * pd) {
 
 void * SharemindPd_handle(const SharemindPd * pd) {
     assert(pd);
-    LOCK_CONST(pd);
+    SharemindPd_lockConst(pd);
     void * const r = pd->pdHandle;
-    UNLOCK_CONST(pd);
+    SharemindPd_unlockConst(pd);
     return r;
 }
 
-SHAREMIND_DEFINE_SELF_FACILITYMAP_ACCESSORS(Pd)
-SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(Pd,pdpi,Pdpi)
+SHAREMIND_DEFINE_SELF_FACILITYMAP_ACCESSORS(SharemindPd)
+SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindPd,pdpi,Pdpi)
 
 SHAREMIND_REFS_DEFINE_FUNCTIONS_WITH_RECURSIVE_MUTEX(SharemindPd)
 SHAREMIND_NAMED_REFS_DEFINE_FUNCTIONS_WITH_RECURSIVE_MUTEX(SharemindPd,startedRefs)

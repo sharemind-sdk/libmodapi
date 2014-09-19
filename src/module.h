@@ -22,6 +22,7 @@
 #include "facilitymap.h"
 #include "lasterror.h"
 #include "libmodapi.h"
+#include "rlocks.h"
 
 
 #ifdef __cplusplus
@@ -31,9 +32,8 @@ extern "C" {
 
 struct SharemindModule_ {
 
-    SharemindRecursiveMutex mutex;
-
-    SHAREMIND_LASTERROR_DECLARE_FIELDS
+    SHAREMIND_RECURSIVE_LOCK_DECLARE_FIELDS;
+    SHAREMIND_LASTERROR_DECLARE_FIELDS;
 
     void * libHandle;
     char * filename;
@@ -64,7 +64,8 @@ struct SharemindModule_ {
 
 };
 
-SHAREMIND_LASTERROR_DECLARE_PRIVATE_FUNCTIONS(SharemindModule)
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE(SharemindModule);
+SHAREMIND_LASTERROR_PRIVATE_FUNCTIONS_DECLARE(SharemindModule);
 
 #ifndef NDEBUG
 SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindModule)

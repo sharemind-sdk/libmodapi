@@ -324,13 +324,16 @@ typedef SharemindModuleApi0x1Error (* SharemindModuleApi0x1Syscall)(
         SharemindCodeBlock * retVal, \
         SharemindModuleApi0x1SyscallContext * c)
 
+#define SHAREMIND_MODULE_API_0x1_SYSCALL_SIGNATURE_BUFFER_SIZE 256u
+
 /** System call list item:*/
 typedef struct {
 
     /**
       Unique non-empty name of the system call (optionally zero-terminated):
     */
-    const char signature[256];
+    const char signature[
+            SHAREMIND_MODULE_API_0x1_SYSCALL_SIGNATURE_BUFFER_SIZE];
 
     /** Pointer to the system call implementation: */
     const SharemindModuleApi0x1Syscall fptr;
@@ -480,6 +483,7 @@ typedef void (* SharemindModuleApi0x1PdpiShutdown)(
 #define SHAREMIND_MODULE_API_0x1_PDPI_SHUTDOWN(name,wrapper) \
     void name(SharemindModuleApi0x1PdpiWrapper * wrapper)
 
+#define SHAREMIND_MODULE_API_0x1_PDK_NAME_BUFFER_SIZE 256u
 
 /** Protection domain kind list item: */
 typedef struct {
@@ -488,7 +492,7 @@ typedef struct {
       Unique non-empty name of the protection domain kind (optionally zero-
       terminated):
     */
-    const char name[256];
+    const char name[SHAREMIND_MODULE_API_0x1_PDK_NAME_BUFFER_SIZE];
 
     /** Pointer to the protection domain initialization implementation: */
     const SharemindModuleApi0x1PdStartup pd_startup_f;

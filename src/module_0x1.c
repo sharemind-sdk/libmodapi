@@ -119,14 +119,14 @@ bool SharemindModule_load_0x1(SharemindModule * m) {
                                        "SyscallDefinitions");
     if (likely(scs)) {
         size_t i = 0u;
-        static const size_t syscallSignatureBufSize = sizeof((*scs)->signature);
-        char syscallSignatureBuffer[syscallSignatureBufSize + 1];
-        syscallSignatureBuffer[syscallSignatureBufSize] = '\0';
+        char syscallSignatureBuffer[
+                SHAREMIND_MODULE_API_0x1_SYSCALL_SIGNATURE_BUFFER_SIZE + 1];
+        syscallSignatureBuffer[
+                SHAREMIND_MODULE_API_0x1_SYSCALL_SIGNATURE_BUFFER_SIZE] = '\0';
         while ((*scs)[i].signature[0]) {
             memcpy(syscallSignatureBuffer,
                    (*scs)[i].signature,
-                   syscallSignatureBufSize);
-
+                   SHAREMIND_MODULE_API_0x1_SYSCALL_SIGNATURE_BUFFER_SIZE);
             if (unlikely(!(*scs)[i].fptr)) {
                 SharemindModuleApi_setError(
                             m->modapi,
@@ -185,11 +185,12 @@ bool SharemindModule_load_0x1(SharemindModule * m) {
                                     "sharemindModuleApi0x1PdkDefinitions");
     if (pdks) {
         size_t i = 0u;
-        static const size_t pdkNameBufferSize = sizeof((*pdks)->name);
-        char pdkNameBuffer[pdkNameBufferSize + 1];
-        pdkNameBuffer[pdkNameBufferSize] = '\0';
+        char pdkNameBuffer[SHAREMIND_MODULE_API_0x1_PDK_NAME_BUFFER_SIZE + 1];
+        pdkNameBuffer[SHAREMIND_MODULE_API_0x1_PDK_NAME_BUFFER_SIZE] = '\0';
         while ((*pdks)[i].name[0]) {
-            memcpy(pdkNameBuffer, (*pdks)[i].name, pdkNameBufferSize);
+            memcpy(pdkNameBuffer,
+                   (*pdks)[i].name,
+                   SHAREMIND_MODULE_API_0x1_PDK_NAME_BUFFER_SIZE);
 
             if (unlikely(!(*pdks)[i].pd_startup_f
                          || !(*pdks)[i].pd_shutdown_f

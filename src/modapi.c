@@ -27,36 +27,38 @@ SHAREMIND_SET_DEFINE(SharemindModulesSet,
                      SHAREMIND_SET_KEYFREE_REGULAR,
                      malloc,
                      free,)
-#define SHAREMIND_COMMA ,
-SHAREMIND_SET_DECLARE_FOREACH_WITH(
+SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
+        static inline SharemindSyscall *,
         SharemindModulesSet,
-        SharemindModule *,
         findSyscall,
-        const char * SHAREMIND_COMMA SharemindSyscall **,
-        static inline)
-SHAREMIND_SET_DEFINE_FOREACH_WITH(
+        const char * signature)
+SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
+        static inline SharemindSyscall *,
         SharemindModulesSet,
-        SharemindModule *,
         findSyscall,
-        const char * SHAREMIND_COMMA SharemindSyscall ** ,
-        const char * signature SHAREMIND_COMMA SharemindSyscall ** result,
-        signature SHAREMIND_COMMA result,
-        static inline)
-SHAREMIND_SET_DECLARE_FOREACH_WITH(
+        const char * signature,
+        NULL,
+        assert(item->key);
+        SharemindSyscall * const result =
+                SharemindModule_findSyscall(item->key, signature);
+        if (result)
+            return result)
+SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
+        static inline SharemindPdk *,
         SharemindModulesSet,
-        SharemindModule *,
         findPdk,
-        const char * SHAREMIND_COMMA SharemindPdk **,
-        static inline)
-SHAREMIND_SET_DEFINE_FOREACH_WITH(
+        const char *)
+SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
+        static inline SharemindPdk *,
         SharemindModulesSet,
-        SharemindModule *,
         findPdk,
-        const char * SHAREMIND_COMMA SharemindPdk ** ,
-        const char * name SHAREMIND_COMMA SharemindPdk ** result,
-        name SHAREMIND_COMMA result,
-        static inline)
-#undef SHAREMIND_COMMA
+        const char * signature,
+        NULL,
+        assert(item->key);
+        SharemindPdk * const result =
+                SharemindModule_findPdk(item->key, signature);
+        if (result)
+            return result)
 
 SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiError * error,
                                             const char ** errorStr)
@@ -105,66 +107,18 @@ void SharemindModuleApi_free(SharemindModuleApi * modapi) {
     free(modapi);
 }
 
-static inline bool SharemindModuleApi_findSyscallHelper(
-        SharemindModule * const * module,
-        const char * signature,
-        SharemindSyscall ** result)
-{
-    assert(module);
-    assert(signature);
-    assert(result);
-    SharemindSyscall * const sc =
-            SharemindModule_findSyscall(*module, signature);
-    if (!sc)
-        return true;
-    *result = sc;
-    return false;
-}
-
 SharemindSyscall * SharemindModuleApi_findSyscall(const SharemindModuleApi * m,
                                                   const char * signature)
 {
     assert(m);
-    SharemindSyscall * result;
-    if (SharemindModulesSet_foreach_with_findSyscall(
-                &m->modules,
-                &SharemindModuleApi_findSyscallHelper,
-                signature,
-                &result))
-        return NULL;
-    assert(result);
-    return result;
-}
-
-static inline bool SharemindModuleApi_findPdkHelper(
-        SharemindModule * const * module,
-        const char * signature,
-        SharemindPdk ** result)
-{
-    assert(module);
-    assert(signature);
-    assert(result);
-    SharemindPdk * const pdk =
-            SharemindModule_findPdk(*module, signature);
-    if (!pdk)
-        return true;
-    *result = pdk;
-    return false;
+    return SharemindModulesSet_foreach_with_findSyscall(&m->modules, signature);
 }
 
 SharemindPdk * SharemindModuleApi_findPdk(const SharemindModuleApi * m,
                                           const char * name)
 {
     assert(m);
-    SharemindPdk * result;
-    if (SharemindModulesSet_foreach_with_findPdk(
-                &m->modules,
-                &SharemindModuleApi_findPdkHelper,
-                name,
-                &result))
-        return NULL;
-    assert(result);
-    return result;
+    return SharemindModulesSet_foreach_with_findPdk(&m->modules, name);
 }
 
 SHAREMIND_LOCK_FUNCTIONS_DEFINE(SharemindModuleApi)

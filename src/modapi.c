@@ -75,6 +75,15 @@ SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
                 SharemindModule_findPd(item->key, signature);
         if (result)
             return result)
+SHAREMIND_SET_DECLARE_DESTROY_WITH_INLINE(SharemindModulesSet,
+                                          moduleFree,,
+                                          static inline)
+SHAREMIND_SET_DEFINE_DESTROY_WITH_INLINE(SharemindModulesSet,
+                                         moduleFree,
+                                         SharemindModule *,,
+                                         free,
+                                         static inline,
+                                         SharemindModule_free(*item))
 
 SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiError * error,
                                             const char ** errorStr)
@@ -111,14 +120,14 @@ SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiError * error,
 
 void SharemindModuleApi_free(SharemindModuleApi * modapi) {
     assert(modapi);
-    SHAREMIND_RECURSIVE_LOCK_DEINIT(modapi);
 
-    assert(modapi->modules.size == 0u);
+    SharemindModulesSet_destroy_with_moduleFree(&modapi->modules);
+
+    SHAREMIND_RECURSIVE_LOCK_DEINIT(modapi);
 
     SharemindFacilityMap_destroy(&modapi->moduleFacilityMap);
     SharemindFacilityMap_destroy(&modapi->pdFacilityMap);
     SharemindFacilityMap_destroy(&modapi->pdpiFacilityMap);
-    SharemindModulesSet_destroy(&modapi->modules);
 
     free(modapi);
 }

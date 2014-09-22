@@ -112,7 +112,7 @@ inline const SharemindFacility * SharemindFacilityMap_getNoRecurse(
         assert(fm); \
         assert(name); \
         assert(name[0]); \
-        const SharemindFacility * value = SharemindFacilityMapInner_get_const( \
+        const SharemindFacility * value = SharemindFacilityMapInner_get( \
                                               &fm->realMap, \
                                               name); \
         if (value) \
@@ -128,7 +128,7 @@ inline const SharemindFacility * SharemindFacilityMap_getNoRecurse(
         assert(fm); \
         assert(name); \
         assert(name[0]); \
-        return SharemindFacilityMapInner_get_const(&fm->realMap, name); \
+        return SharemindFacilityMapInner_get(&fm->realMap, name); \
     }
 
 #ifndef SHAREMIND_LIBMODAPI_FACILITYMAP_C

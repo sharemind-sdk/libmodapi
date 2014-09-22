@@ -142,6 +142,10 @@ SharemindPdk * SharemindModuleApi_findPdk(const SharemindModuleApi * m,
                                           const char * name)
         __attribute__ ((nonnull(1, 2)));
 
+SharemindPd * SharemindModuleApi_findPd(const SharemindModuleApi * m,
+                                        const char * name)
+        __attribute__ ((nonnull(1, 2)));
+
 
 SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
                                                const char * filename,
@@ -211,6 +215,10 @@ SharemindPdk * SharemindModule_findPdk(const SharemindModule * m,
                                        const char * name)
         __attribute__ ((nonnull(1, 2)));
 
+SharemindPd * SharemindModule_findPd(const SharemindModule * m,
+                                     const char * name)
+        __attribute__ ((nonnull(1, 2)));
+
 
 SHAREMIND_LIBMODAPI_DECLARE_SELF_FACILITY_FUNCTIONS(Module)
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(Module,pd,Pd)
@@ -258,6 +266,9 @@ SharemindModuleApi * SharemindPdk_modapi(const SharemindPdk * pdk)
 
 size_t SharemindPdk_index(const SharemindPdk * pdk)
         __attribute__ ((nonnull(1)));
+
+SharemindPd * SharemindPdk_findPd(const SharemindPdk * pdk, const char * name)
+        __attribute__ ((nonnull(1, 2)));
 
 
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(Pdk,pd,Pd)

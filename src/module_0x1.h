@@ -60,6 +60,10 @@ SharemindPdk * SharemindModule_findPdk_0x1(const SharemindModule * m,
                                            const char * name)
         __attribute__ ((nonnull(1, 2), visibility("internal")));
 
+SharemindPd * SharemindModule_findPd_0x1(const SharemindModule * m,
+                                         const char * name)
+        __attribute__ ((nonnull(1, 2), visibility("internal")));
+
 
 #ifdef __cplusplus
 } /* extern "C" { */

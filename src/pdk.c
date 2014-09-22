@@ -17,7 +17,10 @@
 #include <string.h>
 #include "modapi.h"
 #include "module.h"
+#include "pd.h"
 
+
+SHAREMIND_STRINGMAP_DEFINE(SharemindPdMap,SharemindPd,malloc,free,strdup,)
 
 bool SharemindPdk_init(SharemindPdk * pdk,
                        size_t pdk_index,
@@ -94,9 +97,9 @@ bool SharemindPdk_init(SharemindPdk * pdk,
     }
 
     pdk->module = module;
-    SHAREMIND_REFS_INIT(pdk);
     SharemindFacilityMap_init(&pdk->pdFacilityMap, &module->pdFacilityMap);
     SharemindFacilityMap_init(&pdk->pdpiFacilityMap, &module->pdpiFacilityMap);
+    SharemindPdMap_init(&pdk->pds);
     return true;
 
 SharemindPdk_init_error_2:
@@ -122,13 +125,15 @@ void SharemindPdk_destroy(SharemindPdk * pdk) {
     assert(pdk->pdpi_startup_impl_or_wrapper);
     assert(pdk->pdpi_shutdown_impl_or_wrapper);
     assert(pdk->module);
-    SHAREMIND_REFS_ASSERT_IF_REFERENCED(pdk);
+
+    assert(!pdk->pds.size);
 
     free(pdk->name);
     #ifndef NDEBUG
     SharemindModule_refs_unref(pdk->module);
     #endif
 
+    SharemindPdMap_destroy(&pdk->pds);
     SharemindFacilityMap_destroy(&pdk->pdFacilityMap);
     SharemindFacilityMap_destroy(&pdk->pdpiFacilityMap);
     SHAREMIND_LOCK_DEINIT(pdk);
@@ -161,7 +166,15 @@ size_t SharemindPdk_index(const SharemindPdk * pdk) {
     return pdk->pdk_index; // No locking: const after SharemindPdk_init
 }
 
+SharemindPd * SharemindPdk_findPd(const SharemindPdk * pdk, const char * name) {
+    assert(pdk);
+    assert(pdk->module);
+    assert(pdk->module->modapi);
+    SharemindModuleApi_lock(pdk->module->modapi);
+    SharemindPd * const r = SharemindPdMap_get(&pdk->pds, name);
+    SharemindModuleApi_unlock(pdk->module->modapi);
+    return r;
+}
+
 SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindPdk,pd,Pd)
 SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindPdk,pdpi,Pdpi)
-
-SHAREMIND_REFS_DEFINE_FUNCTIONS_WITH_MUTEX(SharemindPdk)

@@ -32,35 +32,36 @@ SharemindPd * SharemindPdk_newPd(SharemindPdk * pdk,
     assert(name);
     assert(name[0]);
 
-    SharemindPd * pd;
-
-    if (!SharemindPdk_refs_ref(pdk)) {
-        SharemindPdk_setErrorOor(pdk);
+    if (unlikely(SharemindModuleApi_findPd(pdk->module->modapi, name))) {
+        SharemindPdk_setError(
+                    pdk,
+                    SHAREMIND_MODULE_API_DUPLICATE_PROTECTION_DOMAIN,
+                    "Protection domain with identical name already created!");
         goto SharemindPd_new_fail_0;
     }
 
-    pd = (SharemindPd *) malloc(sizeof(SharemindPd));
+    SharemindPd * const pd = SharemindPdMap_get_or_insert(&pdk->pds, name);
     if (unlikely(!pd)) {
         SharemindPdk_setErrorOom(pdk);
-        goto SharemindPd_new_fail_1;
+        goto SharemindPd_new_fail_0;
     }
 
     if (!SHAREMIND_RECURSIVE_LOCK_INIT(pd)) {
         SharemindPdk_setErrorMie(pdk);
-        goto SharemindPd_new_fail_2;
+        goto SharemindPd_new_fail_1;
     }
 
     pd->name = strdup(name);
     if (unlikely(!pd->name)) {
         SharemindPdk_setErrorOom(pdk);
-        goto SharemindPd_new_fail_3;
+        goto SharemindPd_new_fail_2;
     }
 
     if (likely(conf && conf[0])) {
         pd->conf = strdup(conf);
         if (!pd->conf) {
             SharemindPdk_setErrorOom(pdk);
-            goto SharemindPd_new_fail_4;
+            goto SharemindPd_new_fail_3;
         }
     } else {
         pd->conf = NULL;
@@ -76,21 +77,17 @@ SharemindPd * SharemindPdk_newPd(SharemindPdk * pdk,
     SHAREMIND_NAMED_REFS_INIT(pd,startedRefs);
     return pd;
 
-SharemindPd_new_fail_4:
+SharemindPd_new_fail_3:
 
     free(pd->name);
 
-SharemindPd_new_fail_3:
+SharemindPd_new_fail_2:
 
     SHAREMIND_RECURSIVE_LOCK_DEINIT(pd);
 
-SharemindPd_new_fail_2:
-
-    free(pd);
-
 SharemindPd_new_fail_1:
 
-    SharemindPdk_refs_unref(pdk);
+    SharemindPdMap_remove(&pdk->pds, name);
 
 SharemindPd_new_fail_0:
 
@@ -110,13 +107,13 @@ void SharemindPd_free(SharemindPd * pd) {
 
     if (likely(pd->conf))
         free(pd->conf);
-    free(pd->name);
-    SharemindPdk_refs_unref(pd->pdk);
+    char * const name = pd->name; // free(name) later
 
     SharemindFacilityMap_destroy(&pd->facilityMap);
     SharemindFacilityMap_destroy(&pd->pdpiFacilityMap);
     SHAREMIND_RECURSIVE_LOCK_DEINIT(pd);
-    free(pd);
+    SharemindPdMap_remove(&pd->pdk->pds, name);
+    free(name);
 }
 
 SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DEFINE(SharemindPd)

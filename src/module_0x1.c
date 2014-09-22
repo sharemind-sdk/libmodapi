@@ -22,6 +22,22 @@
 
 SHAREMIND_STRINGMAP_DECLARE(SharemindPdkMap,SharemindPdk,)
 SHAREMIND_STRINGMAP_DEFINE(SharemindPdkMap,SharemindPdk,malloc,free,strdup,)
+SHAREMIND_MAP_DECLARE_FOREACH_WITH_INLINE(
+        static inline SharemindPd *,
+        SharemindPdkMap,
+        findPd,
+        const char * signature)
+SHAREMIND_MAP_DEFINE_FOREACH_WITH_INLINE(
+        static inline SharemindPd *,
+        SharemindPdkMap,
+        findPd,
+        const char * signature,
+        NULL,
+        assert(item->key);
+        SharemindPd * const result =
+                SharemindPdk_findPd(&item->value, signature);
+        if (result)
+            return result)
 
 SHAREMIND_MAP_DECLARE(SharemindSyscallMap,
                       char *,
@@ -418,4 +434,16 @@ SharemindPdk * SharemindModule_findPdk_0x1(const SharemindModule * m,
     ApiData * const apiData = (ApiData *) m->apiData;
 
     return SharemindPdkMap_get(&apiData->pdks, name);
+}
+
+
+SharemindPd * SharemindModule_findPd_0x1(const SharemindModule * m,
+                                         const char * name)
+{
+    assert(m);
+    assert(name);
+
+    ApiData * const apiData = (ApiData *) m->apiData;
+
+    return SharemindPdkMap_foreach_with_findPd(&apiData->pdks, name);
 }

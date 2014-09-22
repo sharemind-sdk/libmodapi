@@ -27,6 +27,7 @@ static const SharemindApi SharemindApis[] = {
       .numPdks = &SharemindModule_numPdks_0x1,
       .pdk = &SharemindModule_pdk_0x1,
       .findPdk = &SharemindModule_findPdk_0x1,
+      .findPd = &SharemindModule_findPd_0x1,
       .startPd = &SharemindPd_start_0x1,
       .stopPd = &SharemindPd_stop_0x1,
       .startPdpi = &SharemindPdpi_start_0x1,

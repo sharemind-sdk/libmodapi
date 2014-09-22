@@ -14,8 +14,8 @@
 #error including an internal header!
 #endif
 
+#include <sharemind/map.h>
 #include <sharemind/mutex.h>
-#include <sharemind/refs.h>
 #include <stdbool.h>
 #include "facilitymap.h"
 #include "lasterror.h"
@@ -27,6 +27,7 @@
 extern "C" {
 #endif
 
+SHAREMIND_STRINGMAP_DECLARE(SharemindPdMap,SharemindPd,)
 
 struct SharemindPdk_ {
 
@@ -87,7 +88,8 @@ struct SharemindPdk_ {
     /** PDPI facility name to pointer mapping: */
     SharemindFacilityMap pdpiFacilityMap;
 
-    SHAREMIND_REFS_DECLARE_FIELDS
+    /** PD map. */
+    SharemindPdMap pds;
 
 };
 
@@ -110,7 +112,6 @@ void SharemindPdk_destroy(SharemindPdk * pdk) __attribute__ ((nonnull(1)));
 
 SHAREMIND_LOCK_FUNCTIONS_DECLARE(SharemindPdk);
 SHAREMIND_LASTERROR_PRIVATE_FUNCTIONS_DECLARE(SharemindPdk);
-SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindPdk)
 
 
 #ifdef __cplusplus

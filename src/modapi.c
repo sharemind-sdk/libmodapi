@@ -59,6 +59,22 @@ SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
                 SharemindModule_findPdk(item->key, signature);
         if (result)
             return result)
+SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
+        static inline SharemindPd *,
+        SharemindModulesSet,
+        findPd,
+        const char *)
+SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
+        static inline SharemindPd *,
+        SharemindModulesSet,
+        findPd,
+        const char * signature,
+        NULL,
+        assert(item->key);
+        SharemindPd * const result =
+                SharemindModule_findPd(item->key, signature);
+        if (result)
+            return result)
 
 SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiError * error,
                                             const char ** errorStr)
@@ -73,7 +89,7 @@ SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiError * error,
         return NULL;
     }
 
-    if (!SHAREMIND_LOCK_INIT(modapi)) {
+    if (!SHAREMIND_RECURSIVE_LOCK_INIT(modapi)) {
         free(modapi);
         if (error)
             (*error) = SHAREMIND_MODULE_API_MUTEX_ERROR;
@@ -95,7 +111,7 @@ SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiError * error,
 
 void SharemindModuleApi_free(SharemindModuleApi * modapi) {
     assert(modapi);
-    SHAREMIND_LOCK_DEINIT(modapi);
+    SHAREMIND_RECURSIVE_LOCK_DEINIT(modapi);
 
     assert(modapi->modules.size == 0u);
 
@@ -121,7 +137,14 @@ SharemindPdk * SharemindModuleApi_findPdk(const SharemindModuleApi * m,
     return SharemindModulesSet_foreach_with_findPdk(&m->modules, name);
 }
 
-SHAREMIND_LOCK_FUNCTIONS_DEFINE(SharemindModuleApi)
+SharemindPd * SharemindModuleApi_findPd(const SharemindModuleApi * m,
+                                        const char * name)
+{
+    assert(m);
+    return SharemindModulesSet_foreach_with_findPd(&m->modules, name);
+}
+
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DEFINE(SharemindModuleApi)
 
 SHAREMIND_LASTERROR_FUNCTIONS_DEFINE(SharemindModuleApi)
 

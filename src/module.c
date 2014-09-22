@@ -330,6 +330,17 @@ SharemindPdk * SharemindModule_findPdk(const SharemindModule * m,
     return (*(m->api->findPdk))(m, name);
 }
 
+SharemindPd * SharemindModule_findPd(const SharemindModule * m,
+                                     const char * name)
+{
+    assert(m);
+    assert(m->modapi);
+    SharemindModuleApi_lock(m->modapi);
+    SharemindPd * const r = (*(m->api->findPd))(m, name);
+    SharemindModuleApi_unlock(m->modapi);
+    return r;
+}
+
 SHAREMIND_DEFINE_SELF_FACILITYMAP_ACCESSORS(SharemindModule)
 SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindModule,pd,Pd)
 SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindModule,pdpi,Pdpi)

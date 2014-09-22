@@ -21,7 +21,7 @@
 #include "facilitymap.h"
 #include "lasterror.h"
 #include "libmodapi.h"
-#include "locks.h"
+#include "rlocks.h"
 
 
 #ifdef __cplusplus
@@ -32,7 +32,7 @@ SHAREMIND_SET_DECLARE(SharemindModulesSet, SharemindModule *,)
 
 struct SharemindModuleApi_ {
 
-    SHAREMIND_LOCK_DECLARE_FIELDS;
+    SHAREMIND_RECURSIVE_LOCK_DECLARE_FIELDS;
     SHAREMIND_LASTERROR_DECLARE_FIELDS;
 
     SharemindModulesSet modules;
@@ -48,7 +48,7 @@ struct SharemindModuleApi_ {
 
 };
 
-SHAREMIND_LOCK_FUNCTIONS_DECLARE(SharemindModuleApi);
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE(SharemindModuleApi);
 SHAREMIND_LASTERROR_PRIVATE_FUNCTIONS_DECLARE(SharemindModuleApi);
 
 

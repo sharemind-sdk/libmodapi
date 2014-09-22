@@ -33,19 +33,22 @@ bool SharemindSyscall_init(SharemindSyscall * sc,
     #ifndef NDEBUG
     if (!SharemindModule_refs_ref(m)) {
         SharemindModule_setErrorOor(m);
-        return false;
+        goto SharemindSyscall_init_error_0;
+    }
+
+    if (!SHAREMIND_LOCK_INIT(sc)) {
+        SharemindModule_setErrorMie(m);
+        goto SharemindSyscall_init_error_1;
     }
 
     SHAREMIND_REFS_INIT(sc);
     #endif
+    SHAREMIND_TAG_INIT(sc);
 
     sc->name = strdup(name);
     if (!sc->name) {
         SharemindModule_setErrorOom(m);
-        #ifndef NDEBUG
-        SharemindModule_refs_unref(m);
-        #endif
-        return false;
+        goto SharemindSyscall_init_error_2;
     }
 
     if (wrapper) {
@@ -57,6 +60,20 @@ bool SharemindSyscall_init(SharemindSyscall * sc,
     }
     sc->module = m;
     return true;
+
+SharemindSyscall_init_error_2:
+
+    #ifndef NDEBUG
+    SharemindModule_refs_unref(m);
+    #endif
+
+SharemindSyscall_init_error_1:
+
+    SHAREMIND_LOCK_DEINIT(sc);
+
+SharemindSyscall_init_error_0:
+
+    return false;
 }
 
 void SharemindSyscall_destroy(SharemindSyscall * sc) {
@@ -68,10 +85,12 @@ void SharemindSyscall_destroy(SharemindSyscall * sc) {
     SHAREMIND_REFS_ASSERT_IF_REFERENCED(sc);
     #endif
 
+    SHAREMIND_TAG_DESTROY(sc);
     free(sc->name);
     #ifndef NDEBUG
     SharemindModule_refs_unref(sc->module);
     #endif
+    SHAREMIND_LOCK_DEINIT(sc);
 }
 
 const char * SharemindSyscall_signature(const SharemindSyscall * sc) {
@@ -103,6 +122,10 @@ SharemindSyscallWrapper SharemindSyscall_wrapper(const SharemindSyscall * sc) {
     return sc->wrapper;
 }
 
+SHAREMIND_LOCK_FUNCTIONS_DEFINE(SharemindSyscall)
+
 #ifndef NDEBUG
 SHAREMIND_REFS_DEFINE_FUNCTIONS(SharemindSyscall)
 #endif
+
+SHAREMIND_TAG_FUNCTIONS_DEFINE(SharemindSyscall)

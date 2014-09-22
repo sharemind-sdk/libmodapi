@@ -51,6 +51,8 @@ SharemindPd * SharemindPdk_newPd(SharemindPdk * pdk,
         goto SharemindPd_new_fail_1;
     }
 
+    SHAREMIND_TAG_INIT(pd);
+
     pd->name = strdup(name);
     if (unlikely(!pd->name)) {
         SharemindPdk_setErrorOom(pdk);
@@ -101,6 +103,8 @@ void SharemindPd_free(SharemindPd * pd) {
 
     if (pd->isStarted)
         SharemindPd_stop(pd);
+
+    SHAREMIND_TAG_DESTROY(pd);
 
     SHAREMIND_REFS_ASSERT_IF_REFERENCED(pd);
     SHAREMIND_NAMED_REFS_ASSERT_IF_REFERENCED(pd,startedRefs);
@@ -208,5 +212,8 @@ void * SharemindPd_handle(const SharemindPd * pd) {
 SHAREMIND_DEFINE_SELF_FACILITYMAP_ACCESSORS(SharemindPd)
 SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindPd,pdpi,Pdpi)
 
+SHAREMIND_TAG_FUNCTIONS_DEFINE(SharemindPd)
+
 SHAREMIND_REFS_DEFINE_FUNCTIONS_WITH_RECURSIVE_MUTEX(SharemindPd)
-SHAREMIND_NAMED_REFS_DEFINE_FUNCTIONS_WITH_RECURSIVE_MUTEX(SharemindPd,startedRefs)
+SHAREMIND_NAMED_REFS_DEFINE_FUNCTIONS_WITH_RECURSIVE_MUTEX(SharemindPd,
+                                                           startedRefs)

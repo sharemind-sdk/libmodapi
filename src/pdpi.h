@@ -21,6 +21,7 @@
 #include "lasterror.h"
 #include "libmodapi.h"
 #include "rlocks.h"
+#include "tag.h"
 
 
 #ifdef __cplusplus
@@ -31,6 +32,7 @@ struct SharemindPdpi_ {
 
     SHAREMIND_RECURSIVE_LOCK_DECLARE_FIELDS;
     SHAREMIND_LASTERROR_DECLARE_FIELDS;
+    SHAREMIND_TAG_DECLARE_FIELDS;
 
     /** A handle for protection domain runtime data. */
     void * pdProcessHandle;

@@ -44,6 +44,8 @@ SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
         goto SharemindModule_new_fail_1;
     }
 
+    SHAREMIND_TAG_INIT(m);
+
     m->apiData = NULL;
     m->moduleHandle = NULL;
     m->isInitialized = false;
@@ -197,10 +199,14 @@ SharemindModule_new_fail_0:
 
 void SharemindModule_free(SharemindModule * m) {
     assert(m);
+
+
     if (likely(m->isInitialized))
         SharemindModule_deinit(m);
 
     (*(m->api->moduleUnload))(m);
+
+    SHAREMIND_TAG_DESTROY(m);
     #ifndef NDEBUG
     SHAREMIND_REFS_ASSERT_IF_REFERENCED(m);
     #endif
@@ -344,6 +350,8 @@ SharemindPd * SharemindModule_findPd(const SharemindModule * m,
 SHAREMIND_DEFINE_SELF_FACILITYMAP_ACCESSORS(SharemindModule)
 SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindModule,pd,Pd)
 SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindModule,pdpi,Pdpi)
+
+SHAREMIND_TAG_FUNCTIONS_DEFINE(SharemindModule)
 
 #ifndef NDEBUG
 SHAREMIND_REFS_DEFINE_FUNCTIONS_WITH_RECURSIVE_MUTEX(SharemindModule)

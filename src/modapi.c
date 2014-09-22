@@ -12,7 +12,6 @@
 #include "modapi.h"
 
 #include <stdlib.h>
-#include "lasterror.h"
 
 
 SHAREMIND_ENUM_CUSTOM_DEFINE_TOSTRING(SharemindModuleApiError,
@@ -109,17 +108,21 @@ SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiError * error,
 
     modapi->lastError = SHAREMIND_MODULE_API_OK;
     modapi->lastErrorStaticString = NULL;
+    SHAREMIND_TAG_INIT(modapi);
 
     SharemindModulesSet_init(&modapi->modules);
     SharemindFacilityMap_init(&modapi->moduleFacilityMap, NULL);
     SharemindFacilityMap_init(&modapi->pdFacilityMap, NULL);
     SharemindFacilityMap_init(&modapi->pdpiFacilityMap, NULL);
 
+
     return modapi;
 }
 
 void SharemindModuleApi_free(SharemindModuleApi * modapi) {
     assert(modapi);
+
+    SHAREMIND_TAG_DESTROY(modapi);
 
     SharemindModulesSet_destroy_with_moduleFree(&modapi->modules);
 
@@ -160,3 +163,5 @@ SHAREMIND_LASTERROR_FUNCTIONS_DEFINE(SharemindModuleApi)
 SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindModuleApi,module,Module)
 SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindModuleApi,pd,Pd)
 SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindModuleApi,pdpi,Pdpi)
+
+SHAREMIND_TAG_FUNCTIONS_DEFINE(SharemindModuleApi)

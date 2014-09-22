@@ -21,6 +21,7 @@
 #include "lasterror.h"
 #include "libmodapi.h"
 #include "locks.h"
+#include "tag.h"
 
 
 #ifdef __cplusplus
@@ -33,6 +34,7 @@ struct SharemindPdk_ {
 
     SHAREMIND_LOCK_DECLARE_FIELDS;
     SHAREMIND_LASTERROR_DECLARE_FIELDS;
+    SHAREMIND_TAG_DECLARE_FIELDS;
 
     /**
       The index of the protection domain kind in the

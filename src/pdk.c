@@ -97,6 +97,7 @@ bool SharemindPdk_init(SharemindPdk * pdk,
     }
 
     pdk->module = module;
+    SHAREMIND_TAG_INIT(pdk);
     SharemindFacilityMap_init(&pdk->pdFacilityMap, &module->pdFacilityMap);
     SharemindFacilityMap_init(&pdk->pdpiFacilityMap, &module->pdpiFacilityMap);
     SharemindPdMap_init(&pdk->pds);
@@ -128,6 +129,7 @@ void SharemindPdk_destroy(SharemindPdk * pdk) {
 
     assert(!pdk->pds.size);
 
+    SHAREMIND_TAG_DESTROY(pdk);
     free(pdk->name);
     #ifndef NDEBUG
     SharemindModule_refs_unref(pdk->module);
@@ -178,3 +180,5 @@ SharemindPd * SharemindPdk_findPd(const SharemindPdk * pdk, const char * name) {
 
 SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindPdk,pd,Pd)
 SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindPdk,pdpi,Pdpi)
+
+SHAREMIND_TAG_FUNCTIONS_DEFINE(SharemindPdk)

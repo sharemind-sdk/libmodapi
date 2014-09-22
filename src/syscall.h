@@ -19,6 +19,8 @@
 #endif
 #include <stdbool.h>
 #include "libmodapi.h"
+#include "locks.h"
+#include "tag.h"
 
 
 #ifdef __cplusplus
@@ -28,9 +30,7 @@ extern "C" {
 
 struct SharemindSyscall_ {
 
-    #ifndef NDEBUG
-    SharemindMutex mutex;
-    #endif
+    SHAREMIND_LOCK_DECLARE_FIELDS;
 
     SharemindSyscallWrapper wrapper;
 
@@ -44,6 +44,8 @@ struct SharemindSyscall_ {
     SHAREMIND_REFS_DECLARE_FIELDS
     #endif
 
+    SHAREMIND_TAG_DECLARE_FIELDS;
+
 };
 
 bool SharemindSyscall_init(SharemindSyscall * sc,
@@ -55,6 +57,8 @@ bool SharemindSyscall_init(SharemindSyscall * sc,
 
 void SharemindSyscall_destroy(SharemindSyscall * sc)
         __attribute__ ((nonnull(1)));
+
+SHAREMIND_LOCK_FUNCTIONS_DECLARE(SharemindSyscall);
 
 #ifndef NDEBUG
 SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindSyscall)

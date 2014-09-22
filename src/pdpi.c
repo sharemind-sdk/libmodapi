@@ -43,6 +43,8 @@ SharemindPdpi * SharemindPd_newPdpi(SharemindPd * pd) {
         goto SharemindPdpi_new_error_2;
     }
 
+    SHAREMIND_TAG_INIT(pdpi);
+
     pdpi->pdProcessHandle = NULL; /* Just in case */
     pdpi->pd = pd;
     pdpi->isStarted = false;
@@ -76,6 +78,8 @@ void SharemindPdpi_free(SharemindPdpi * pdpi) {
 
     if (pdpi->isStarted)
         SharemindPdpi_stop(pdpi);
+
+    SHAREMIND_TAG_DESTROY(pdpi);
 
     SharemindPd_refs_unref(pdpi->pd);
     SharemindFacilityMap_destroy(&pdpi->facilityMap);
@@ -183,6 +187,8 @@ SharemindModuleApi * SharemindPdpi_modapi(const SharemindPdpi * pdpi) {
 }
 
 SHAREMIND_DEFINE_SELF_FACILITYMAP_ACCESSORS(SharemindPdpi)
+
+SHAREMIND_TAG_FUNCTIONS_DEFINE(SharemindPdpi)
 
 SHAREMIND_REFS_DEFINE_FUNCTIONS_WITH_RECURSIVE_MUTEX(SharemindPdpi)
 SHAREMIND_NAMED_REFS_DEFINE_FUNCTIONS_WITH_RECURSIVE_MUTEX(SharemindPdpi,startedRefs)

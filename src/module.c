@@ -29,11 +29,11 @@ SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
     assert(filename);
     assert(filename[0]);
 
-    SharemindModule * m;
     const SharemindModuleInfo * moduleInfo;
     size_t i;
 
-    m = (SharemindModule *) malloc(sizeof(SharemindModule));
+    SharemindModule * const m =
+            (SharemindModule *) malloc(sizeof(SharemindModule));
     if (unlikely(!m)) {
         SharemindModuleApi_setErrorOom(modapi);
         goto SharemindModule_new_fail_0;

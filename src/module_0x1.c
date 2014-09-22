@@ -154,6 +154,16 @@ bool SharemindModule_load_0x1(SharemindModule * m) {
                 goto loadModule_0x1_fail_2;
             }
             assert(apiData->syscalls.size - oldSize == 1u);
+            if (unlikely(SharemindModuleApi_findSyscall(
+                             m->modapi,
+                             syscallSignatureBuffer)))
+            {
+                SharemindModuleApi_setError(
+                            m->modapi,
+                            SHAREMIND_MODULE_API_DUPLICATE_SYSCALL,
+                            "System call already provided by another module!");
+                goto loadModule_0x1_fail_2;
+            }
             if (unlikely(!SharemindSyscall_init(sc,
                                                 syscallSignatureBuffer,
                                                 (void (*)(void)) (*scs)[i].fptr,
@@ -222,6 +232,17 @@ bool SharemindModule_load_0x1(SharemindModule * m) {
                             "Duplicate protection domain kind definitions in "
                             "module!");
                 goto loadModule_0x1_fail_3;
+            }
+            if (unlikely(SharemindModuleApi_findPdk(
+                             m->modapi,
+                             pdkNameBuffer)))
+            {
+                SharemindModuleApi_setError(
+                        m->modapi,
+                        SHAREMIND_MODULE_API_DUPLICATE_PROTECTION_DOMAIN_KIND,
+                        "Protection domain kind already provided by another "
+                        "module!");
+                goto loadModule_0x1_fail_2;
             }
             assert(apiData->pdks.size - oldSize == 1u);
             if (unlikely(!SharemindPdk_init(

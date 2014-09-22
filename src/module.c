@@ -39,15 +39,9 @@ SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
         goto SharemindModule_new_fail_0;
     }
 
-    assert(!SharemindModulesSet_contains(&modapi->modules, m));
-    if (!SharemindModulesSet_replace_or_insert(&modapi->modules, m)) {
-        SharemindModuleApi_setErrorOom(modapi);
-        goto SharemindModule_new_fail_1;
-    }
-
     if (!SHAREMIND_RECURSIVE_LOCK_INIT(m)) {
         SharemindModuleApi_setErrorMie(modapi);
-        goto SharemindModule_new_fail_2;
+        goto SharemindModule_new_fail_1;
     }
 
     m->apiData = NULL;
@@ -58,14 +52,14 @@ SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
     m->filename = strdup(filename);
     if (unlikely(!m->filename)) {
         SharemindModuleApi_setErrorOom(modapi);
-        goto SharemindModule_new_fail_3;
+        goto SharemindModule_new_fail_2;
     }
 
     if (likely(conf && conf[0])) {
         m->conf = strdup(conf);
         if (!m->conf) {
             SharemindModuleApi_setErrorOom(modapi);
-            goto SharemindModule_new_fail_4;
+            goto SharemindModule_new_fail_3;
         }
     } else {
         m->conf = NULL;
@@ -78,7 +72,7 @@ SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
                     modapi,
                     SHAREMIND_MODULE_API_UNABLE_TO_OPEN_MODULE,
                     "dlopen() failed!");
-        goto SharemindModule_new_fail_5;
+        goto SharemindModule_new_fail_4;
     }
 
     /* Read module info: */
@@ -89,7 +83,7 @@ SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
                     modapi,
                     SHAREMIND_MODULE_API_INVALID_MODULE,
                     "The \"sharemindModuleInfo\" symbol was not found!");
-        goto SharemindModule_new_fail_6;
+        goto SharemindModule_new_fail_5;
     }
 
     /* Verify module name: */
@@ -98,7 +92,7 @@ SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
                     modapi,
                     SHAREMIND_MODULE_API_API_NOT_SUPPORTED,
                     "Invalid module name!");
-        goto SharemindModule_new_fail_6;
+        goto SharemindModule_new_fail_5;
     }
 
     /*
@@ -112,7 +106,7 @@ SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
                     modapi,
                     SHAREMIND_MODULE_API_API_NOT_SUPPORTED,
                     "Invalid supported API list!");
-        goto SharemindModule_new_fail_6;
+        goto SharemindModule_new_fail_5;
     }
     i = 0u;
     m->apiVersion = 0u;
@@ -131,7 +125,7 @@ SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
                     modapi,
                     SHAREMIND_MODULE_API_API_NOT_SUPPORTED,
                     "API not supported!");
-        goto SharemindModule_new_fail_6;
+        goto SharemindModule_new_fail_5;
     }
     m->api = &SharemindApis[m->apiVersion - 1u];
 
@@ -139,7 +133,7 @@ SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
     m->name = strndup(moduleInfo->moduleName, sizeof(moduleInfo->moduleName));
     if (unlikely(!m->name)) {
         SharemindModuleApi_setErrorOom(modapi);
-        goto SharemindModule_new_fail_6;
+        goto SharemindModule_new_fail_5;
     }
 
     /* Read module version: */
@@ -151,7 +145,7 @@ SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
         SHAREMIND_REFS_INIT(m);
         #endif
         if (unlikely(!(*(m->api->moduleLoad))(m)))
-            goto SharemindModule_new_fail_7;
+            goto SharemindModule_new_fail_6;
 
         SharemindFacilityMap_init(&m->facilityMap,
                                   &modapi->moduleFacilityMap);
@@ -159,33 +153,38 @@ SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
                                   &modapi->pdFacilityMap);
         SharemindFacilityMap_init(&m->pdpiFacilityMap,
                                   &modapi->pdpiFacilityMap);
+
+        assert(!SharemindModulesSet_contains(&modapi->modules, m));
+        if (!SharemindModulesSet_replace_or_insert(&modapi->modules, m)) {
+            SharemindModuleApi_setErrorOom(modapi);
+            goto SharemindModule_new_fail_7;
+        }
         return m;
     }
 
 SharemindModule_new_fail_7:
 
-    free(m->name);
+    (*(m->api->moduleUnload))(m);
 
 SharemindModule_new_fail_6:
 
-    dlclose(m->libHandle);
+    free(m->name);
 
 SharemindModule_new_fail_5:
 
-    if (likely(m->conf))
-        free(m->conf);
+    dlclose(m->libHandle);
 
 SharemindModule_new_fail_4:
 
-    free(m->filename);
+    free(m->conf);
 
 SharemindModule_new_fail_3:
 
-    SHAREMIND_RECURSIVE_LOCK_DEINIT(m);
+    free(m->filename);
 
 SharemindModule_new_fail_2:
 
-    SharemindModulesSet_remove(&modapi->modules, m);
+    SHAREMIND_RECURSIVE_LOCK_DEINIT(m);
 
 SharemindModule_new_fail_1:
 

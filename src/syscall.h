@@ -17,6 +17,7 @@
 #ifndef NDEBUG
 #include <sharemind/refs.h>
 #endif
+#include <stdbool.h>
 #include "libmodapi.h"
 
 
@@ -45,11 +46,11 @@ struct SharemindSyscall_ {
 
 };
 
-int SharemindSyscall_init(SharemindSyscall * sc,
-                          const char * name,
-                          void (* impl)(void),
-                          SharemindSyscallCallable wrapper,
-                          SharemindModule * m)
+bool SharemindSyscall_init(SharemindSyscall * sc,
+                           const char * name,
+                           void (* impl)(void),
+                           SharemindSyscallCallable wrapper,
+                           SharemindModule * m)
         __attribute__ ((nonnull(1, 2, 3, 5)));
 
 void SharemindSyscall_destroy(SharemindSyscall * sc)

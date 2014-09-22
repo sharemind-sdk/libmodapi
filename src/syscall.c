@@ -18,11 +18,11 @@
 #include "module.h"
 
 
-int SharemindSyscall_init(SharemindSyscall * sc,
-                          const char * name,
-                          void (* impl)(void),
-                          SharemindSyscallCallable wrapper,
-                          SharemindModule * m)
+bool SharemindSyscall_init(SharemindSyscall * sc,
+                           const char * name,
+                           void (* impl)(void),
+                           SharemindSyscallCallable wrapper,
+                           SharemindModule * m)
 {
     assert(sc);
     assert(name);
@@ -33,7 +33,7 @@ int SharemindSyscall_init(SharemindSyscall * sc,
     #ifndef NDEBUG
     if (!SharemindModule_refs_ref(m)) {
         SharemindModule_setErrorOor(m);
-        return 0;
+        return false;
     }
 
     SHAREMIND_REFS_INIT(sc);
@@ -45,7 +45,7 @@ int SharemindSyscall_init(SharemindSyscall * sc,
         #ifndef NDEBUG
         SharemindModule_refs_unref(m);
         #endif
-        return 0;
+        return false;
     }
 
     if (wrapper) {
@@ -56,7 +56,7 @@ int SharemindSyscall_init(SharemindSyscall * sc,
         sc->wrapper.internal = NULL;
     }
     sc->module = m;
-    return 1;
+    return true;
 }
 
 void SharemindSyscall_destroy(SharemindSyscall * sc) {

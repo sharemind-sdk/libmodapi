@@ -41,6 +41,7 @@ int SharemindSyscall_init(SharemindSyscall * sc,
 
     sc->name = strdup(name);
     if (!sc->name) {
+        SharemindModule_setErrorOom(m);
         #ifndef NDEBUG
         SharemindModule_refs_unref(m);
         #endif

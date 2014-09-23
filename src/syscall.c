@@ -36,7 +36,7 @@ bool SharemindSyscall_init(SharemindSyscall * sc,
         goto SharemindSyscall_init_error_0;
     }
 
-    if (!SHAREMIND_LOCK_INIT(sc)) {
+    if (!SHAREMIND_RECURSIVE_LOCK_INIT(sc)) {
         SharemindModule_setErrorMie(m);
         goto SharemindSyscall_init_error_1;
     }
@@ -69,7 +69,7 @@ SharemindSyscall_init_error_2:
 
 SharemindSyscall_init_error_1:
 
-    SHAREMIND_LOCK_DEINIT(sc);
+    SHAREMIND_RECURSIVE_LOCK_DEINIT(sc);
 
 SharemindSyscall_init_error_0:
 
@@ -90,7 +90,7 @@ void SharemindSyscall_destroy(SharemindSyscall * sc) {
     #ifndef NDEBUG
     SharemindModule_refs_unref(sc->module);
     #endif
-    SHAREMIND_LOCK_DEINIT(sc);
+    SHAREMIND_RECURSIVE_LOCK_DEINIT(sc);
 }
 
 const char * SharemindSyscall_signature(const SharemindSyscall * sc) {
@@ -122,7 +122,7 @@ SharemindSyscallWrapper SharemindSyscall_wrapper(const SharemindSyscall * sc) {
     return sc->wrapper;
 }
 
-SHAREMIND_LOCK_FUNCTIONS_DEFINE(SharemindSyscall)
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DEFINE(SharemindSyscall)
 
 #ifndef NDEBUG
 SHAREMIND_REFS_DEFINE_FUNCTIONS(SharemindSyscall)

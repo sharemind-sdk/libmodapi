@@ -14,7 +14,7 @@
 #error including an internal header!
 #endif
 
-#include <sharemind/locks.h>
+#include <sharemind/recursive_locks.h>
 #ifndef NDEBUG
 #include <sharemind/refs.h>
 #endif
@@ -30,7 +30,7 @@ extern "C" {
 
 struct SharemindSyscall_ {
 
-    SHAREMIND_LOCK_DECLARE_FIELDS;
+    SHAREMIND_RECURSIVE_LOCK_DECLARE_FIELDS;
 
     SharemindSyscallWrapper wrapper;
 
@@ -58,7 +58,7 @@ bool SharemindSyscall_init(SharemindSyscall * sc,
 void SharemindSyscall_destroy(SharemindSyscall * sc)
         __attribute__ ((nonnull(1)));
 
-SHAREMIND_LOCK_FUNCTIONS_DECLARE(SharemindSyscall);
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE(SharemindSyscall);
 
 #ifndef NDEBUG
 SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindSyscall)

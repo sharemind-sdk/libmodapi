@@ -51,7 +51,7 @@ bool SharemindPdk_init(SharemindPdk * pdk,
     }
     #endif
 
-    if (!SHAREMIND_LOCK_INIT(pdk)) {
+    if (!SHAREMIND_RECURSIVE_LOCK_INIT(pdk)) {
         SharemindModuleApi_setErrorMie(module->modapi);
         goto SharemindPdk_init_error_1;
     }
@@ -105,7 +105,7 @@ bool SharemindPdk_init(SharemindPdk * pdk,
 
 SharemindPdk_init_error_2:
 
-    SHAREMIND_LOCK_DEINIT(pdk);
+    SHAREMIND_RECURSIVE_LOCK_DEINIT(pdk);
 
 SharemindPdk_init_error_1:
 
@@ -138,10 +138,10 @@ void SharemindPdk_destroy(SharemindPdk * pdk) {
     SharemindPdMap_destroy(&pdk->pds);
     SharemindFacilityMap_destroy(&pdk->pdFacilityMap);
     SharemindFacilityMap_destroy(&pdk->pdpiFacilityMap);
-    SHAREMIND_LOCK_DEINIT(pdk);
+    SHAREMIND_RECURSIVE_LOCK_DEINIT(pdk);
 }
 
-SHAREMIND_LOCK_FUNCTIONS_DEFINE(SharemindPdk)
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DEFINE(SharemindPdk)
 SHAREMIND_LASTERROR_FUNCTIONS_DEFINE(SharemindPdk)
 
 const char * SharemindPdk_name(const SharemindPdk * pdk) {

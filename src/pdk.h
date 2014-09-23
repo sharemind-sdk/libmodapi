@@ -14,7 +14,7 @@
 #error including an internal header!
 #endif
 
-#include <sharemind/locks.h>
+#include <sharemind/recursive_locks.h>
 #include <sharemind/map.h>
 #include <stdbool.h>
 #include "facilitymap.h"
@@ -31,7 +31,7 @@ SHAREMIND_STRINGMAP_DECLARE(SharemindPdMap,SharemindPd,)
 
 struct SharemindPdk_ {
 
-    SHAREMIND_LOCK_DECLARE_FIELDS;
+    SHAREMIND_RECURSIVE_LOCK_DECLARE_FIELDS;
     SHAREMIND_LASTERROR_DECLARE_FIELDS;
     SHAREMIND_TAG_DECLARE_FIELDS;
 
@@ -111,7 +111,7 @@ bool SharemindPdk_init(SharemindPdk * pdk,
 
 void SharemindPdk_destroy(SharemindPdk * pdk) __attribute__ ((nonnull(1)));
 
-SHAREMIND_LOCK_FUNCTIONS_DECLARE(SharemindPdk);
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE(SharemindPdk);
 SHAREMIND_LASTERROR_PRIVATE_FUNCTIONS_DECLARE(SharemindPdk);
 
 

@@ -49,21 +49,7 @@ inline void SharemindFacilityMap_init(SharemindFacilityMap * fm,
 inline void SharemindFacilityMap_destroy(SharemindFacilityMap * fm)
         __attribute__ ((nonnull(1)));
 
-inline bool SharemindFacilityMap_set(SharemindFacilityMap * fm,
-                                     const char * name,
-                                     void * facility,
-                                     void * context)
-        __attribute__ ((nonnull(1,2)));
-
-inline bool SharemindFacilityMap_unset(SharemindFacilityMap * fm,
-                                       const char * name)
-        __attribute__ ((nonnull(1,2)));
-
 inline const SharemindFacility * SharemindFacilityMap_get(
-            const SharemindFacilityMap * fm,
-            const char * name) __attribute__ ((nonnull(1,2)));
-
-inline const SharemindFacility * SharemindFacilityMap_getNoRecurse(
             const SharemindFacilityMap * fm,
             const char * name) __attribute__ ((nonnull(1,2)));
 
@@ -80,31 +66,6 @@ inline const SharemindFacility * SharemindFacilityMap_getNoRecurse(
         assert(fm); \
         SharemindFacilityMapInner_destroy(&fm->realMap); \
     } \
-    qualifiers bool SharemindFacilityMap_set(SharemindFacilityMap * fm, \
-                                             const char * name, \
-                                             void * facility, \
-                                             void * context) \
-    { \
-        assert(fm); \
-        assert(name); \
-        assert(name[0]); \
-        SharemindFacility * value = SharemindFacilityMapInner_get_or_insert( \
-                                        &fm->realMap, \
-                                        name); \
-        if (unlikely(!value)) \
-            return false; \
-        value->facility = facility; \
-        value->context = context; \
-        return true; \
-    } \
-    qualifiers bool SharemindFacilityMap_unset(SharemindFacilityMap * fm, \
-                                               const char * name) \
-    { \
-        assert(fm); \
-        assert(name); \
-        assert(name[0]); \
-        return SharemindFacilityMapInner_remove(&fm->realMap, name); \
-    } \
     qualifiers const SharemindFacility * SharemindFacilityMap_get( \
             const SharemindFacilityMap * fm, \
             const char * name) \
@@ -120,15 +81,6 @@ inline const SharemindFacility * SharemindFacilityMap_getNoRecurse(
         if (fm->nextMap) \
             return SharemindFacilityMap_get(fm->nextMap, name); \
         return NULL; \
-    } \
-    qualifiers const SharemindFacility * SharemindFacilityMap_getNoRecurse( \
-            const SharemindFacilityMap * fm, \
-            const char * name) \
-    { \
-        assert(fm); \
-        assert(name); \
-        assert(name[0]); \
-        return SharemindFacilityMapInner_get(&fm->realMap, name); \
     }
 
 #ifndef SHAREMIND_LIBMODAPI_FACILITYMAP_C
@@ -136,26 +88,38 @@ SHAREMIND_FACILITYMAP_DEFINE(inline)
 #endif /* SHAREMIND_LIBMODAPI_FACILITYMAP_C */
 
 #define SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS__(CN,fF,FF)\
-    SharemindModuleApiError \
-    CN ## _set ## FF(CN * c, \
-                     const char * name, \
-                     void * facility, \
-                     void * context) \
+    SharemindModuleApiError CN ## _set ## FF(CN * c, \
+                                             const char * name, \
+                                             void * facility, \
+                                             void * context) \
     { \
         assert(c); \
         assert(name); \
         assert(name[0]); \
+        SharemindModuleApiError r = SHAREMIND_MODULE_API_OK; \
         CN ## _lock(c); \
-        const bool r = SharemindFacilityMap_set(&c->fF ## Map, \
-                                                name, \
-                                                facility, \
-                                                context); \
-        CN ## _unlock(c); \
-        if (!r) { \
-            CN ## _setErrorOom(c); \
-            return SHAREMIND_MODULE_API_OUT_OF_MEMORY; \
+        void * const insertHint = \
+                SharemindFacilityMapInner_insertHint(&c->fF ## Map.realMap, \
+                                                     name); \
+        if (unlikely(!insertHint)) { \
+            r = SHAREMIND_MODULE_API_FACILITY_ALREADY_EXISTS; \
+            CN ## _setError(c, r, "Facility with this name already exists!"); \
+            goto CN ## _set ## FF ## _exit; \
         } \
-        return SHAREMIND_MODULE_API_OK; \
+        SharemindFacility * const value = \
+                SharemindFacilityMapInner_insertAtHint(&c->fF ## Map.realMap, \
+                                                       name, \
+                                                       insertHint); \
+        if (unlikely(!value)) { \
+            r = SHAREMIND_MODULE_API_OUT_OF_MEMORY; \
+            CN ## _setErrorOom(c); \
+            goto CN ## _set ## FF ## _exit; \
+        } \
+        value->facility = facility; \
+        value->context = context; \
+    CN ## _set ## FF ## _exit: \
+        CN ## _unlock(c); \
+        return r; \
     } \
     bool CN ## _unset ## FF(CN * c, const char * name) { \
         assert(c); \
@@ -163,7 +127,7 @@ SHAREMIND_FACILITYMAP_DEFINE(inline)
         assert(name[0]); \
         CN ## _lock(c); \
         const bool r = \
-               SharemindFacilityMap_unset(&c->fF ## Map, name); \
+                SharemindFacilityMapInner_remove(&c->fF ## Map.realMap, name); \
         CN ## _unlock(c); \
         return r; \
     } \

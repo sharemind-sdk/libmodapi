@@ -156,8 +156,7 @@ SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
         SharemindFacilityMap_init(&m->pdpiFacilityMap,
                                   &modapi->pdpiFacilityMap);
 
-        assert(!SharemindModulesSet_contains(&modapi->modules, m));
-        if (!SharemindModulesSet_replace_or_insert(&modapi->modules, m)) {
+        if (unlikely(!SharemindModulesSet_insertNew(&modapi->modules, m))) {
             SharemindModuleApi_setErrorOom(modapi);
             goto SharemindModule_new_fail_7;
         }

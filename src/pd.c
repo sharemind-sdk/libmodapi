@@ -40,7 +40,7 @@ SharemindPd * SharemindPdk_newPd(SharemindPdk * pdk,
         goto SharemindPd_new_fail_0;
     }
 
-    SharemindPd * const pd = SharemindPdMap_get_or_insert(&pdk->pds, name);
+    SharemindPd * const pd = SharemindPdMap_insertNew(&pdk->pds, name);
     if (unlikely(!pd)) {
         SharemindPdk_setErrorOom(pdk);
         goto SharemindPd_new_fail_0;

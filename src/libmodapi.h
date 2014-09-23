@@ -21,6 +21,15 @@
 extern "C" {
 #endif
 
+
+/*******************************************************************************
+  Module API compatibility macros
+*******************************************************************************/
+
+#define SHAREMIND_MODULE_API_API_VERSION     1u
+#define SHAREMIND_MODULE_API_API_MIN_VERSION 1u
+
+
 /*******************************************************************************
   Helper macros
 *******************************************************************************/
@@ -85,7 +94,7 @@ typedef SharemindModuleApi0x1Facility SharemindFacility;
 
 
 /*******************************************************************************
-  Forward declarations
+  Types
 *******************************************************************************/
 
 struct SharemindModuleApi_;
@@ -106,14 +115,12 @@ typedef struct SharemindPd_ SharemindPd;
 struct SharemindPdpi_;
 typedef struct SharemindPdpi_ SharemindPdpi;
 
+typedef struct {
+    SharemindSyscallCallable callable;
+    void * internal;
+} SharemindSyscallWrapper;
+
 typedef void (* SharemindTagDestructor)(void *);
-
-/*******************************************************************************
-  SharemindModuleApi
-*******************************************************************************/
-
-#define SHAREMIND_MODULE_API_API_VERSION     1u
-#define SHAREMIND_MODULE_API_API_MIN_VERSION 1u
 
 #define SHAREMIND_MODULE_API_ERROR_ENUM \
     ((SHAREMIND_MODULE_API_OK, = 0)) \
@@ -136,6 +143,10 @@ SHAREMIND_ENUM_CUSTOM_DEFINE(SharemindModuleApiError,
                              SHAREMIND_MODULE_API_ERROR_ENUM);
 SHAREMIND_ENUM_DECLARE_TOSTRING(SharemindModuleApiError);
 
+
+/*******************************************************************************
+  SharemindModuleApi
+*******************************************************************************/
 
 SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiError * error,
                                             const char ** errorStr);
@@ -291,12 +302,6 @@ SharemindModule * SharemindSyscall_module(const SharemindSyscall * sc)
 
 SharemindModuleApi * SharemindSyscall_modapi(const SharemindSyscall * sc)
         __attribute__ ((nonnull(1)));
-
-
-typedef struct {
-    SharemindSyscallCallable callable;
-    void * internal;
-} SharemindSyscallWrapper;
 
 SharemindSyscallWrapper SharemindSyscall_wrapper(const SharemindSyscall * sc)
         __attribute__ ((nonnull(1)));

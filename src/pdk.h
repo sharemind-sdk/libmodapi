@@ -14,13 +14,12 @@
 #error including an internal header!
 #endif
 
+#include <sharemind/locks.h>
 #include <sharemind/map.h>
-#include <sharemind/mutex.h>
 #include <stdbool.h>
 #include "facilitymap.h"
 #include "lasterror.h"
 #include "libmodapi.h"
-#include "locks.h"
 #include "tag.h"
 
 

@@ -14,13 +14,12 @@
 #error including an internal header!
 #endif
 
-#include <sharemind/recursivemutex.h>
+#include <sharemind/recursive_locks.h>
 #include <sharemind/refs.h>
 #include <stdbool.h>
 #include "facilitymap.h"
 #include "lasterror.h"
 #include "libmodapi.h"
-#include "rlocks.h"
 #include "tag.h"
 
 

@@ -14,12 +14,12 @@
 #error including an internal header!
 #endif
 
+#include <sharemind/locks.h>
 #ifndef NDEBUG
 #include <sharemind/refs.h>
 #endif
 #include <stdbool.h>
 #include "libmodapi.h"
-#include "locks.h"
 #include "tag.h"
 
 

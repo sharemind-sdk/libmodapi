@@ -15,13 +15,12 @@
 #endif
 
 
-#include <sharemind/mutex.h>
+#include <sharemind/recursive_locks.h>
 #include <sharemind/set.h>
 #include <stdbool.h>
 #include "facilitymap.h"
 #include "lasterror.h"
 #include "libmodapi.h"
-#include "rlocks.h"
 #include "tag.h"
 
 

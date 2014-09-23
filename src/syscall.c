@@ -21,7 +21,6 @@
 bool SharemindSyscall_init(SharemindSyscall * sc,
                            const char * name,
                            void (* impl)(void),
-                           SharemindSyscallCallable wrapper,
                            SharemindModule * m)
 {
     assert(sc);
@@ -51,13 +50,8 @@ bool SharemindSyscall_init(SharemindSyscall * sc,
         goto SharemindSyscall_init_error_2;
     }
 
-    if (wrapper) {
-        sc->wrapper.callable = wrapper;
-        sc->wrapper.internal = impl;
-    } else {
-        sc->wrapper.callable = (SharemindSyscallCallable) impl;
-        sc->wrapper.internal = NULL;
-    }
+    sc->wrapper.callable = (SharemindSyscallCallable) impl;
+    sc->wrapper.internal = NULL;
     sc->module = m;
     return true;
 

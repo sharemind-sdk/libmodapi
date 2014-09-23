@@ -183,7 +183,6 @@ bool SharemindModule_load_0x1(SharemindModule * m) {
             if (unlikely(!SharemindSyscall_init(sc,
                                                 syscallSignatureBuffer,
                                                 (void (*)(void)) (*scs)[i].fptr,
-                                                NULL,
                                                 m)))
             {
                 SharemindModuleApi_setErrorOom(m->modapi);

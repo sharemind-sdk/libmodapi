@@ -51,9 +51,8 @@ struct SharemindSyscall_ {
 bool SharemindSyscall_init(SharemindSyscall * sc,
                            const char * name,
                            void (* impl)(void),
-                           SharemindSyscallCallable wrapper,
                            SharemindModule * m)
-        __attribute__ ((nonnull(1, 2, 3, 5)));
+        __attribute__ ((nonnull(1, 2, 3, 4)));
 
 void SharemindSyscall_destroy(SharemindSyscall * sc)
         __attribute__ ((nonnull(1)));

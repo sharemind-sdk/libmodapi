@@ -51,6 +51,11 @@ typedef struct {
     SharemindPdk * (* const findPdk)(const SharemindModule * m,
                                      const char * name);
 
+
+    size_t (* const numPds)(const SharemindModule * m);
+
+    SharemindPd * (* const pd)(const SharemindModule * m, size_t index);
+
     SharemindPd * (* const findPd)(const SharemindModule * m,
                                    const char * name);
 

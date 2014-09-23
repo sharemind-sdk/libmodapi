@@ -23,21 +23,52 @@
 SHAREMIND_STRINGMAP_DECLARE(SharemindPdkMap,SharemindPdk,)
 SHAREMIND_STRINGMAP_DEFINE(SharemindPdkMap,SharemindPdk,malloc,free,strdup,)
 SHAREMIND_MAP_DECLARE_FOREACH_WITH_INLINE(
+        static inline size_t,
+        SharemindPdkMap,
+        numPds,)
+SHAREMIND_MAP_DEFINE_FOREACH_WITH_INLINE(
+        static inline size_t,
+        SharemindPdkMap,
+        numPds,,
+        size_t result = 0u;,
+        result,
+        assert(item->key);
+        const size_t r = SharemindPdk_numPds(&item->value);
+        if (SIZE_MAX - r <= result)
+            return SIZE_MAX;
+        result += r;)
+SHAREMIND_MAP_DECLARE_FOREACH_WITH_INLINE(
+        static inline SharemindPd *,
+        SharemindPdkMap,
+        pd,
+        SHAREMIND_COMMA size_t index)
+SHAREMIND_MAP_DEFINE_FOREACH_WITH_INLINE(
+        static inline SharemindPd *,
+        SharemindPdkMap,
+        pd,
+        SHAREMIND_COMMA size_t index,,
+        NULL,
+        assert(item->key);
+        const size_t n = SharemindPdk_numPds(&item->value);
+        if (index < n)
+            return SharemindPdk_pd(&item->value, index);
+        index -= n;)
+SHAREMIND_MAP_DECLARE_FOREACH_WITH_INLINE(
         static inline SharemindPd *,
         SharemindPdkMap,
         findPd,
-        const char * signature)
+        SHAREMIND_COMMA const char * signature)
 SHAREMIND_MAP_DEFINE_FOREACH_WITH_INLINE(
         static inline SharemindPd *,
         SharemindPdkMap,
         findPd,
-        const char * signature,
+        SHAREMIND_COMMA const char * signature,,
         NULL,
         assert(item->key);
         SharemindPd * const result =
                 SharemindPdk_findPd(&item->value, signature);
         if (result)
-            return result)
+            return result;)
 
 SHAREMIND_MAP_DECLARE(SharemindSyscallMap,
                       char *,
@@ -436,13 +467,23 @@ SharemindPdk * SharemindModule_findPdk_0x1(const SharemindModule * m,
 }
 
 
+size_t SharemindModule_numPds_0x1(const SharemindModule * m) {
+    assert(m);
+    ApiData * const apiData = (ApiData *) m->apiData;
+    return SharemindPdkMap_foreach_with_numPds(&apiData->pdks);
+}
+
+SharemindPd * SharemindModule_pd_0x1(const SharemindModule * m, size_t index) {
+    assert(m);
+    ApiData * const apiData = (ApiData *) m->apiData;
+    return SharemindPdkMap_foreach_with_pd(&apiData->pdks, index);
+}
+
 SharemindPd * SharemindModule_findPd_0x1(const SharemindModule * m,
                                          const char * name)
 {
     assert(m);
     assert(name);
-
     ApiData * const apiData = (ApiData *) m->apiData;
-
     return SharemindPdkMap_foreach_with_findPd(&apiData->pdks, name);
 }

@@ -336,14 +336,29 @@ SharemindPdk * SharemindModule_findPdk(const SharemindModule * m,
     return (*(m->api->findPdk))(m, name);
 }
 
+size_t SharemindModule_numPds(const SharemindModule * m) {
+    assert(m);
+    SharemindModule_lockConst(m);
+    size_t const r = (*(m->api->numPds))(m);
+    SharemindModule_unlockConst(m);
+    return r;
+}
+
+SharemindPd * SharemindModule_pd(const SharemindModule * m, size_t index) {
+    assert(m);
+    SharemindModule_lockConst(m);
+    SharemindPd * const r = (*(m->api->pd))(m, index);
+    SharemindModule_unlockConst(m);
+    return r;
+}
+
 SharemindPd * SharemindModule_findPd(const SharemindModule * m,
                                      const char * name)
 {
     assert(m);
-    assert(m->modapi);
-    SharemindModuleApi_lock(m->modapi);
+    SharemindModule_lockConst(m);
     SharemindPd * const r = (*(m->api->findPd))(m, name);
-    SharemindModuleApi_unlock(m->modapi);
+    SharemindModule_unlockConst(m);
     return r;
 }
 

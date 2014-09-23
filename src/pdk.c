@@ -168,13 +168,27 @@ size_t SharemindPdk_index(const SharemindPdk * pdk) {
     return pdk->pdk_index; // No locking: const after SharemindPdk_init
 }
 
+size_t SharemindPdk_numPds(const SharemindPdk * pdk) {
+    assert(pdk);
+    SharemindPdk_lockConst(pdk);
+    const size_t r = pdk->pds.size;
+    SharemindPdk_unlockConst(pdk);
+    return r;
+}
+
+SharemindPd * SharemindPdk_pd(const SharemindPdk * pdk, size_t index) {
+    assert(pdk);
+    SharemindPdk_lockConst(pdk);
+    SharemindPd * const r = SharemindPdMap_value_at(&pdk->pds, index);
+    SharemindPdk_unlockConst(pdk);
+    return r;
+}
+
 SharemindPd * SharemindPdk_findPd(const SharemindPdk * pdk, const char * name) {
     assert(pdk);
-    assert(pdk->module);
-    assert(pdk->module->modapi);
-    SharemindModuleApi_lock(pdk->module->modapi);
+    SharemindPdk_lockConst(pdk);
     SharemindPd * const r = SharemindPdMap_get(&pdk->pds, name);
-    SharemindModuleApi_unlock(pdk->module->modapi);
+    SharemindPdk_unlockConst(pdk);
     return r;
 }
 

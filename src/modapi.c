@@ -27,62 +27,155 @@ SHAREMIND_SET_DEFINE(SharemindModulesSet,
                      malloc,
                      free,)
 SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
+        static inline size_t,
+        SharemindModulesSet,
+        numSyscalls,)
+SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
+        static inline size_t,
+        SharemindModulesSet,
+        numSyscalls,,
+        size_t result = 0u;,
+        result,
+        assert(item->key);
+        const size_t r = SharemindModule_numSyscalls(item->key);
+        if (SIZE_MAX - r <= result)
+            return SIZE_MAX;
+        result += r;)
+SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
+        static inline SharemindSyscall *,
+        SharemindModulesSet,
+        syscall,
+        SHAREMIND_COMMA size_t index)
+SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
+        static inline SharemindSyscall *,
+        SharemindModulesSet,
+        syscall,
+        SHAREMIND_COMMA size_t index,,
+        NULL,
+        assert(item->key);
+        const size_t n = SharemindModule_numSyscalls(item->key);
+        if (index < n)
+            return SharemindModule_syscall(item->key, index);
+        index -= n;)
+SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
         static inline SharemindSyscall *,
         SharemindModulesSet,
         findSyscall,
-        const char * signature)
+        SHAREMIND_COMMA const char * signature)
 SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
         static inline SharemindSyscall *,
         SharemindModulesSet,
         findSyscall,
-        const char * signature,
+        SHAREMIND_COMMA const char * signature,,
         NULL,
         assert(item->key);
         SharemindSyscall * const result =
                 SharemindModule_findSyscall(item->key, signature);
         if (result)
-            return result)
+            return result;)
+SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
+        static inline size_t,
+        SharemindModulesSet,
+        numPdks,)
+SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
+        static inline size_t,
+        SharemindModulesSet,
+        numPdks,,
+        size_t result = 0u;,
+        result,
+        assert(item->key);
+        const size_t r = SharemindModule_numPdks(item->key);
+        if (SIZE_MAX - r <= result)
+            return SIZE_MAX;
+        result += r;)
+SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
+        static inline SharemindPdk *,
+        SharemindModulesSet,
+        pdk,
+        SHAREMIND_COMMA size_t index)
+SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
+        static inline SharemindPdk *,
+        SharemindModulesSet,
+        pdk,
+        SHAREMIND_COMMA size_t index,,
+        NULL,
+        assert(item->key);
+        const size_t n = SharemindModule_numPdks(item->key);
+        if (index < n)
+            return SharemindModule_pdk(item->key, index);
+        index -= n;)
 SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
         static inline SharemindPdk *,
         SharemindModulesSet,
         findPdk,
-        const char *)
+        SHAREMIND_COMMA const char * signature)
 SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
         static inline SharemindPdk *,
         SharemindModulesSet,
         findPdk,
-        const char * signature,
+        SHAREMIND_COMMA const char * signature,,
         NULL,
         assert(item->key);
         SharemindPdk * const result =
                 SharemindModule_findPdk(item->key, signature);
         if (result)
-            return result)
+            return result;)
+SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
+        static inline size_t,
+        SharemindModulesSet,
+        numPds,)
+SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
+        static inline size_t,
+        SharemindModulesSet,
+        numPds,,
+        size_t result = 0u;,
+        result,
+        assert(item->key);
+        const size_t r = SharemindModule_numPds(item->key);
+        if (SIZE_MAX - r <= result)
+            return SIZE_MAX;
+        result += r;)
+SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
+        static inline SharemindPd *,
+        SharemindModulesSet,
+        pd,
+        SHAREMIND_COMMA size_t index)
+SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
+        static inline SharemindPd *,
+        SharemindModulesSet,
+        pd,
+        SHAREMIND_COMMA size_t index,,
+        NULL,
+        assert(item->key);
+        const size_t n = SharemindModule_numPds(item->key);
+        if (index < n)
+            return SharemindModule_pd(item->key, index);
+        index -= n;)
 SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
         static inline SharemindPd *,
         SharemindModulesSet,
         findPd,
-        const char *)
+        SHAREMIND_COMMA const char * signature)
 SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
         static inline SharemindPd *,
         SharemindModulesSet,
         findPd,
-        const char * signature,
+        SHAREMIND_COMMA const char * signature,,
         NULL,
         assert(item->key);
         SharemindPd * const result =
                 SharemindModule_findPd(item->key, signature);
         if (result)
-            return result)
+            return result;)
 SHAREMIND_SET_DECLARE_DESTROY_WITH_INLINE(SharemindModulesSet,
                                           moduleFree,,
                                           static inline)
 SHAREMIND_SET_DEFINE_DESTROY_WITH_INLINE(SharemindModulesSet,
                                          moduleFree,
-                                         SharemindModule *,,
+                                         SharemindModule *,,,
                                          free,
                                          static inline,
-                                         SharemindModule_free(*item))
+                                         SharemindModule_free(*item);)
 
 SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiError * error,
                                             const char ** errorStr)
@@ -135,11 +228,35 @@ void SharemindModuleApi_free(SharemindModuleApi * modapi) {
     free(modapi);
 }
 
+size_t SharemindModuleApi_numSyscalls(const SharemindModuleApi * m) {
+    assert(m);
+    return SharemindModulesSet_foreach_with_numSyscalls(&m->modules);
+}
+
+SharemindSyscall * SharemindModuleApi_syscall(const SharemindModuleApi * m,
+                                              size_t index)
+{
+    assert(m);
+    return SharemindModulesSet_foreach_with_syscall(&m->modules, index);
+}
+
 SharemindSyscall * SharemindModuleApi_findSyscall(const SharemindModuleApi * m,
                                                   const char * signature)
 {
     assert(m);
     return SharemindModulesSet_foreach_with_findSyscall(&m->modules, signature);
+}
+
+size_t SharemindModuleApi_numPdks(const SharemindModuleApi * m) {
+    assert(m);
+    return SharemindModulesSet_foreach_with_numPdks(&m->modules);
+}
+
+SharemindPdk * SharemindModuleApi_pdk(const SharemindModuleApi * m,
+                                      size_t index)
+{
+    assert(m);
+    return SharemindModulesSet_foreach_with_pdk(&m->modules, index);
 }
 
 SharemindPdk * SharemindModuleApi_findPdk(const SharemindModuleApi * m,
@@ -149,11 +266,25 @@ SharemindPdk * SharemindModuleApi_findPdk(const SharemindModuleApi * m,
     return SharemindModulesSet_foreach_with_findPdk(&m->modules, name);
 }
 
+size_t SharemindModuleApi_numPds(const SharemindModuleApi * m) {
+    assert(m);
+    return SharemindModulesSet_foreach_with_numPds(&m->modules);
+}
+
+SharemindPd * SharemindModuleApi_pd(const SharemindModuleApi * m, size_t index) {
+    assert(m);
+    return SharemindModulesSet_foreach_with_pd(&m->modules, index);
+}
+
 SharemindPd * SharemindModuleApi_findPd(const SharemindModuleApi * m,
                                         const char * name)
 {
     assert(m);
-    return SharemindModulesSet_foreach_with_findPd(&m->modules, name);
+    SharemindModuleApi_lockConst(m);
+    SharemindPd * const r =
+            SharemindModulesSet_foreach_with_findPd(&m->modules, name);
+    SharemindModuleApi_unlockConst(m);
+    return r;
 }
 
 SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DEFINE(SharemindModuleApi)

@@ -60,6 +60,13 @@ SharemindPdk * SharemindModule_findPdk_0x1(const SharemindModule * m,
                                            const char * name)
         __attribute__ ((nonnull(1, 2), visibility("internal")));
 
+
+size_t SharemindModule_numPds_0x1(const SharemindModule * m)
+        __attribute__ ((nonnull(1), visibility("internal")));
+
+SharemindPd * SharemindModule_pd_0x1(const SharemindModule * m, size_t index)
+        __attribute__ ((nonnull(1), visibility("internal")));
+
 SharemindPd * SharemindModule_findPd_0x1(const SharemindModule * m,
                                          const char * name)
         __attribute__ ((nonnull(1, 2), visibility("internal")));

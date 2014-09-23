@@ -164,13 +164,10 @@ bool SharemindModule_load_0x1(SharemindModule * m) {
     if (likely(scs)) {
         size_t i = 0u;
         char syscallSignatureBuffer[
-                SHAREMIND_MODULE_API_0x1_SYSCALL_SIGNATURE_BUFFER_SIZE + 1];
+                SHAREMIND_MODULE_API_0x1_SYSCALL_SIGNATURE_BUFFER_SIZE + 1u];
         syscallSignatureBuffer[
                 SHAREMIND_MODULE_API_0x1_SYSCALL_SIGNATURE_BUFFER_SIZE] = '\0';
         while ((*scs)[i].signature[0]) {
-            memcpy(syscallSignatureBuffer,
-                   (*scs)[i].signature,
-                   SHAREMIND_MODULE_API_0x1_SYSCALL_SIGNATURE_BUFFER_SIZE);
             if (unlikely(!(*scs)[i].fptr)) {
                 SharemindModuleApi_setError(
                             m->modapi,
@@ -179,25 +176,9 @@ bool SharemindModule_load_0x1(SharemindModule * m) {
                             "function pointer!");
                 goto loadModule_0x1_fail_2;
             }
-
-            const size_t oldSize = apiData->syscalls.size;
-            SharemindSyscall * const sc = SharemindSyscallMap_get_or_insert(
-                                                  &apiData->syscalls,
-                                                  syscallSignatureBuffer);
-            assert(oldSize <= apiData->syscalls.size
-                   && apiData->syscalls.size - oldSize <= 1u);
-            if (unlikely(!sc)) {
-                SharemindModuleApi_setErrorOom(m->modapi);
-                goto loadModule_0x1_fail_2;
-            }
-            if (unlikely(oldSize == apiData->syscalls.size)) {
-                SharemindModuleApi_setError(
-                            m->modapi,
-                            SHAREMIND_MODULE_API_API_ERROR,
-                            "Duplicate system call definitions in module!");
-                goto loadModule_0x1_fail_2;
-            }
-            assert(apiData->syscalls.size - oldSize == 1u);
+            memcpy(syscallSignatureBuffer,
+                   (*scs)[i].signature,
+                   SHAREMIND_MODULE_API_0x1_SYSCALL_SIGNATURE_BUFFER_SIZE);
             if (unlikely(SharemindModuleApi_findSyscall(
                              m->modapi,
                              syscallSignatureBuffer)))
@@ -208,15 +189,36 @@ bool SharemindModule_load_0x1(SharemindModule * m) {
                             "System call already provided by another module!");
                 goto loadModule_0x1_fail_2;
             }
+            void * const hint =
+                    SharemindSyscallMap_insertHint(&apiData->syscalls,
+                                                   syscallSignatureBuffer);
+            if (unlikely(!hint)) {
+                SharemindModuleApi_setError(
+                            m->modapi,
+                            SHAREMIND_MODULE_API_API_ERROR,
+                            "Duplicate system call definitions in module!");
+                goto loadModule_0x1_fail_2;
+            }
+            SharemindSyscall * const sc =
+                    SharemindSyscallMap_insertAtHint(&apiData->syscalls,
+                                                     syscallSignatureBuffer,
+                                                     hint);
+            if (unlikely(!sc)) {
+                SharemindModuleApi_setErrorOom(m->modapi);
+                goto loadModule_0x1_fail_2;
+            }
             if (unlikely(!SharemindSyscall_init(sc,
                                                 syscallSignatureBuffer,
                                                 (void (*)(void)) (*scs)[i].fptr,
                                                 m)))
             {
                 SharemindModuleApi_setErrorOom(m->modapi);
-                int r = SharemindSyscallMap_remove(&apiData->syscalls,
+                #ifndef NDEBUG
+                const bool r =
+                #endif
+                        SharemindSyscallMap_remove(&apiData->syscalls,
                                                    syscallSignatureBuffer);
-                assert(r == 1); (void) r;
+                assert(r);
                 goto loadModule_0x1_fail_2;
             }
 
@@ -238,13 +240,9 @@ bool SharemindModule_load_0x1(SharemindModule * m) {
                                     "sharemindModuleApi0x1PdkDefinitions");
     if (pdks) {
         size_t i = 0u;
-        char pdkNameBuffer[SHAREMIND_MODULE_API_0x1_PDK_NAME_BUFFER_SIZE + 1];
+        char pdkNameBuffer[SHAREMIND_MODULE_API_0x1_PDK_NAME_BUFFER_SIZE + 1u];
         pdkNameBuffer[SHAREMIND_MODULE_API_0x1_PDK_NAME_BUFFER_SIZE] = '\0';
         while ((*pdks)[i].name[0]) {
-            memcpy(pdkNameBuffer,
-                   (*pdks)[i].name,
-                   SHAREMIND_MODULE_API_0x1_PDK_NAME_BUFFER_SIZE);
-
             if (unlikely(!(*pdks)[i].pd_startup_f
                          || !(*pdks)[i].pd_shutdown_f
                          || !(*pdks)[i].pdpi_startup_f
@@ -257,25 +255,9 @@ bool SharemindModule_load_0x1(SharemindModule * m) {
                             "definitions list in module!");
                 goto loadModule_0x1_fail_3;
             }
-
-            const size_t oldSize = apiData->pdks.size;
-            SharemindPdk * const pdk =
-                    SharemindPdkMap_get_or_insert(&apiData->pdks,
-                                                  pdkNameBuffer);
-            assert(oldSize <= apiData->pdks.size
-                   && apiData->pdks.size - oldSize <= 1u);
-            if (unlikely(!pdk)) {
-                SharemindModuleApi_setErrorOom(m->modapi);
-                goto loadModule_0x1_fail_3;
-            }
-            if (unlikely(oldSize == apiData->pdks.size)) {
-                SharemindModuleApi_setError(
-                            m->modapi,
-                            SHAREMIND_MODULE_API_API_ERROR,
-                            "Duplicate protection domain kind definitions in "
-                            "module!");
-                goto loadModule_0x1_fail_3;
-            }
+            memcpy(pdkNameBuffer,
+                   (*pdks)[i].name,
+                   SHAREMIND_MODULE_API_0x1_PDK_NAME_BUFFER_SIZE);
             if (unlikely(SharemindModuleApi_findPdk(
                              m->modapi,
                              pdkNameBuffer)))
@@ -287,7 +269,24 @@ bool SharemindModule_load_0x1(SharemindModule * m) {
                         "module!");
                 goto loadModule_0x1_fail_3;
             }
-            assert(apiData->pdks.size - oldSize == 1u);
+            void * const hint =
+                    SharemindPdkMap_insertHint(&apiData->pdks, pdkNameBuffer);
+            if (unlikely(!hint)) {
+                SharemindModuleApi_setError(
+                            m->modapi,
+                            SHAREMIND_MODULE_API_API_ERROR,
+                            "Duplicate protection domain kind definitions in "
+                            "module!");
+                goto loadModule_0x1_fail_3;
+            }
+            SharemindPdk * const pdk =
+                    SharemindPdkMap_insertAtHint(&apiData->pdks,
+                                                 pdkNameBuffer,
+                                                 hint);
+            if (unlikely(!pdk)) {
+                SharemindModuleApi_setErrorOom(m->modapi);
+                goto loadModule_0x1_fail_3;
+            }
             if (unlikely(!SharemindPdk_init(
                              pdk,
                              i,
@@ -304,8 +303,11 @@ bool SharemindModule_load_0x1(SharemindModule * m) {
             {
                 /* Note that SharemindPdk_init calls the
                  * SharemindModuleApi_setError*() functions itself. */
-                int r = SharemindPdkMap_remove(&apiData->pdks, pdkNameBuffer);
-                assert(r == 1); (void) r;
+                #ifndef NDEBUG
+                const bool r =
+                #endif
+                        SharemindPdkMap_remove(&apiData->pdks, pdkNameBuffer);
+                assert(r);
                 goto loadModule_0x1_fail_3;
             }
 

@@ -285,7 +285,7 @@ bool SharemindModule_load_0x1(SharemindModule * m) {
                         SHAREMIND_MODULE_API_DUPLICATE_PROTECTION_DOMAIN_KIND,
                         "Protection domain kind already provided by another "
                         "module!");
-                goto loadModule_0x1_fail_2;
+                goto loadModule_0x1_fail_3;
             }
             assert(apiData->pdks.size - oldSize == 1u);
             if (unlikely(!SharemindPdk_init(

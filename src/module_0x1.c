@@ -70,10 +70,7 @@ SHAREMIND_MAP_DEFINE_FOREACH_WITH_INLINE(
         if (result)
             return result;)
 
-SHAREMIND_MAP_DECLARE(SharemindSyscallMap,
-                      char *,
-                      const char * const,
-                      SharemindSyscall,)
+SHAREMIND_STRINGMAP_DECLARE(SharemindSyscallMap,SharemindSyscall,)
 SHAREMIND_STRINGMAP_DEFINE(SharemindSyscallMap,
                            SharemindSyscall,
                            malloc,

@@ -97,7 +97,7 @@
     void ClassName ## _setErrorOor(ClassName * c) { \
         ClassName ## _setError( \
                 c, \
-                SHAREMIND_MODULE_API_REFERENCE_OVERFLOW, \
+                SHAREMIND_MODULE_API_IMPLEMENTATION_LIMITS_REACHED, \
                 "Too many references!"); \
     } \
     void ClassName ## _setErrorMie(ClassName * c) { \

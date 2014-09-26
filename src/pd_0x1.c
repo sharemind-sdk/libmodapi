@@ -82,6 +82,7 @@ SharemindModuleApiError SharemindPd_start_0x1(SharemindPd * pd) {
                 return SHAREMIND_MODULE_API_ ## ours
         #define SHAREMIND_EC2(e) SHAREMIND_EC(e,e)
         SHAREMIND_EC2(OUT_OF_MEMORY);
+        SHAREMIND_EC2(IMPLEMENTATION_LIMITS_REACHED);
         SHAREMIND_EC2(SHAREMIND_ERROR);
         SHAREMIND_EC2(MODULE_ERROR);
         SHAREMIND_EC(GENERAL_ERROR, MODULE_ERROR);

@@ -28,7 +28,7 @@
 
 SHAREMIND_EXTERN_C_BEGIN
 
-SHAREMIND_STRINGMAP_DECLARE(SharemindPdMap,SharemindPd,)
+SHAREMIND_STRINGMAP_DECLARE_BODY(SharemindPdMap, SharemindPd)
 
 struct SharemindPdk_ {
 

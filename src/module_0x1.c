@@ -20,63 +20,101 @@
 #include "syscall.h"
 
 
-SHAREMIND_STRINGMAP_DECLARE(SharemindPdkMap,SharemindPdk,)
-SHAREMIND_STRINGMAP_DEFINE(SharemindPdkMap,SharemindPdk,malloc,free,strdup,)
-SHAREMIND_MAP_DECLARE_FOREACH_WITH_INLINE(
-        static inline size_t,
-        SharemindPdkMap,
-        numPds,)
-SHAREMIND_MAP_DEFINE_FOREACH_WITH_INLINE(
-        static inline size_t,
-        SharemindPdkMap,
-        numPds,,
+SHAREMIND_STRINGMAP_DECLARE_BODY(SharemindPdkMap, SharemindPdk)
+SHAREMIND_STRINGMAP_DECLARE_init(SharemindPdkMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_init(SharemindPdkMap,static inline)
+SHAREMIND_STRINGMAP_DECLARE_destroy(SharemindPdkMap,static inline,,)
+SHAREMIND_STRINGMAP_DEFINE_destroy(SharemindPdkMap,
+                                   static inline,
+                                   SharemindPdk,,
+                                   free,
+                                   SharemindPdk_destroy(&v->value);)
+SHAREMIND_STRINGMAP_DECLARE_get(SharemindPdkMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_get(SharemindPdkMap,static inline)
+SHAREMIND_STRINGMAP_DECLARE_at(SharemindPdkMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_at(SharemindPdkMap,static inline)
+SHAREMIND_STRINGMAP_DECLARE_insertHint(SharemindPdkMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_insertHint(SharemindPdkMap,static inline)
+SHAREMIND_STRINGMAP_DECLARE_insertAtHint(SharemindPdkMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_insertAtHint(SharemindPdkMap,
+                                        static inline,
+                                        strdup,
+                                        malloc,
+                                        free)
+SHAREMIND_STRINGMAP_DECLARE_remove(SharemindPdkMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_remove(SharemindPdkMap,
+                                  static inline,
+                                  SharemindPdk,
+                                  free,
+                                  SharemindPdk_destroy(&v->value);)
+SHAREMIND_STRINGMAP_DECLARE_foreach_detail(
+        static inline size_t SharemindPdkMap_numPds,
+        SharemindPdkMap,,)
+SHAREMIND_STRINGMAP_DEFINE_foreach_detail(
+        static inline size_t SharemindPdkMap_numPds,
+        SharemindPdkMap,,
         size_t result = 0u;,
         result,
-        assert(item->key);
-        const size_t r = SharemindPdk_numPds(&item->value);
+        assert(v->key);
+        const size_t r = SharemindPdk_numPds(&v->value);
         if (SIZE_MAX - r <= result)
             return SIZE_MAX;
         result += r;)
-SHAREMIND_MAP_DECLARE_FOREACH_WITH_INLINE(
-        static inline SharemindPd *,
+SHAREMIND_STRINGMAP_DECLARE_foreach_detail(
+        static inline SharemindPd * SharemindPdkMap_pd,
         SharemindPdkMap,
-        pd,
-        SHAREMIND_COMMA size_t index)
-SHAREMIND_MAP_DEFINE_FOREACH_WITH_INLINE(
-        static inline SharemindPd *,
+        SHAREMIND_COMMA size_t index,)
+SHAREMIND_STRINGMAP_DEFINE_foreach_detail(
+        static inline SharemindPd * SharemindPdkMap_pd,
         SharemindPdkMap,
-        pd,
         SHAREMIND_COMMA size_t index,,
         NULL,
-        assert(item->key);
-        const size_t n = SharemindPdk_numPds(&item->value);
+        assert(v->key);
+        const size_t n = SharemindPdk_numPds(&v->value);
         if (index < n)
-            return SharemindPdk_pd(&item->value, index);
+            return SharemindPdk_pd(&v->value, index);
         index -= n;)
-SHAREMIND_MAP_DECLARE_FOREACH_WITH_INLINE(
-        static inline SharemindPd *,
+SHAREMIND_STRINGMAP_DECLARE_foreach_detail(
+        static inline SharemindPd * SharemindPdkMap_findPd,
         SharemindPdkMap,
-        findPd,
-        SHAREMIND_COMMA const char * signature)
-SHAREMIND_MAP_DEFINE_FOREACH_WITH_INLINE(
-        static inline SharemindPd *,
+        SHAREMIND_COMMA const char * signature,)
+SHAREMIND_STRINGMAP_DEFINE_foreach_detail(
+        static inline SharemindPd * SharemindPdkMap_findPd,
         SharemindPdkMap,
-        findPd,
         SHAREMIND_COMMA const char * signature,,
         NULL,
-        assert(item->key);
+        assert(v->key);
         SharemindPd * const result =
-                SharemindPdk_findPd(&item->value, signature);
+                SharemindPdk_findPd(&v->value, signature);
         if (result)
             return result;)
 
-SHAREMIND_STRINGMAP_DECLARE(SharemindSyscallMap,SharemindSyscall,)
-SHAREMIND_STRINGMAP_DEFINE(SharemindSyscallMap,
-                           SharemindSyscall,
-                           malloc,
-                           free,
-                           strdup,)
-
+SHAREMIND_STRINGMAP_DECLARE_BODY(SharemindSyscallMap, SharemindSyscall)
+SHAREMIND_STRINGMAP_DECLARE_init(SharemindSyscallMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_init(SharemindSyscallMap,static inline)
+SHAREMIND_STRINGMAP_DECLARE_destroy(SharemindSyscallMap,static inline,,)
+SHAREMIND_STRINGMAP_DEFINE_destroy(SharemindSyscallMap,
+                                   static inline,
+                                   SharemindSyscall,,
+                                   free,
+                                   SharemindSyscall_destroy(&v->value);)
+SHAREMIND_STRINGMAP_DECLARE_get(SharemindSyscallMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_get(SharemindSyscallMap,static inline)
+SHAREMIND_STRINGMAP_DECLARE_at(SharemindSyscallMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_at(SharemindSyscallMap,static inline)
+SHAREMIND_STRINGMAP_DECLARE_insertHint(SharemindSyscallMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_insertHint(SharemindSyscallMap,static inline)
+SHAREMIND_STRINGMAP_DECLARE_insertAtHint(SharemindSyscallMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_insertAtHint(SharemindSyscallMap,
+                                        static inline,
+                                        strdup,
+                                        malloc,
+                                        free)
+SHAREMIND_STRINGMAP_DECLARE_remove(SharemindSyscallMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_remove(SharemindSyscallMap,
+                                  static inline,
+                                  SharemindSyscall,
+                                  free,)
 
 typedef SharemindModuleApi0x1ModuleContext ModuleContext;
 typedef SharemindModuleApi0x1ModuleInitializer ModuleInitializer;
@@ -94,20 +132,6 @@ static const SharemindFacility * SharemindModule_facilityWrapper(
     assert(name);
     assert(name[0]);
     return SharemindModule_facility((SharemindModule *) w->internal, name);
-}
-
-static void SharemindSyscallMap_destroyer(const char * const * key,
-                                          SharemindSyscall * value)
-{
-    (void) key;
-    SharemindSyscall_destroy(value);
-}
-
-static void SharemindPdkMap_destroyer(const char * const * key,
-                                      SharemindPdk * value)
-{
-    (void) key;
-    SharemindPdk_destroy(value);
 }
 
 
@@ -199,15 +223,15 @@ bool SharemindModule_load_0x1(SharemindModule * m) {
                             "Duplicate system call definitions in module!");
                 goto loadModule_0x1_fail_2;
             }
-            SharemindSyscall * const sc =
+            SharemindSyscallMap_value * const v =
                     SharemindSyscallMap_insertAtHint(&apiData->syscalls,
                                                      syscallSignatureBuffer,
                                                      hint);
-            if (unlikely(!sc)) {
+            if (unlikely(!v)) {
                 SharemindModuleApi_setErrorOom(m->modapi);
                 goto loadModule_0x1_fail_2;
             }
-            if (unlikely(!SharemindSyscall_init(sc,
+            if (unlikely(!SharemindSyscall_init(&v->value,
                                                 syscallSignatureBuffer,
                                                 (void (*)(void)) (*scs)[i].fptr,
                                                 m)))
@@ -279,16 +303,16 @@ bool SharemindModule_load_0x1(SharemindModule * m) {
                             "module!");
                 goto loadModule_0x1_fail_3;
             }
-            SharemindPdk * const pdk =
+            SharemindPdkMap_value * const v =
                     SharemindPdkMap_insertAtHint(&apiData->pdks,
                                                  pdkNameBuffer,
                                                  hint);
-            if (unlikely(!pdk)) {
+            if (unlikely(!v)) {
                 SharemindModuleApi_setErrorOom(m->modapi);
                 goto loadModule_0x1_fail_3;
             }
             if (unlikely(!SharemindPdk_init(
-                             pdk,
+                             &v->value,
                              i,
                              pdkNameBuffer,
                              (void (*)(void)) (*pdks)[i].pd_startup_f,
@@ -333,12 +357,11 @@ bool SharemindModule_load_0x1(SharemindModule * m) {
 
 loadModule_0x1_fail_3:
 
-    SharemindPdkMap_destroy_with(&apiData->pdks, &SharemindPdkMap_destroyer);
+    SharemindPdkMap_destroy(&apiData->pdks);
 
 loadModule_0x1_fail_2:
 
-    SharemindSyscallMap_destroy_with(&apiData->syscalls,
-                                     &SharemindSyscallMap_destroyer);
+    SharemindSyscallMap_destroy(&apiData->syscalls);
 
 loadModule_0x1_fail_1:
 
@@ -355,10 +378,8 @@ void SharemindModule_unload_0x1(SharemindModule * const m) {
 
     ApiData * const apiData = (ApiData *) m->apiData;
 
-    SharemindPdkMap_destroy_with(&apiData->pdks,
-                                 &SharemindPdkMap_destroyer);
-    SharemindSyscallMap_destroy_with(&apiData->syscalls,
-                                     &SharemindSyscallMap_destroyer);
+    SharemindPdkMap_destroy(&apiData->pdks);
+    SharemindSyscallMap_destroy(&apiData->syscalls);
     free(apiData);
 }
 
@@ -427,8 +448,9 @@ SharemindSyscall * SharemindModule_syscall_0x1(const SharemindModule * m,
                                                size_t index)
 {
     ApiData * const apiData = (ApiData *) m->apiData;
-
-    return SharemindSyscallMap_value_at(&apiData->syscalls, index);
+    SharemindSyscallMap_value * const v =
+            SharemindSyscallMap_at(&apiData->syscalls, index);
+    return v ? (&v->value) : NULL;
 }
 
 
@@ -436,8 +458,9 @@ SharemindSyscall * SharemindModule_findSyscall_0x1(const SharemindModule * m,
                                                    const char * signature)
 {
     ApiData * const apiData = (ApiData *) m->apiData;
-
-    return SharemindSyscallMap_get(&apiData->syscalls, signature);
+    SharemindSyscallMap_value * const v =
+            SharemindSyscallMap_get(&apiData->syscalls, signature);
+    return v ? (&v->value) : NULL;
 }
 
 size_t SharemindModule_numPdks_0x1(const SharemindModule * m) {
@@ -449,8 +472,9 @@ size_t SharemindModule_numPdks_0x1(const SharemindModule * m) {
 SharemindPdk * SharemindModule_pdk_0x1(const SharemindModule * m, size_t index)
 {
     ApiData * const apiData = (ApiData *) m->apiData;
-
-    return SharemindPdkMap_value_at(&apiData->pdks, index);
+    SharemindPdkMap_value * const v =
+            SharemindPdkMap_at(&apiData->pdks, index);
+    return v ? (&v->value) : NULL;
 }
 
 
@@ -458,21 +482,21 @@ SharemindPdk * SharemindModule_findPdk_0x1(const SharemindModule * m,
                                            const char * name)
 {
     ApiData * const apiData = (ApiData *) m->apiData;
-
-    return SharemindPdkMap_get(&apiData->pdks, name);
+    SharemindPdkMap_value * const v = SharemindPdkMap_get(&apiData->pdks, name);
+    return v ? (&v->value) : NULL;
 }
 
 
 size_t SharemindModule_numPds_0x1(const SharemindModule * m) {
     assert(m);
     ApiData * const apiData = (ApiData *) m->apiData;
-    return SharemindPdkMap_foreach_with_numPds(&apiData->pdks);
+    return SharemindPdkMap_numPds(&apiData->pdks);
 }
 
 SharemindPd * SharemindModule_pd_0x1(const SharemindModule * m, size_t index) {
     assert(m);
     ApiData * const apiData = (ApiData *) m->apiData;
-    return SharemindPdkMap_foreach_with_pd(&apiData->pdks, index);
+    return SharemindPdkMap_pd(&apiData->pdks, index);
 }
 
 SharemindPd * SharemindModule_findPd_0x1(const SharemindModule * m,
@@ -481,5 +505,5 @@ SharemindPd * SharemindModule_findPd_0x1(const SharemindModule * m,
     assert(m);
     assert(name);
     ApiData * const apiData = (ApiData *) m->apiData;
-    return SharemindPdkMap_foreach_with_findPd(&apiData->pdks, name);
+    return SharemindPdkMap_findPd(&apiData->pdks, name);
 }

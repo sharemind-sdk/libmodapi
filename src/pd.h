@@ -71,6 +71,7 @@ SHAREMIND_LASTERROR_PRIVATE_FUNCTIONS_DECLARE(SharemindPd);
 SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindPd)
 SHAREMIND_NAMED_REFS_DECLARE_FUNCTIONS(SharemindPd,startedRefs)
 
+void SharemindPd_destroy(SharemindPd * pd) __attribute__((nonnull(1)));
 
 SHAREMIND_EXTERN_C_END
 

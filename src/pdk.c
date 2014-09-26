@@ -13,6 +13,7 @@
 
 #include <assert.h>
 #include <sharemind/likely.h>
+#include <sharemind/stringmap.h>
 #include <stdlib.h>
 #include <string.h>
 #include "modapi.h"
@@ -20,7 +21,18 @@
 #include "pd.h"
 
 
-SHAREMIND_STRINGMAP_DEFINE(SharemindPdMap,SharemindPd,malloc,free,strdup,)
+SHAREMIND_STRINGMAP_DECLARE_init(SharemindPdMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_init(SharemindPdMap,static inline)
+SHAREMIND_STRINGMAP_DECLARE_destroy(SharemindPdMap,static inline,,)
+SHAREMIND_STRINGMAP_DEFINE_destroy(SharemindPdMap,
+                                   static inline,
+                                   SharemindPd,,
+                                   free,
+                                   SharemindPd_destroy((assert(value), value));)
+SHAREMIND_STRINGMAP_DECLARE_at(SharemindPdMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_at(SharemindPdMap,static inline)
+SHAREMIND_STRINGMAP_DECLARE_get(SharemindPdMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_get(SharemindPdMap,static inline)
 
 bool SharemindPdk_init(SharemindPdk * pdk,
                        size_t pdk_index,
@@ -178,17 +190,17 @@ size_t SharemindPdk_numPds(const SharemindPdk * pdk) {
 SharemindPd * SharemindPdk_pd(const SharemindPdk * pdk, size_t index) {
     assert(pdk);
     SharemindPdk_lockConst(pdk);
-    SharemindPd * const r = SharemindPdMap_value_at(&pdk->pds, index);
+    SharemindPdMap_value * const v = SharemindPdMap_at(&pdk->pds, index);
     SharemindPdk_unlockConst(pdk);
-    return r;
+    return v ? (&v->value) : NULL;
 }
 
 SharemindPd * SharemindPdk_findPd(const SharemindPdk * pdk, const char * name) {
     assert(pdk);
     SharemindPdk_lockConst(pdk);
-    SharemindPd * const r = SharemindPdMap_get(&pdk->pds, name);
+    SharemindPdMap_value * const v = SharemindPdMap_get(&pdk->pds, name);
     SharemindPdk_unlockConst(pdk);
-    return r;
+    return v ? (&v->value) : NULL;
 }
 
 SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindPdk,pd,Pd)

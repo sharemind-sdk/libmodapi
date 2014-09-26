@@ -21,6 +21,22 @@
 #include "apis.c"
 
 
+SHAREMIND_STRINGMAP_DECLARE_insertHint(SharemindPdMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_insertHint(SharemindPdMap,static inline)
+SHAREMIND_STRINGMAP_DECLARE_insertAtHint(SharemindPdMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_insertAtHint(SharemindPdMap,
+                                        static inline,
+                                        strdup,
+                                        malloc,
+                                        free)
+SHAREMIND_STRINGMAP_DECLARE_insertNew(SharemindPdMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_insertNew(SharemindPdMap,static inline)
+SHAREMIND_STRINGMAP_DECLARE_remove(SharemindPdMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_remove(SharemindPdMap,
+                                  static inline,
+                                  SharemindPd,
+                                  free,)
+
 SharemindPd * SharemindPdk_newPd(SharemindPdk * pdk,
                                  const char * name,
                                  const char * conf)
@@ -32,6 +48,9 @@ SharemindPd * SharemindPdk_newPd(SharemindPdk * pdk,
     assert(name);
     assert(name[0]);
 
+    SharemindPdMap_value * v;
+    SharemindPd * pd;
+
     if (unlikely(SharemindModuleApi_findPd(pdk->module->modapi, name))) {
         SharemindPdk_setError(
                     pdk,
@@ -40,11 +59,13 @@ SharemindPd * SharemindPdk_newPd(SharemindPdk * pdk,
         goto SharemindPd_new_fail_0;
     }
 
-    SharemindPd * const pd = SharemindPdMap_insertNew(&pdk->pds, name);
-    if (unlikely(!pd)) {
+    v = SharemindPdMap_insertNew(&pdk->pds, name);
+    if (unlikely(!v)) {
         SharemindPdk_setErrorOom(pdk);
         goto SharemindPd_new_fail_0;
     }
+
+    pd = &v->value;
 
     if (!SHAREMIND_RECURSIVE_LOCK_INIT(pd)) {
         SharemindPdk_setErrorMie(pdk);
@@ -97,7 +118,7 @@ SharemindPd_new_fail_0:
     return NULL;
 }
 
-void SharemindPd_free(SharemindPd * pd) {
+void SharemindPd_destroy(SharemindPd * pd) {
     assert(pd);
     assert(pd->name);
     assert(pd->pdk);
@@ -110,15 +131,19 @@ void SharemindPd_free(SharemindPd * pd) {
     SHAREMIND_REFS_ASSERT_IF_REFERENCED(pd);
     SHAREMIND_NAMED_REFS_ASSERT_IF_REFERENCED(pd,startedRefs);
 
-    if (likely(pd->conf))
-        free(pd->conf);
-    char * const name = pd->name; // free(name) later
+    free(pd->conf);
+    free(pd->name);
 
     SharemindFacilityMap_destroy(&pd->facilityMap);
     SharemindFacilityMap_destroy(&pd->pdpiFacilityMap);
     SHAREMIND_RECURSIVE_LOCK_DEINIT(pd);
-    SharemindPdMap_remove(&pd->pdk->pds, name);
-    free(name);
+}
+
+void SharemindPd_free(SharemindPd * pd) {
+    assert(pd);
+    assert(pd->name);
+    assert(pd->pdk);
+    SharemindPdMap_remove(&pd->pdk->pds, pd->name);
 }
 
 SHAREMIND_LASTERROR_FUNCTIONS_DEFINE(SharemindPd)

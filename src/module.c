@@ -143,26 +143,25 @@ SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
     m->version = moduleInfo->moduleVersion;
 
     /* Do API specific loading: */
-    {
-        #ifndef NDEBUG
-        SHAREMIND_REFS_INIT(m);
-        #endif
-        if (unlikely(!(*(m->api->moduleLoad))(m)))
-            goto SharemindModule_new_fail_6;
+    #ifndef NDEBUG
+    SHAREMIND_REFS_INIT(m);
+    #endif
+    if (unlikely(!(*(m->api->moduleLoad))(m)))
+        goto SharemindModule_new_fail_6;
 
-        SharemindFacilityMap_init(&m->facilityMap,
-                                  &modapi->moduleFacilityMap);
-        SharemindFacilityMap_init(&m->pdFacilityMap,
-                                  &modapi->pdFacilityMap);
-        SharemindFacilityMap_init(&m->pdpiFacilityMap,
-                                  &modapi->pdpiFacilityMap);
+    SharemindFacilityMap_init(&m->facilityMap,
+                              &modapi->moduleFacilityMap);
+    SharemindFacilityMap_init(&m->pdFacilityMap,
+                              &modapi->pdFacilityMap);
+    SharemindFacilityMap_init(&m->pdpiFacilityMap,
+                              &modapi->pdpiFacilityMap);
 
-        if (unlikely(!SharemindModulesSet_insertNew(&modapi->modules, m))) {
-            SharemindModuleApi_setErrorOom(modapi);
-            goto SharemindModule_new_fail_7;
-        }
-        return m;
+    /* Register with SharemindModuleApi: */
+    if (unlikely(!SharemindModulesSet_insertNew(&modapi->modules, m))) {
+        SharemindModuleApi_setErrorOom(modapi);
+        goto SharemindModule_new_fail_7;
     }
+    return m;
 
 SharemindModule_new_fail_7:
 
@@ -204,6 +203,7 @@ void SharemindModule_free(SharemindModule * m) {
     if (likely(m->isInitialized))
         SharemindModule_deinit(m);
 
+    SharemindModulesSet_remove(&m->modapi->modules, m);
     (*(m->api->moduleUnload))(m);
 
     SHAREMIND_TAG_DESTROY(m);
@@ -215,7 +215,6 @@ void SharemindModule_free(SharemindModule * m) {
     if (likely(m->conf))
         free(m->conf);
     free(m->filename);
-    SharemindModulesSet_remove(&m->modapi->modules, m);
 
     SharemindFacilityMap_destroy(&m->facilityMap);
     SharemindFacilityMap_destroy(&m->pdFacilityMap);

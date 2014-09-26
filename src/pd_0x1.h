@@ -21,7 +21,7 @@
 
 SHAREMIND_EXTERN_C_BEGIN
 
-bool SharemindPd_start_0x1(SharemindPd * pd)
+SharemindModuleApiError SharemindPd_start_0x1(SharemindPd * pd)
         __attribute__ ((nonnull(1), visibility("internal")));
 
 void SharemindPd_stop_0x1(SharemindPd * pd)

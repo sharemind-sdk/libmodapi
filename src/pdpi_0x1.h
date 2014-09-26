@@ -21,7 +21,7 @@
 
 SHAREMIND_EXTERN_C_BEGIN
 
-bool SharemindPdpi_start_0x1(SharemindPdpi * pdpi)
+SharemindModuleApiError SharemindPdpi_start_0x1(SharemindPdpi * pdpi)
         __attribute__ ((nonnull(1), visibility("internal")));
 
 void SharemindPdpi_stop_0x1(SharemindPdpi * pdpi)

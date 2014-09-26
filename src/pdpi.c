@@ -98,7 +98,7 @@ bool SharemindPdpi_isStarted(const SharemindPdpi * pdpi) {
     return r;
 }
 
-bool SharemindPdpi_start(SharemindPdpi * pdpi) {
+SharemindModuleApiError SharemindPdpi_start(SharemindPdpi * pdpi) {
     assert(pdpi);
     assert(pdpi->pd);
     assert(pdpi->pd->pdk);
@@ -117,11 +117,11 @@ bool SharemindPdpi_start(SharemindPdpi * pdpi) {
     if (!SharemindPd_startedRefs_ref(pd)) {
         SharemindPdpi_setErrorOor(pdpi);
         SharemindPdpi_unlock(pdpi);
-        return false;
+        return SHAREMIND_MODULE_API_IMPLEMENTATION_LIMITS_REACHED;
     }
 
-    const bool r = (*(module->api->startPdpi))(pdpi);
-    if (r) {
+    const SharemindModuleApiError r = (*(module->api->startPdpi))(pdpi);
+    if (likely(r == SHAREMIND_MODULE_API_OK)) {
         pdpi->isStarted = r;
     } else {
         SharemindPd_startedRefs_unref(pd);

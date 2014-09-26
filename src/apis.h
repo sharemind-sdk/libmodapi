@@ -29,7 +29,7 @@ typedef struct {
     void (* const moduleUnload)(SharemindModule * m);
 
 
-    bool (* const moduleInit)(SharemindModule * m);
+    SharemindModuleApiError (* const moduleInit)(SharemindModule * m);
 
     void (* const moduleDeinit)(SharemindModule * m);
 
@@ -59,11 +59,11 @@ typedef struct {
                                    const char * name);
 
 
-    bool (* const startPd)(SharemindPd * pd);
+    SharemindModuleApiError (* const startPd)(SharemindPd * pd);
 
     void (* const stopPd)(SharemindPd * pd);
 
-    bool (* const startPdpi)(SharemindPdpi * pd);
+    SharemindModuleApiError (* const startPdpi)(SharemindPdpi * pd);
 
     void (* const stopPdpi)(SharemindPdpi * pd);
 

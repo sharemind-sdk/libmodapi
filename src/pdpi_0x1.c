@@ -41,7 +41,7 @@ static const SharemindFacility * SharemindPdpi_facilityWrapper(
     return SharemindPdpi_facility((SharemindPdpi *) w->internal, name);
 }
 
-bool SharemindPdpi_start_0x1(SharemindPdpi * pdpi) {
+SharemindModuleApiError SharemindPdpi_start_0x1(SharemindPdpi * pdpi) {
     assert(pdpi);
     assert(pdpi->pd);
     assert(pdpi->pd->pdk);
@@ -57,20 +57,33 @@ bool SharemindPdpi_start_0x1(SharemindPdpi * pdpi) {
         .internal = pdpi
     };
 
-    const SharemindPdk * const pdk = pd->pdk;
-    typedef SharemindModuleApi0x1PdpiStartup PdpiStartup;
-    const SharemindModuleApi0x1Error r =
-            (*((PdpiStartup) pdk->pdpi_startup_impl_or_wrapper))(&pdpiWrapper);
-    if (likely(r == SHAREMIND_MODULE_API_0x1_OK)) {
-        pdpi->pdProcessHandle = pdpiWrapper.pdProcessHandle;
-        return true;
+    switch((*((SharemindModuleApi0x1PdpiStartup)
+                  pd->pdk->pdpi_startup_impl_or_wrapper))(&pdpiWrapper))
+    {
+        case SHAREMIND_MODULE_API_0x1_OK:
+            pdpi->pdProcessHandle = pdpiWrapper.pdProcessHandle;
+            return SHAREMIND_MODULE_API_OK;
+        #define SHAREMIND_EC(theirs,ours) \
+            case SHAREMIND_MODULE_API_0x1_ ## theirs: \
+                SharemindPdpi_setError(pdpi, \
+                                       SHAREMIND_MODULE_API_ ## ours, \
+                                       "Module returned " #theirs "!"); \
+                return SHAREMIND_MODULE_API_ ## ours
+        #define SHAREMIND_EC2(e) SHAREMIND_EC(e,e)
+        SHAREMIND_EC2(OUT_OF_MEMORY);
+        SHAREMIND_EC2(IMPLEMENTATION_LIMITS_REACHED);
+        SHAREMIND_EC2(SHAREMIND_ERROR);
+        SHAREMIND_EC2(MODULE_ERROR);
+        SHAREMIND_EC(GENERAL_ERROR, MODULE_ERROR);
+        SHAREMIND_EC(MISSING_FACILITY, MODULE_ERROR);
+        #undef SHAREMIND_EC2
+        #undef SHAREMIND_EC
+        default:
+            SharemindPdpi_setError(pdpi,
+                                   SHAREMIND_MODULE_API_API_ERROR,
+                                   "Module returned an unexpected error!");
+            return SHAREMIND_MODULE_API_API_ERROR;
     }
-
-    SharemindModuleApi_setError(
-                pdk->module->modapi,
-                SHAREMIND_MODULE_API_PDPI_STARTUP_FAILED,
-                pdpiStartupErrorToString(r));
-    return false;
 }
 
 void SharemindPdpi_stop_0x1(SharemindPdpi * pdpi) {

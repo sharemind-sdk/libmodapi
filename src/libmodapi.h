@@ -135,8 +135,6 @@ typedef void (* SharemindTagDestructor)(void *);
     ((SHAREMIND_MODULE_API_DUPLICATE_PROTECTION_DOMAIN_KIND,)) \
     ((SHAREMIND_MODULE_API_SHAREMIND_ERROR,)) \
     ((SHAREMIND_MODULE_API_MODULE_ERROR,)) \
-    ((SHAREMIND_MODULE_API_PD_STARTUP_FAILED,)) \
-    ((SHAREMIND_MODULE_API_PDPI_STARTUP_FAILED,)) \
     ((SHAREMIND_MODULE_API_FACILITY_ALREADY_EXISTS,)) \
     ((SHAREMIND_MODULE_API_ERROR_COUNT,))
 SHAREMIND_ENUM_CUSTOM_DEFINE(SharemindModuleApiError,
@@ -365,7 +363,8 @@ SHAREMIND_LIBMODAPI_DECLARE_TAG_FUNCTIONS(SharemindPd);
 
 bool SharemindPd_isStarted(const SharemindPd * pd) __attribute__ ((nonnull(1)));
 
-bool SharemindPd_start(SharemindPd * pd) __attribute__ ((nonnull(1)));
+SharemindModuleApiError SharemindPd_start(SharemindPd * pd)
+        __attribute__ ((nonnull(1)));
 void SharemindPd_stop(SharemindPd * pd) __attribute__ ((nonnull(1)));
 
 
@@ -408,7 +407,8 @@ SHAREMIND_LIBMODAPI_DECLARE_TAG_FUNCTIONS(SharemindPdpi);
 bool SharemindPdpi_isStarted(const SharemindPdpi * pdpi)
         __attribute__ ((nonnull(1)));
 
-bool SharemindPdpi_start(SharemindPdpi * pdpi) __attribute__ ((nonnull(1)));
+SharemindModuleApiError SharemindPdpi_start(SharemindPdpi * pdpi)
+        __attribute__ ((nonnull(1)));
 void SharemindPdpi_stop(SharemindPdpi * pdpi) __attribute__ ((nonnull(1)));
 
 

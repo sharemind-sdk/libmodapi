@@ -59,7 +59,7 @@ static inline void SharemindPd_initStartStopWrappers(
     pdWrapper->getPdFacility = &SharemindPd_facilityWrapper;
 }
 
-bool SharemindPd_start_0x1(SharemindPd * pd) {
+SharemindModuleApiError SharemindPd_start_0x1(SharemindPd * pd) {
     assert(pd);
     assert(!pd->isStarted);
 
@@ -70,19 +70,31 @@ bool SharemindPd_start_0x1(SharemindPd * pd) {
     pdWrapper.internal = pd;
 
     typedef SharemindModuleApi0x1PdStartup PdStartup;
-    const SharemindModuleApi0x1Error r =
-            (*((PdStartup) pdk->pd_startup_impl_or_wrapper))(&pdWrapper);
-    if (likely(r == SHAREMIND_MODULE_API_0x1_OK)) {
-        pd->pdHandle = pdWrapper.pdHandle;
-        pd->isStarted = true;
-        return true;
+    switch ((*((PdStartup) pdk->pd_startup_impl_or_wrapper))(&pdWrapper)) {
+        case SHAREMIND_MODULE_API_0x1_OK:
+            pd->pdHandle = pdWrapper.pdHandle;
+            return SHAREMIND_MODULE_API_OK;
+        #define SHAREMIND_EC(theirs,ours) \
+            case SHAREMIND_MODULE_API_0x1_ ## theirs: \
+                SharemindPd_setError(pd, \
+                                     SHAREMIND_MODULE_API_ ## ours, \
+                                     "Module returned " #theirs "!"); \
+                return SHAREMIND_MODULE_API_ ## ours
+        #define SHAREMIND_EC2(e) SHAREMIND_EC(e,e)
+        SHAREMIND_EC2(OUT_OF_MEMORY);
+        SHAREMIND_EC2(SHAREMIND_ERROR);
+        SHAREMIND_EC2(MODULE_ERROR);
+        SHAREMIND_EC(GENERAL_ERROR, MODULE_ERROR);
+        SHAREMIND_EC(MISSING_FACILITY, MODULE_ERROR);
+        SHAREMIND_EC(INVALID_PD_CONFIGURATION, MODULE_ERROR);
+        #undef SHAREMIND_EC2
+        #undef SHAREMIND_EC
+        default:
+            SharemindPd_setError(pd,
+                                 SHAREMIND_MODULE_API_API_ERROR,
+                                 "Module returned an unexpected error!");
+            return SHAREMIND_MODULE_API_API_ERROR;
     }
-
-    SharemindModuleApi_setError(
-                pdk->module->modapi,
-                SHAREMIND_MODULE_API_PD_STARTUP_FAILED,
-                pdStartupErrorToString(r));
-    return false;
 }
 
 void SharemindPd_stop_0x1(SharemindPd * pd) {

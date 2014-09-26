@@ -29,7 +29,7 @@ void SharemindModule_unload_0x1(SharemindModule * m)
         __attribute__ ((nonnull(1), visibility("internal")));
 
 
-bool SharemindModule_init_0x1(SharemindModule * m)
+SharemindModuleApiError SharemindModule_init_0x1(SharemindModule * m)
         __attribute__ ((nonnull(1), visibility("internal")));
 
 void SharemindModule_deinit_0x1(SharemindModule * m)

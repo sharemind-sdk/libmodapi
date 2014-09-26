@@ -132,7 +132,7 @@ bool SharemindPd_isStarted(const SharemindPd * pd) {
     return r;
 }
 
-bool SharemindPd_start(SharemindPd * pd) {
+SharemindModuleApiError SharemindPd_start(SharemindPd * pd) {
     assert(pd);
     assert(pd->pdk);
     assert(pd->pdk->module);
@@ -142,10 +142,12 @@ bool SharemindPd_start(SharemindPd * pd) {
     SharemindPd_lock(pd);
     if (pd->isStarted) {
         SharemindPd_unlock(pd);
-        return true;
+        return SHAREMIND_MODULE_API_OK;
     }
 
-    const bool r = (*(pd->pdk->module->api->startPd))(pd);
+    const SharemindModuleApiError r = (*(pd->pdk->module->api->startPd))(pd);
+    if (likely(r == SHAREMIND_MODULE_API_OK))
+        pd->isStarted = true;
     SharemindPd_unlock(pd);
     return r;
 }

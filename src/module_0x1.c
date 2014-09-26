@@ -362,7 +362,7 @@ void SharemindModule_unload_0x1(SharemindModule * const m) {
     free(apiData);
 }
 
-bool SharemindModule_init_0x1(SharemindModule * const m) {
+SharemindModuleApiError SharemindModule_init_0x1(SharemindModule * const m) {
     ApiData * const apiData = (ApiData *) m->apiData;
 
     ModuleContext context = {
@@ -378,39 +378,35 @@ bool SharemindModule_init_0x1(SharemindModule * const m) {
                 SharemindModule_setError(m,
                                          SHAREMIND_MODULE_API_API_ERROR,
                                          "Module handle was not initialized!");
-                return false;
+                return SHAREMIND_MODULE_API_API_ERROR;
             }
             m->moduleHandle = context.moduleHandle;
-            return true;
-        case SHAREMIND_MODULE_API_0x1_OUT_OF_MEMORY:
-            SharemindModule_setErrorOom(m);
-            return false;
-        case SHAREMIND_MODULE_API_0x1_SHAREMIND_ERROR:
-            SharemindModule_setError(m,
-                                     SHAREMIND_MODULE_API_SHAREMIND_ERROR,
-                                     "Module notified a Sharemind fault!");
-            return false;
-        case SHAREMIND_MODULE_API_0x1_MODULE_ERROR:
-            SharemindModule_setError(m,
-                                     SHAREMIND_MODULE_API_MODULE_ERROR,
-                                     "Module notified a module error!");
-            return false;
-        case SHAREMIND_MODULE_API_0x1_GENERAL_ERROR:
-            SharemindModule_setError(m,
-                                     SHAREMIND_MODULE_API_MODULE_ERROR,
-                                     "Module notified a general error!");
-            return false;
+            return SHAREMIND_MODULE_API_OK;
+        #define SHAREMIND_EC(theirs,ours) \
+            case SHAREMIND_MODULE_API_0x1_ ## theirs: \
+                SharemindModule_setError(m, \
+                                         SHAREMIND_MODULE_API_ ## ours, \
+                                         "Module returned " #theirs "!"); \
+                return SHAREMIND_MODULE_API_ ## ours
+        #define SHAREMIND_EC2(e) SHAREMIND_EC(e,e)
+        SHAREMIND_EC2(OUT_OF_MEMORY);
+        SHAREMIND_EC2(SHAREMIND_ERROR);
+        SHAREMIND_EC2(MODULE_ERROR);
+        SHAREMIND_EC(GENERAL_ERROR, MODULE_ERROR);
+        SHAREMIND_EC(MISSING_FACILITY, MODULE_ERROR);
+        SHAREMIND_EC(INVALID_MODULE_CONFIGURATION, MODULE_ERROR);
+        #undef SHAREMIND_EC2
+        #undef SHAREMIND_EC
         default:
             SharemindModule_setError(m,
                                      SHAREMIND_MODULE_API_API_ERROR,
                                      "Module returned an unexpected error!");
-            return false;
+            return SHAREMIND_MODULE_API_API_ERROR;
     }
 }
 
 void SharemindModule_deinit_0x1(SharemindModule * const m) {
     ApiData * const apiData = (ApiData *) m->apiData;
-
     ModuleContext context = {
         .moduleHandle = m->moduleHandle,
         .getModuleFacility = &SharemindModule_facilityWrapper,

@@ -22,6 +22,12 @@
     SharemindModuleApiError lastError; \
     const char * lastErrorStaticString
 
+#define SHAREMIND_LASTERROR_INIT(className) \
+    do { \
+        (className)->lastError = SHAREMIND_MODULE_API_OK; \
+        (className)->lastErrorStaticString = NULL; \
+    } while(0)
+
 #define SHAREMIND_LASTERROR_PRIVATE_FUNCTIONS_DECLARE(ClassName) \
     SHAREMIND_EXTERN_C_BEGIN \
     void ClassName ## _setError( \

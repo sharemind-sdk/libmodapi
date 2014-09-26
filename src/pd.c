@@ -51,6 +51,7 @@ SharemindPd * SharemindPdk_newPd(SharemindPdk * pdk,
         goto SharemindPd_new_fail_1;
     }
 
+    SHAREMIND_LASTERROR_INIT(pd);
     SHAREMIND_TAG_INIT(pd);
 
     pd->name = strdup(name);

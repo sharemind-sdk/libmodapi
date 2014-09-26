@@ -44,6 +44,7 @@ SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
         goto SharemindModule_new_fail_1;
     }
 
+    SHAREMIND_LASTERROR_INIT(m);
     SHAREMIND_TAG_INIT(m);
 
     m->apiData = NULL;
@@ -224,8 +225,6 @@ void SharemindModule_free(SharemindModule * m) {
 }
 
 SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DEFINE(SharemindModule)
-SHAREMIND_LASTERROR_FUNCTIONS_DEFINE(SharemindModule)
-
 SharemindModuleApiError SharemindModule_init(SharemindModule * m) {
     assert(m);
     SharemindModule_lock(m);
@@ -360,6 +359,8 @@ SharemindPd * SharemindModule_findPd(const SharemindModule * m,
     SharemindModule_unlockConst(m);
     return r;
 }
+
+SHAREMIND_LASTERROR_FUNCTIONS_DEFINE(SharemindModule)
 
 SHAREMIND_DEFINE_SELF_FACILITYMAP_ACCESSORS(SharemindModule)
 SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindModule,pd,Pd)

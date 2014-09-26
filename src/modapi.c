@@ -199,8 +199,7 @@ SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiError * error,
         return NULL;
     }
 
-    modapi->lastError = SHAREMIND_MODULE_API_OK;
-    modapi->lastErrorStaticString = NULL;
+    SHAREMIND_LASTERROR_INIT(modapi);
     SHAREMIND_TAG_INIT(modapi);
 
     SharemindModulesSet_init(&modapi->modules);

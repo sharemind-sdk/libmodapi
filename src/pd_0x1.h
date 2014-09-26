@@ -14,9 +14,9 @@
 #error SHAREMIND_INTERNAL__
 #endif
 
-#include "libmodapi.h"
 
 #include <sharemind/extern_c.h>
+#include "libmodapi.h"
 
 
 SHAREMIND_EXTERN_C_BEGIN

@@ -15,8 +15,8 @@
 #endif
 
 
-#include <sharemind/recursive_locks.h>
 #include <sharemind/extern_c.h>
+#include <sharemind/recursive_locks.h>
 #include <sharemind/set.h>
 #include <stdbool.h>
 #include "facilitymap.h"

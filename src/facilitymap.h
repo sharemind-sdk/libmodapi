@@ -14,24 +14,51 @@
 #error including an internal header!
 #endif
 
+#include <sharemind/comma.h>
 #include <sharemind/extern_c.h>
 #include <sharemind/stringmap.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 #include "libmodapi.h"
 
 
-SHAREMIND_STRINGMAP_DECLARE(SharemindFacilityMapInner,SharemindFacility,inline)
-#ifndef SHAREMIND_LIBMODAPI_FACILITYMAP_C
-SHAREMIND_STRINGMAP_DEFINE(SharemindFacilityMapInner,
-                           SharemindFacility,
-                           malloc,
-                           free,
-                           strdup,
-                           inline)
-#endif /* SHAREMIND_LIBMODAPI_FACILITYMAP_C */
-
+SHAREMIND_STRINGMAP_DECLARE_BODY(SharemindFacilityMapInner, SharemindFacility)
+SHAREMIND_STRINGMAP_DECLARE_init(SharemindFacilityMapInner,
+                                 inline,
+                                 SHAREMIND_COMMA visibility("internal"))
+SHAREMIND_STRINGMAP_DEFINE_init(SharemindFacilityMapInner, inline)
+SHAREMIND_STRINGMAP_DECLARE_destroy(SharemindFacilityMapInner,
+                                    inline,,
+                                    SHAREMIND_COMMA visibility("internal"))
+SHAREMIND_STRINGMAP_DEFINE_destroy(SharemindFacilityMapInner,
+                                   inline,
+                                   SharemindFacility,,
+                                   free,)
+SHAREMIND_STRINGMAP_DECLARE_get(SharemindFacilityMapInner,
+                                inline,
+                                SHAREMIND_COMMA visibility("internal"))
+SHAREMIND_STRINGMAP_DEFINE_get(SharemindFacilityMapInner, inline)
+SHAREMIND_STRINGMAP_DECLARE_insertHint(SharemindFacilityMapInner,
+                                       inline,
+                                       SHAREMIND_COMMA visibility("internal"))
+SHAREMIND_STRINGMAP_DEFINE_insertHint(SharemindFacilityMapInner, inline)
+SHAREMIND_STRINGMAP_DECLARE_insertAtHint(SharemindFacilityMapInner,
+                                         inline,
+                                         SHAREMIND_COMMA visibility("internal"))
+SHAREMIND_STRINGMAP_DEFINE_insertAtHint(SharemindFacilityMapInner, \
+                                        inline, \
+                                        strdup, \
+                                        malloc, \
+                                        free)
+SHAREMIND_STRINGMAP_DECLARE_remove(SharemindFacilityMapInner,
+                                   inline,
+                                   SHAREMIND_COMMA visibility("internal"))
+SHAREMIND_STRINGMAP_DEFINE_remove(SharemindFacilityMapInner,
+                                  inline,
+                                  SharemindFacility,
+                                  free,)
 
 SHAREMIND_EXTERN_C_BEGIN
 
@@ -40,55 +67,47 @@ typedef struct SharemindFacilityMap_ {
     struct SharemindFacilityMap_ * nextMap;
 } SharemindFacilityMap;
 
-
 inline void SharemindFacilityMap_init(SharemindFacilityMap * fm,
                                       SharemindFacilityMap * nextMap)
-        __attribute__ ((nonnull(1)));
+        __attribute__ ((nonnull(1), visibility("internal")));
+inline void SharemindFacilityMap_init(SharemindFacilityMap * fm,
+                                      SharemindFacilityMap * nextMap)
+{
+    assert(fm);
+    fm->nextMap = nextMap;
+    SharemindFacilityMapInner_init(&fm->realMap);
+}
 
 inline void SharemindFacilityMap_destroy(SharemindFacilityMap * fm)
-        __attribute__ ((nonnull(1)));
+        __attribute__ ((nonnull(1), visibility("internal")));
+inline void SharemindFacilityMap_destroy(SharemindFacilityMap * fm) {
+    assert(fm);
+    SharemindFacilityMapInner_destroy(&fm->realMap);
+}
 
 inline const SharemindFacility * SharemindFacilityMap_get(
             const SharemindFacilityMap * fm,
-            const char * name) __attribute__ ((nonnull(1,2)));
-
-
-#define SHAREMIND_FACILITYMAP_DEFINE(qualifiers) \
-    qualifiers void SharemindFacilityMap_init(SharemindFacilityMap * fm, \
-                                              SharemindFacilityMap * nextMap) \
-    { \
-        assert(fm); \
-        fm->nextMap = nextMap; \
-        SharemindFacilityMapInner_init(&fm->realMap); \
-    } \
-    qualifiers void SharemindFacilityMap_destroy(SharemindFacilityMap * fm) { \
-        assert(fm); \
-        SharemindFacilityMapInner_destroy(&fm->realMap); \
-    } \
-    qualifiers const SharemindFacility * SharemindFacilityMap_get( \
-            const SharemindFacilityMap * fm, \
-            const char * name) \
-    { \
-        assert(fm); \
-        assert(name); \
-        assert(name[0]); \
-        const SharemindFacility * value = SharemindFacilityMapInner_get( \
-                                              &fm->realMap, \
-                                              name); \
-        if (value) \
-            return value; \
-        if (fm->nextMap) \
-            return SharemindFacilityMap_get(fm->nextMap, name); \
-        return NULL; \
-    }
-
-#ifndef SHAREMIND_LIBMODAPI_FACILITYMAP_C
-SHAREMIND_FACILITYMAP_DEFINE(inline)
-#endif /* SHAREMIND_LIBMODAPI_FACILITYMAP_C */
+            const char * name)
+        __attribute__ ((nonnull(1, 2), visibility("internal")));
+inline const SharemindFacility * SharemindFacilityMap_get(
+        const SharemindFacilityMap * fm,
+        const char * name)
+{
+    assert(fm);
+    assert(name);
+    assert(name[0]);
+    const SharemindFacilityMapInner_value * const v =
+            SharemindFacilityMapInner_get(&fm->realMap, name);
+    if (v)
+        return &v->value;
+    if (fm->nextMap)
+        return SharemindFacilityMap_get(fm->nextMap, name);
+    return NULL;
+}
 
 SHAREMIND_EXTERN_C_END
 
-#define SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS__(CN,fF,FF)\
+#define SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS__(CN,fF,FF) \
     SHAREMIND_EXTERN_C_BEGIN \
     SharemindModuleApiError CN ## _set ## FF(CN * c, \
                                              const char * name, \
@@ -108,17 +127,17 @@ SHAREMIND_EXTERN_C_END
             CN ## _setError(c, r, "Facility with this name already exists!"); \
             goto CN ## _set ## FF ## _exit; \
         } \
-        SharemindFacility * const value = \
+        SharemindFacilityMapInner_value * const v = \
                 SharemindFacilityMapInner_insertAtHint(&c->fF ## Map.realMap, \
                                                        name, \
                                                        insertHint); \
-        if (unlikely(!value)) { \
+        if (unlikely(!v)) { \
             r = SHAREMIND_MODULE_API_OUT_OF_MEMORY; \
             CN ## _setErrorOom(c); \
             goto CN ## _set ## FF ## _exit; \
         } \
-        value->facility = facility; \
-        value->context = context; \
+        v->value.facility = facility; \
+        v->value.context = context; \
     CN ## _set ## FF ## _exit: \
         CN ## _unlock(c); \
         return r; \

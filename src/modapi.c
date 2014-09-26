@@ -17,19 +17,10 @@
 SHAREMIND_ENUM_CUSTOM_DEFINE_TOSTRING(SharemindModuleApiError,
                                       SHAREMIND_MODULE_API_ERROR_ENUM)
 
-SHAREMIND_SET_DEFINE(SharemindModulesSet,
-                     SharemindModule *,
-                     ((uintptr_t) key),
-                     SHAREMIND_SET_KEY_EQUALS_voidptr,
-                     SHAREMIND_SET_KEY_LESS_THAN_voidptr,
-                     SHAREMIND_SET_KEYCOPY_REGULAR,
-                     SHAREMIND_SET_KEYFREE_REGULAR,
-                     malloc,
-                     free,)
 SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
         static inline size_t,
         SharemindModulesSet,
-        numSyscalls,)
+        numSyscalls,,)
 SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
         static inline size_t,
         SharemindModulesSet,
@@ -45,7 +36,7 @@ SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
         static inline SharemindSyscall *,
         SharemindModulesSet,
         syscall,
-        SHAREMIND_COMMA size_t index)
+        SHAREMIND_COMMA size_t index,)
 SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
         static inline SharemindSyscall *,
         SharemindModulesSet,
@@ -61,7 +52,7 @@ SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
         static inline SharemindSyscall *,
         SharemindModulesSet,
         findSyscall,
-        SHAREMIND_COMMA const char * signature)
+        SHAREMIND_COMMA const char * signature,)
 SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
         static inline SharemindSyscall *,
         SharemindModulesSet,
@@ -76,7 +67,7 @@ SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
 SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
         static inline size_t,
         SharemindModulesSet,
-        numPdks,)
+        numPdks,,)
 SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
         static inline size_t,
         SharemindModulesSet,
@@ -92,7 +83,7 @@ SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
         static inline SharemindPdk *,
         SharemindModulesSet,
         pdk,
-        SHAREMIND_COMMA size_t index)
+        SHAREMIND_COMMA size_t index,)
 SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
         static inline SharemindPdk *,
         SharemindModulesSet,
@@ -108,7 +99,7 @@ SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
         static inline SharemindPdk *,
         SharemindModulesSet,
         findPdk,
-        SHAREMIND_COMMA const char * signature)
+        SHAREMIND_COMMA const char * signature,)
 SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
         static inline SharemindPdk *,
         SharemindModulesSet,
@@ -123,7 +114,7 @@ SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
 SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
         static inline size_t,
         SharemindModulesSet,
-        numPds,)
+        numPds,,)
 SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
         static inline size_t,
         SharemindModulesSet,
@@ -139,7 +130,7 @@ SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
         static inline SharemindPd *,
         SharemindModulesSet,
         pd,
-        SHAREMIND_COMMA size_t index)
+        SHAREMIND_COMMA size_t index,)
 SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
         static inline SharemindPd *,
         SharemindModulesSet,
@@ -155,7 +146,7 @@ SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
         static inline SharemindPd *,
         SharemindModulesSet,
         findPd,
-        SHAREMIND_COMMA const char * signature)
+        SHAREMIND_COMMA const char * signature,)
 SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
         static inline SharemindPd *,
         SharemindModulesSet,
@@ -169,7 +160,7 @@ SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
             return result;)
 SHAREMIND_SET_DECLARE_DESTROY_WITH_INLINE(SharemindModulesSet,
                                           moduleFree,,
-                                          static inline)
+                                          static inline,)
 SHAREMIND_SET_DEFINE_DESTROY_WITH_INLINE(SharemindModulesSet,
                                          moduleFree,
                                          SharemindModule *,,,

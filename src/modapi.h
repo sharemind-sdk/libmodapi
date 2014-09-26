@@ -15,6 +15,7 @@
 #endif
 
 
+#include <sharemind/comma.h>
 #include <sharemind/extern_c.h>
 #include <sharemind/recursive_locks.h>
 #include <sharemind/set.h>
@@ -27,7 +28,17 @@
 
 SHAREMIND_EXTERN_C_BEGIN
 
-SHAREMIND_SET_DECLARE(SharemindModulesSet, SharemindModule *,)
+SHAREMIND_SET_DECLARE_DEFINE(SharemindModulesSet,
+                             SharemindModule *,
+                             ((uintptr_t) key),
+                             SHAREMIND_SET_KEY_EQUALS_voidptr,
+                             SHAREMIND_SET_KEY_LESS_THAN_voidptr,
+                             SHAREMIND_SET_KEYCOPY_REGULAR,
+                             SHAREMIND_SET_KEYFREE_REGULAR,
+                             malloc,
+                             free,
+                             inline,
+                             SHAREMIND_COMMA visibility("internal"))
 
 struct SharemindModuleApi_ {
 

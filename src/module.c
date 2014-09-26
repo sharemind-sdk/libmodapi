@@ -157,14 +157,17 @@ SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
                               &modapi->pdpiFacilityMap);
 
     /* Register with SharemindModuleApi: */
+    SharemindModuleApi_lock(modapi);
     if (unlikely(!SharemindModulesSet_insertNew(&modapi->modules, m))) {
         SharemindModuleApi_setErrorOom(modapi);
         goto SharemindModule_new_fail_7;
     }
+    SharemindModuleApi_unlock(modapi);
     return m;
 
 SharemindModule_new_fail_7:
 
+    SharemindModuleApi_unlock(modapi);
     (*(m->api->moduleUnload))(m);
 
 SharemindModule_new_fail_6:
@@ -203,7 +206,9 @@ void SharemindModule_free(SharemindModule * m) {
     if (likely(m->isInitialized))
         SharemindModule_deinit(m);
 
+    SharemindModuleApi_lock(m->modapi);
     SharemindModulesSet_remove(&m->modapi->modules, m);
+    SharemindModuleApi_unlock(m->modapi);
     (*(m->api->moduleUnload))(m);
 
     SHAREMIND_TAG_DESTROY(m);

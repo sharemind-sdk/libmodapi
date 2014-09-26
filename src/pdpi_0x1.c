@@ -20,16 +20,6 @@
 #include "pdpi.h"
 
 
-static SHAREMIND_ENUM_DECLARE_TOSTRING_CUSTOMNAME(
-        pdpiStartupErrorToString,
-        SharemindModuleApi0x1Error);
-static SHAREMIND_ENUM_CUSTOM_DEFINE_CUSTOM_TOSTRING_CUSTOMNAME(
-        pdpiStartupErrorToString,
-        SharemindModuleApi0x1Error,
-        SHAREMIND_MODULE_API_0x1_ERROR_ENUM,
-        "PDPI startup failed with code ",
-        " from the module!")
-
 static const SharemindFacility * SharemindPdpi_facilityWrapper(
         SharemindModuleApi0x1PdpiWrapper * w,
         const char * name)

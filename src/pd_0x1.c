@@ -18,15 +18,6 @@
 #include "pd.h"
 #include "pdk.h"
 
-static SHAREMIND_ENUM_DECLARE_TOSTRING_CUSTOMNAME(
-        pdStartupErrorToString,
-        SharemindModuleApi0x1Error);
-static SHAREMIND_ENUM_CUSTOM_DEFINE_CUSTOM_TOSTRING_CUSTOMNAME(
-        pdStartupErrorToString,
-        SharemindModuleApi0x1Error,
-        SHAREMIND_MODULE_API_0x1_ERROR_ENUM,
-        "PD startup failed with code ",
-        " from the module!")
 
 static const SharemindFacility * SharemindPd_facilityWrapper(
         SharemindModuleApi0x1PdWrapper * w,

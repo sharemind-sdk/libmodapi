@@ -175,6 +175,10 @@ SharemindSyscall * SharemindModuleApi_findSyscall(const SharemindModuleApi * m,
                                                   const char * signature)
         __attribute__ ((nonnull(1, 2)));
 
+SharemindSyscallWrapper SharemindModuleApi_syscallWrapper(
+        const SharemindModuleApi * m,
+        const char * signature) __attribute__ ((nonnull(1, 2)));
+
 
 size_t SharemindModuleApi_numPdks(const SharemindModuleApi * m)
         __attribute__ ((nonnull(1)));

@@ -246,6 +246,18 @@ SharemindSyscall * SharemindModuleApi_findSyscall(const SharemindModuleApi * m,
     return SharemindModulesSet_foreach_with_findSyscall(&m->modules, signature);
 }
 
+SharemindSyscallWrapper SharemindModuleApi_syscallWrapper(
+        const SharemindModuleApi * m,
+        const char * signature)
+{
+    assert(m);
+    SharemindSyscall * const sc = SharemindModuleApi_findSyscall(m, signature);
+    if (sc)
+        return SharemindSyscall_wrapper(sc);
+    static const SharemindSyscallWrapper nullWrapper = { NULL, NULL };
+    return nullWrapper;
+}
+
 size_t SharemindModuleApi_numPdks(const SharemindModuleApi * m) {
     assert(m);
     return SharemindModulesSet_foreach_with_numPdks(&m->modules);

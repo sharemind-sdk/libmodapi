@@ -22,6 +22,7 @@
 #include "facilitymap.h"
 #include "lasterror.h"
 #include "libmodapi.h"
+#include "pd.h"
 #include "tag.h"
 
 

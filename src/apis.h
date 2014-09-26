@@ -15,13 +15,12 @@
 #endif
 
 
+#include <sharemind/extern_c.h>
 #include <stdbool.h>
 #include "libmodapi.h"
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+SHAREMIND_EXTERN_C_BEGIN
 
 typedef struct {
 
@@ -70,8 +69,6 @@ typedef struct {
 
 } SharemindApi;
 
-#ifdef __cplusplus
-} /* extern "C" { */
-#endif
+SHAREMIND_EXTERN_C_END
 
 #endif /* SHAREMIND_LIBMODAPI_APIS_H */

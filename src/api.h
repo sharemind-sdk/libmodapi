@@ -10,12 +10,11 @@
 #ifndef SHAREMIND_LIBMODAPI_API_H
 #define SHAREMIND_LIBMODAPI_API_H
 
+#include <sharemind/extern_c.h>
 #include <stdint.h>
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+SHAREMIND_EXTERN_C_BEGIN
 
 /**
   \note This struct needs a name, because otherwise we might get this warning
@@ -41,9 +40,6 @@ typedef struct SharemindModuleInfo_ {
         (name), (version), { __VA_ARGS__, 0x0 } \
     }
 
-
-#ifdef __cplusplus
-} /* extern "C" { */
-#endif
+SHAREMIND_EXTERN_C_END
 
 #endif /* SHAREMIND_LIBMODAPI_API_H */

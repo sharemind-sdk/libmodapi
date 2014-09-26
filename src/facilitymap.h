@@ -14,6 +14,7 @@
 #error including an internal header!
 #endif
 
+#include <sharemind/extern_c.h>
 #include <sharemind/stringmap.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -32,9 +33,7 @@ SHAREMIND_STRINGMAP_DEFINE(SharemindFacilityMapInner,
 #endif /* SHAREMIND_LIBMODAPI_FACILITYMAP_C */
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+SHAREMIND_EXTERN_C_BEGIN
 
 typedef struct SharemindFacilityMap_ {
     SharemindFacilityMapInner realMap;
@@ -87,7 +86,10 @@ inline const SharemindFacility * SharemindFacilityMap_get(
 SHAREMIND_FACILITYMAP_DEFINE(inline)
 #endif /* SHAREMIND_LIBMODAPI_FACILITYMAP_C */
 
+SHAREMIND_EXTERN_C_END
+
 #define SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS__(CN,fF,FF)\
+    SHAREMIND_EXTERN_C_BEGIN \
     SharemindModuleApiError CN ## _set ## FF(CN * c, \
                                              const char * name, \
                                              void * facility, \
@@ -141,7 +143,8 @@ SHAREMIND_FACILITYMAP_DEFINE(inline)
                 SharemindFacilityMap_get(&c->fF ## Map, name); \
         CN ## _unlockConst(c); \
         return r; \
-    }
+    } \
+    SHAREMIND_EXTERN_C_END
 
 #define SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(ClassName,fN,FN) \
     SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS__(ClassName, \
@@ -150,9 +153,5 @@ SHAREMIND_FACILITYMAP_DEFINE(inline)
 
 #define SHAREMIND_DEFINE_SELF_FACILITYMAP_ACCESSORS(ClassName) \
     SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS__(ClassName, facility, Facility)
-
-#ifdef __cplusplus
-} /* extern "C" { */
-#endif
 
 #endif /* SHAREMIND_LIBMODAPI_FACILITYMAP_H */

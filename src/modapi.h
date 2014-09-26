@@ -16,6 +16,7 @@
 
 
 #include <sharemind/recursive_locks.h>
+#include <sharemind/extern_c.h>
 #include <sharemind/set.h>
 #include <stdbool.h>
 #include "facilitymap.h"
@@ -24,9 +25,7 @@
 #include "tag.h"
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+SHAREMIND_EXTERN_C_BEGIN
 
 SHAREMIND_SET_DECLARE(SharemindModulesSet, SharemindModule *,)
 
@@ -53,9 +52,7 @@ SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE(SharemindModuleApi);
 SHAREMIND_LASTERROR_PRIVATE_FUNCTIONS_DECLARE(SharemindModuleApi);
 
 
-#ifdef __cplusplus
-} /* extern "C" { */
-#endif
+SHAREMIND_EXTERN_C_BEGIN
 
 #endif /* SHAREMIND_LIBMODAPI_MODAPI_H */
 

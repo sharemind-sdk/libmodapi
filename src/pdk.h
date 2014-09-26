@@ -14,6 +14,7 @@
 #error including an internal header!
 #endif
 
+#include <sharemind/extern_c.h>
 #include <sharemind/recursive_locks.h>
 #include <sharemind/map.h>
 #include <stdbool.h>
@@ -23,9 +24,7 @@
 #include "tag.h"
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+SHAREMIND_EXTERN_C_BEGIN
 
 SHAREMIND_STRINGMAP_DECLARE(SharemindPdMap,SharemindPd,)
 
@@ -114,9 +113,6 @@ void SharemindPdk_destroy(SharemindPdk * pdk) __attribute__ ((nonnull(1)));
 SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE(SharemindPdk);
 SHAREMIND_LASTERROR_PRIVATE_FUNCTIONS_DECLARE(SharemindPdk);
 
-
-#ifdef __cplusplus
-} /* extern "C" { */
-#endif
+SHAREMIND_EXTERN_C_END
 
 #endif /* SHAREMIND_LIBMODAPI_PDK_H */

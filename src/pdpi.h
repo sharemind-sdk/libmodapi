@@ -14,6 +14,7 @@
 #error including an internal header!
 #endif
 
+#include <sharemind/extern_c.h>
 #include <sharemind/recursive_locks.h>
 #include <sharemind/refs.h>
 #include <stdbool.h>
@@ -23,9 +24,7 @@
 #include "tag.h"
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+SHAREMIND_EXTERN_C_BEGIN
 
 struct SharemindPdpi_ {
 
@@ -57,9 +56,6 @@ SHAREMIND_LASTERROR_PRIVATE_FUNCTIONS_DECLARE(SharemindPdpi);
 SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindPdpi)
 SHAREMIND_NAMED_REFS_DECLARE_FUNCTIONS(SharemindPdpi,startedRefs)
 
-
-#ifdef __cplusplus
-} /* extern "C" { */
-#endif
+SHAREMIND_EXTERN_C_END
 
 #endif /* SHAREMIND_LIBMODAPI_PDPI_H */

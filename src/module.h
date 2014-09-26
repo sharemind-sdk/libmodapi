@@ -15,6 +15,7 @@
 #endif
 
 
+#include <sharemind/extern_c.h>
 #include <sharemind/recursive_locks.h>
 #include <sharemind/refs.h>
 #include <stdint.h>
@@ -25,9 +26,7 @@
 #include "tag.h"
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+SHAREMIND_EXTERN_C_BEGIN
 
 
 struct SharemindModule_ {
@@ -72,9 +71,7 @@ SHAREMIND_LASTERROR_PRIVATE_FUNCTIONS_DECLARE(SharemindModule);
 SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindModule)
 #endif
 
-#ifdef __cplusplus
-} /* extern "C" { */
-#endif
+SHAREMIND_EXTERN_C_END
 
 #endif /* SHAREMIND_LIBMODAPI_MODULE_H */
 

@@ -14,6 +14,7 @@
 #error SHAREMIND_INTERNAL__
 #endif
 
+#include <sharemind/extern_c.h>
 #include "libmodapi.h"
 
 
@@ -22,6 +23,7 @@
     const char * lastErrorStaticString
 
 #define SHAREMIND_LASTERROR_PRIVATE_FUNCTIONS_DECLARE(ClassName) \
+    SHAREMIND_EXTERN_C_BEGIN \
     void ClassName ## _setError( \
             ClassName * c, \
             SharemindModuleApiError error, \
@@ -32,8 +34,10 @@
             __attribute__ ((nonnull(1))); \
     void ClassName ## _setErrorMie(ClassName * c) \
             __attribute__ ((nonnull(1))) \
+    SHAREMIND_EXTERN_C_END
 
 #define SHAREMIND_LASTERROR_FUNCTIONS_DEFINE(ClassName) \
+    SHAREMIND_EXTERN_C_BEGIN \
     SharemindModuleApiError ClassName ## _lastError( \
             const ClassName * c) \
     { \
@@ -94,7 +98,8 @@
         ClassName ## _setError(c, \
                                SHAREMIND_MODULE_API_MUTEX_ERROR, \
                                "Mutex initialization error!"); \
-    }
+    } \
+    SHAREMIND_EXTERN_C_END
 
 #endif /* SHAREMIND_LIBMODAPI_LASTERROR_H */
 

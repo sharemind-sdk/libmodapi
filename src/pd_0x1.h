@@ -16,11 +16,10 @@
 
 #include "libmodapi.h"
 
+#include <sharemind/extern_c.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
+SHAREMIND_EXTERN_C_BEGIN
 
 bool SharemindPd_start_0x1(SharemindPd * pd)
         __attribute__ ((nonnull(1), visibility("internal")));
@@ -28,10 +27,7 @@ bool SharemindPd_start_0x1(SharemindPd * pd)
 void SharemindPd_stop_0x1(SharemindPd * pd)
         __attribute__ ((nonnull(1), visibility("internal")));
 
-
-#ifdef __cplusplus
-} /* extern "C" { */
-#endif
+SHAREMIND_EXTERN_C_END
 
 #endif /* SHAREMIND_LIBMODAPI_PD_0x1_H */
 

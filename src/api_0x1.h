@@ -11,14 +11,13 @@
 #define SHAREMIND_LIBMODAPI_API_0x1_H
 
 #include <sharemind/codeblock.h>
+#include <sharemind/extern_c.h>
 #include <sharemind/preprocessor.h>
 #include <stddef.h>
 #include "api.h"
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+SHAREMIND_EXTERN_C_BEGIN
 
 #ifndef SHAREMIND_ICONST
 #ifdef SHAREMIND_INTERNAL__
@@ -528,8 +527,6 @@ typedef SharemindModuleApi0x1PdkDefinition const
         { "", NULL, NULL, NULL, NULL } \
     }
 
-#ifdef __cplusplus
-} /* extern "C" { */
-#endif
+SHAREMIND_EXTERN_C_END
 
 #endif /* SHAREMIND_LIBMODAPI_API_0x1_H */

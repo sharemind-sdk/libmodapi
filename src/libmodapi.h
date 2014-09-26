@@ -10,6 +10,7 @@
 #ifndef SHAREMIND_LIBMODAPI_LIBMODAPI_H
 #define SHAREMIND_LIBMODAPI_LIBMODAPI_H
 
+#include <sharemind/extern_c.h>
 #include <sharemind/preprocessor.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -17,9 +18,7 @@
 #include "api_0x1.h"
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+SHAREMIND_EXTERN_C_BEGIN
 
 
 /*******************************************************************************
@@ -440,9 +439,7 @@ SharemindModuleApi * SharemindPdpi_modapi(const SharemindPdpi * pdpi)
 #undef SHAREMIND_LIBMODAPI_DECLARE_TAG_FUNCTIONS
 
 
-#ifdef __cplusplus
-} /* extern "C" { */
-#endif
+SHAREMIND_EXTERN_C_END
 
 
 #endif /* SHAREMIND_LIBMODAPI_LIBMODAPI_H */

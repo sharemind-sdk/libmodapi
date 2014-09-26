@@ -14,6 +14,8 @@
 #error including an internal header!
 #endif
 
+
+#include <sharemind/extern_c.h>
 #include <sharemind/recursive_locks.h>
 #ifndef NDEBUG
 #include <sharemind/refs.h>
@@ -23,9 +25,7 @@
 #include "tag.h"
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+SHAREMIND_EXTERN_C_BEGIN
 
 
 struct SharemindSyscall_ {
@@ -63,9 +63,6 @@ SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE(SharemindSyscall);
 SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindSyscall)
 #endif
 
-
-#ifdef __cplusplus
-} /* extern "C" { */
-#endif
+SHAREMIND_EXTERN_C_END
 
 #endif /* SHAREMIND_LIBMODAPI_SYSCALL_H */

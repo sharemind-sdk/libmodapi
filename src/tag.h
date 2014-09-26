@@ -15,6 +15,9 @@
 #endif
 
 
+#include <sharemind/extern_c.h>
+
+
 #define SHAREMIND_TAG_DECLARE_FIELDS \
     void * tag; \
     SharemindTagDestructor tagDestructor
@@ -31,6 +34,7 @@
     } else (void) 0
 
 #define SHAREMIND_TAG_FUNCTIONS_DEFINE(ClassName) \
+    SHAREMIND_EXTERN_C_BEGIN \
     void * ClassName ## _tag(const ClassName * c) { \
         assert(c); \
         ClassName ## _lockConst(c); \
@@ -83,6 +87,7 @@
         c->tagDestructor = tagDestructor; \
         ClassName ## _unlock(c); \
     } \
+    SHAREMIND_EXTERN_C_END
 
 #endif /* SHAREMIND_LIBMODAPI_TAG_H */
 

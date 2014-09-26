@@ -16,11 +16,10 @@
 
 #include "libmodapi.h"
 
+#include <sharemind/extern_c.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
+SHAREMIND_EXTERN_C_BEGIN
 
 bool SharemindPdpi_start_0x1(SharemindPdpi * pdpi)
         __attribute__ ((nonnull(1), visibility("internal")));
@@ -28,10 +27,7 @@ bool SharemindPdpi_start_0x1(SharemindPdpi * pdpi)
 void SharemindPdpi_stop_0x1(SharemindPdpi * pdpi)
         __attribute__ ((nonnull(1), visibility("internal")));
 
-
-#ifdef __cplusplus
-} /* extern "C" { */
-#endif
+SHAREMIND_EXTERN_C_END
 
 #endif /* SHAREMIND_LIBMODAPI_PDPI_0x1_H */
 

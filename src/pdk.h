@@ -14,6 +14,7 @@
 #error including an internal header!
 #endif
 
+#include <sharemind/comma.h>
 #include <sharemind/extern_c.h>
 #include <sharemind/recursive_locks.h>
 #include <sharemind/map.h>
@@ -110,7 +111,10 @@ bool SharemindPdk_init(SharemindPdk * pdk,
 
 void SharemindPdk_destroy(SharemindPdk * pdk) __attribute__ ((nonnull(1)));
 
-SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE(SharemindPdk);
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE_DEFINE(
+        SharemindPdk,
+        inline,
+        SHAREMIND_COMMA visibility("internal"))
 SHAREMIND_LASTERROR_PRIVATE_FUNCTIONS_DECLARE(SharemindPdk);
 
 SHAREMIND_EXTERN_C_END

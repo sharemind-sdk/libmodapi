@@ -121,7 +121,6 @@ void SharemindPd_free(SharemindPd * pd) {
     free(name);
 }
 
-SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DEFINE(SharemindPd)
 SHAREMIND_LASTERROR_FUNCTIONS_DEFINE(SharemindPd)
 
 bool SharemindPd_isStarted(const SharemindPd * pd) {

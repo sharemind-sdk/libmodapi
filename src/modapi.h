@@ -48,7 +48,9 @@ struct SharemindModuleApi_ {
 
 };
 
-SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE(SharemindModuleApi);
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE_DEFINE(SharemindModuleApi,
+                                                  inline,
+                                                  SHAREMIND_COMMA visibility("internal"))
 SHAREMIND_LASTERROR_PRIVATE_FUNCTIONS_DECLARE(SharemindModuleApi);
 
 

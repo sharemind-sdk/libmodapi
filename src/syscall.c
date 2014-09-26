@@ -116,8 +116,6 @@ SharemindSyscallWrapper SharemindSyscall_wrapper(const SharemindSyscall * sc) {
     return sc->wrapper;
 }
 
-SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DEFINE(SharemindSyscall)
-
 #ifndef NDEBUG
 SHAREMIND_REFS_DEFINE_FUNCTIONS(SharemindSyscall)
 #endif

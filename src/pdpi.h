@@ -14,6 +14,7 @@
 #error including an internal header!
 #endif
 
+#include <sharemind/comma.h>
 #include <sharemind/extern_c.h>
 #include <sharemind/recursive_locks.h>
 #include <sharemind/refs.h>
@@ -51,7 +52,10 @@ struct SharemindPdpi_ {
 
 };
 
-SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE(SharemindPdpi);
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE_DEFINE(
+        SharemindPdpi,
+        inline,
+        SHAREMIND_COMMA visibility("internal"))
 SHAREMIND_LASTERROR_PRIVATE_FUNCTIONS_DECLARE(SharemindPdpi);
 SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindPdpi)
 SHAREMIND_NAMED_REFS_DECLARE_FUNCTIONS(SharemindPdpi,startedRefs)

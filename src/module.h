@@ -14,7 +14,7 @@
 #error SHAREMIND_INTERNAL__
 #endif
 
-
+#include <sharemind/comma.h>
 #include <sharemind/extern_c.h>
 #include <sharemind/recursive_locks.h>
 #include <sharemind/refs.h>
@@ -64,7 +64,10 @@ struct SharemindModule_ {
 
 };
 
-SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE(SharemindModule);
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE_DEFINE(
+        SharemindModule,
+        inline,
+        SHAREMIND_COMMA visibility("internal"))
 SHAREMIND_LASTERROR_PRIVATE_FUNCTIONS_DECLARE(SharemindModule);
 
 #ifndef NDEBUG

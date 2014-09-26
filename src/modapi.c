@@ -298,8 +298,6 @@ SharemindPd * SharemindModuleApi_findPd(const SharemindModuleApi * m,
     return r;
 }
 
-SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DEFINE(SharemindModuleApi)
-
 SHAREMIND_LASTERROR_FUNCTIONS_DEFINE(SharemindModuleApi)
 
 SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindModuleApi,module,Module)

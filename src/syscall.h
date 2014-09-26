@@ -15,6 +15,7 @@
 #endif
 
 
+#include <sharemind/comma.h>
 #include <sharemind/extern_c.h>
 #include <sharemind/recursive_locks.h>
 #ifndef NDEBUG
@@ -57,7 +58,10 @@ bool SharemindSyscall_init(SharemindSyscall * sc,
 void SharemindSyscall_destroy(SharemindSyscall * sc)
         __attribute__ ((nonnull(1)));
 
-SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE(SharemindSyscall);
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE_DEFINE(
+        SharemindSyscall,
+        inline,
+        SHAREMIND_COMMA visibility("internal"))
 
 #ifndef NDEBUG
 SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindSyscall)

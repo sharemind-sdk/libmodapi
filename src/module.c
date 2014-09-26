@@ -224,7 +224,6 @@ void SharemindModule_free(SharemindModule * m) {
     free(m);
 }
 
-SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DEFINE(SharemindModule)
 SharemindModuleApiError SharemindModule_init(SharemindModule * m) {
     assert(m);
     SharemindModule_lock(m);

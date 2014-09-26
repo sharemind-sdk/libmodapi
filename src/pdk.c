@@ -141,7 +141,6 @@ void SharemindPdk_destroy(SharemindPdk * pdk) {
     SHAREMIND_RECURSIVE_LOCK_DEINIT(pdk);
 }
 
-SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DEFINE(SharemindPdk)
 SHAREMIND_LASTERROR_FUNCTIONS_DEFINE(SharemindPdk)
 
 const char * SharemindPdk_name(const SharemindPdk * pdk) {

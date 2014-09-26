@@ -87,7 +87,6 @@ void SharemindPdpi_free(SharemindPdpi * pdpi) {
     free(pdpi);
 }
 
-SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DEFINE(SharemindPdpi)
 SHAREMIND_LASTERROR_FUNCTIONS_DEFINE(SharemindPdpi)
 
 bool SharemindPdpi_isStarted(const SharemindPdpi * pdpi) {

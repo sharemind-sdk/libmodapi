@@ -65,6 +65,29 @@ SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
         if (result)
             return result;)
 SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
+        static inline SharemindSyscallWrapper,
+        SharemindModulesSet,
+        findSyscallWrapper,
+        SHAREMIND_COMMA const char * signature,)
+SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
+        static inline SharemindSyscallWrapper,
+        SharemindModulesSet,
+        findSyscallWrapper,
+        SHAREMIND_COMMA const char * signature,
+        static const SharemindSyscallWrapper nullWrapper =
+                { NULL SHAREMIND_COMMA NULL };,
+        nullWrapper,
+        assert(item->key);
+        SharemindSyscall * const sc =
+                SharemindModule_findSyscall(item->key, signature);
+        if (sc) {
+            const SharemindSyscallWrapper result = {
+                SharemindSyscall_wrapper(sc).callable,
+                SharemindModule_handle(item->key)
+            };
+            return result;
+        })
+SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
         static inline size_t,
         SharemindModulesSet,
         numPdks,,)
@@ -168,6 +191,7 @@ SHAREMIND_SET_DEFINE_DESTROY_WITH_INLINE(SharemindModulesSet,
                                          static inline,
                                          SharemindModule_free(*item);)
 
+
 SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiError * error,
                                             const char ** errorStr)
 {
@@ -242,11 +266,12 @@ SharemindSyscallWrapper SharemindModuleApi_syscallWrapper(
         const char * signature)
 {
     assert(m);
-    SharemindSyscall * const sc = SharemindModuleApi_findSyscall(m, signature);
-    if (sc)
-        return SharemindSyscall_wrapper(sc);
-    static const SharemindSyscallWrapper nullWrapper = { NULL, NULL };
-    return nullWrapper;
+    SharemindModuleApi_lockConst(m);
+    const SharemindSyscallWrapper sc =
+            SharemindModulesSet_foreach_with_findSyscallWrapper(&m->modules,
+                                                                signature);
+    SharemindModuleApi_unlockConst(m);
+    return sc;
 }
 
 size_t SharemindModuleApi_numPdks(const SharemindModuleApi * m) {

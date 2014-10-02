@@ -68,7 +68,7 @@ bool SharemindPdk_init(SharemindPdk * pdk,
         goto SharemindPdk_init_error_1;
     }
 
-    SHAREMIND_LASTERROR_INIT(pdk);
+    SHAREMIND_LIBMODAPI_LASTERROR_INIT(pdk);
     SHAREMIND_TAG_INIT(pdk);
 
     pdk->name = strdup(name);
@@ -155,7 +155,7 @@ void SharemindPdk_destroy(SharemindPdk * pdk) {
     SHAREMIND_RECURSIVE_LOCK_DEINIT(pdk);
 }
 
-SHAREMIND_LASTERROR_FUNCTIONS_DEFINE(SharemindPdk)
+SHAREMIND_LIBMODAPI_LASTERROR_FUNCTIONS_DEFINE(SharemindPdk)
 
 const char * SharemindPdk_name(const SharemindPdk * pdk) {
     assert(pdk);

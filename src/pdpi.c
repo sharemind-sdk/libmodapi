@@ -43,7 +43,7 @@ SharemindPdpi * SharemindPd_newPdpi(SharemindPd * pd) {
         goto SharemindPdpi_new_error_2;
     }
 
-    SHAREMIND_LASTERROR_INIT(pdpi);
+    SHAREMIND_LIBMODAPI_LASTERROR_INIT(pdpi);
     SHAREMIND_TAG_INIT(pdpi);
 
     pdpi->pdProcessHandle = NULL; /* Just in case */
@@ -88,7 +88,7 @@ void SharemindPdpi_free(SharemindPdpi * pdpi) {
     free(pdpi);
 }
 
-SHAREMIND_LASTERROR_FUNCTIONS_DEFINE(SharemindPdpi)
+SHAREMIND_LIBMODAPI_LASTERROR_FUNCTIONS_DEFINE(SharemindPdpi)
 
 bool SharemindPdpi_isStarted(const SharemindPdpi * pdpi) {
     assert(pdpi);

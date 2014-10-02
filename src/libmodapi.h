@@ -11,6 +11,7 @@
 #define SHAREMIND_LIBMODAPI_LIBMODAPI_H
 
 #include <sharemind/extern_c.h>
+#include <sharemind/lasterror.h>
 #include <sharemind/preprocessor.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -34,12 +35,8 @@ SHAREMIND_EXTERN_C_BEGIN
 *******************************************************************************/
 
 #define SHAREMIND_LIBMODAPI_DECLARE_ERROR_FUNCTIONS(ClassName) \
-    SharemindModuleApiError ClassName ## _lastError(const ClassName * c) \
-            __attribute__ ((nonnull(1))); \
-    const char * ClassName ## _lastErrorString(const ClassName * c) \
-            __attribute__ ((nonnull(1))); \
-    void ClassName ## _clearError(ClassName * c) \
-            __attribute__ ((nonnull(1)))
+    SHAREMIND_LASTERROR_PUBLIC_FUNCTIONS_DECLARE(ClassName,, \
+                                                 SharemindModuleApiError,)
 
 #define SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS__(ClassName,fF,FF) \
     SharemindModuleApiError ClassName ## _set ## FF(ClassName * c, \

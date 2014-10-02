@@ -72,7 +72,7 @@ SharemindPd * SharemindPdk_newPd(SharemindPdk * pdk,
         goto SharemindPd_new_fail_1;
     }
 
-    SHAREMIND_LASTERROR_INIT(pd);
+    SHAREMIND_LIBMODAPI_LASTERROR_INIT(pd);
     SHAREMIND_TAG_INIT(pd);
 
     pd->name = strdup(name);
@@ -146,7 +146,7 @@ void SharemindPd_free(SharemindPd * pd) {
     SharemindPdMap_remove(&pd->pdk->pds, pd->name);
 }
 
-SHAREMIND_LASTERROR_FUNCTIONS_DEFINE(SharemindPd)
+SHAREMIND_LIBMODAPI_LASTERROR_FUNCTIONS_DEFINE(SharemindPd)
 
 bool SharemindPd_isStarted(const SharemindPd * pd) {
     assert(pd);

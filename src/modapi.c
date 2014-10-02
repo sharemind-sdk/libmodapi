@@ -214,7 +214,7 @@ SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiError * error,
         return NULL;
     }
 
-    SHAREMIND_LASTERROR_INIT(modapi);
+    SHAREMIND_LIBMODAPI_LASTERROR_INIT(modapi);
     SHAREMIND_TAG_INIT(modapi);
 
     SharemindModulesSet_init(&modapi->modules);
@@ -314,7 +314,7 @@ SharemindPd * SharemindModuleApi_findPd(const SharemindModuleApi * m,
     return r;
 }
 
-SHAREMIND_LASTERROR_FUNCTIONS_DEFINE(SharemindModuleApi)
+SHAREMIND_LIBMODAPI_LASTERROR_FUNCTIONS_DEFINE(SharemindModuleApi)
 
 SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindModuleApi,module,Module)
 SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindModuleApi,pd,Pd)

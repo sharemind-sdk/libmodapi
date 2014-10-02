@@ -69,6 +69,7 @@ bool SharemindPdk_init(SharemindPdk * pdk,
     }
 
     SHAREMIND_LASTERROR_INIT(pdk);
+    SHAREMIND_TAG_INIT(pdk);
 
     pdk->name = strdup(name);
     if (unlikely(!pdk->name)) {
@@ -111,7 +112,6 @@ bool SharemindPdk_init(SharemindPdk * pdk,
     }
 
     pdk->module = module;
-    SHAREMIND_TAG_INIT(pdk);
     SharemindFacilityMap_init(&pdk->pdFacilityMap, &module->pdFacilityMap);
     SharemindFacilityMap_init(&pdk->pdpiFacilityMap, &module->pdpiFacilityMap);
     SharemindPdMap_init(&pdk->pds);

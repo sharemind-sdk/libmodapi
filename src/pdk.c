@@ -68,6 +68,8 @@ bool SharemindPdk_init(SharemindPdk * pdk,
         goto SharemindPdk_init_error_1;
     }
 
+    SHAREMIND_LASTERROR_INIT(pdk);
+
     pdk->name = strdup(name);
     if (unlikely(!pdk->name)) {
         SharemindModuleApi_setErrorOom(module->modapi);

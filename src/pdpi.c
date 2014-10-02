@@ -43,6 +43,7 @@ SharemindPdpi * SharemindPd_newPdpi(SharemindPd * pd) {
         goto SharemindPdpi_new_error_2;
     }
 
+    SHAREMIND_LASTERROR_INIT(pdpi);
     SHAREMIND_TAG_INIT(pdpi);
 
     pdpi->pdProcessHandle = NULL; /* Just in case */

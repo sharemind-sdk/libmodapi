@@ -14,6 +14,7 @@
 #error SHAREMIND_INTERNAL__
 #endif
 
+#include <sharemind/comma.h>
 #include <sharemind/lasterror.h>
 #include "libmodapi.h"
 
@@ -24,36 +25,48 @@
 #define SHAREMIND_LIBMODAPI_LASTERROR_INIT(className) \
     SHAREMIND_LASTERROR_INIT(className, SHAREMIND_MODULE_API_OK)
 
-#define SHAREMIND_LIBMODAPI_LASTERROR_PRIVATE_FUNCTIONS(ClassName) \
-    SHAREMIND_LASTERROR_PRIVATE_FUNCTIONS_DECLARE_DEFINE( \
-            ClassName, \
-            inline, \
+#define SHAREMIND_LIBMODAPI_LASTERROR_PRIVATE_FUNCTIONS_DECLARE(ClassName) \
+    SHAREMIND_LASTERROR_PRIVATE_FUNCTIONS_DECLARE( \
+            ClassName,, \
             SharemindModuleApiError, \
-            SHAREMIND_MODULE_API_OK,) \
-    SHAREMIND_LASTERROR_PRIVATE_SHORTCUT_DECLARE_DEFINE( \
+            SHAREMIND_COMMA visibility("internal")) \
+    SHAREMIND_LASTERROR_PRIVATE_SHORTCUT_DECLARE( \
             ClassName, \
-            Oom, \
-            inline, \
-            SHAREMIND_MODULE_API_OUT_OF_MEMORY, \
-            "Out of memory!",) \
-    SHAREMIND_LASTERROR_PRIVATE_SHORTCUT_DECLARE_DEFINE( \
+            Oom,, \
+            SHAREMIND_COMMA visibility("internal")) \
+    SHAREMIND_LASTERROR_PRIVATE_SHORTCUT_DECLARE( \
             ClassName, \
-            Oor, \
-            inline, \
-            SHAREMIND_MODULE_API_IMPLEMENTATION_LIMITS_REACHED, \
-            "Implementation limits reached!",) \
-    SHAREMIND_LASTERROR_PRIVATE_SHORTCUT_DECLARE_DEFINE( \
+            Oor,, \
+            SHAREMIND_COMMA visibility("internal")) \
+    SHAREMIND_LASTERROR_PRIVATE_SHORTCUT_DECLARE( \
             ClassName, \
-            Mie, \
-            inline, \
-            SHAREMIND_MODULE_API_MUTEX_ERROR, \
-            "Mutex initialization error!",)
+            Mie,, \
+            SHAREMIND_COMMA visibility("internal"))
 
 #define SHAREMIND_LIBMODAPI_LASTERROR_FUNCTIONS_DEFINE(ClassName) \
     SHAREMIND_LASTERROR_PUBLIC_FUNCTIONS_DEFINE( \
             ClassName,, \
             SharemindModuleApiError, \
-            SHAREMIND_MODULE_API_OK)
+            SHAREMIND_MODULE_API_OK) \
+    SHAREMIND_LASTERROR_PRIVATE_FUNCTIONS_DEFINE( \
+            ClassName,, \
+            SharemindModuleApiError, \
+            SHAREMIND_MODULE_API_OK) \
+    SHAREMIND_LASTERROR_PRIVATE_SHORTCUT_DEFINE( \
+            ClassName, \
+            Oom,, \
+            SHAREMIND_MODULE_API_OUT_OF_MEMORY, \
+            "Out of memory!") \
+    SHAREMIND_LASTERROR_PRIVATE_SHORTCUT_DEFINE( \
+            ClassName, \
+            Oor,, \
+            SHAREMIND_MODULE_API_IMPLEMENTATION_LIMITS_REACHED, \
+            "Implementation limits reached!") \
+    SHAREMIND_LASTERROR_PRIVATE_SHORTCUT_DEFINE( \
+            ClassName, \
+            Mie,, \
+            SHAREMIND_MODULE_API_MUTEX_ERROR, \
+            "Mutex initialization error!")
 
 #endif /* SHAREMIND_LIBMODAPI_LASTERROR_H */
 

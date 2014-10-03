@@ -113,7 +113,11 @@ SharemindModuleApi * SharemindSyscall_modapi(const SharemindSyscall * sc) {
 SharemindSyscallWrapper SharemindSyscall_wrapper(const SharemindSyscall * sc) {
     assert(sc);
     assert(sc->wrapper.callable);
-    return sc->wrapper;
+    const SharemindSyscallWrapper result = {
+        sc->wrapper.callable,
+        SharemindModule_handle(sc->module)
+    };
+    return result;
 }
 
 #ifndef NDEBUG

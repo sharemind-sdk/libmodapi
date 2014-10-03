@@ -317,6 +317,27 @@ SharemindSyscall * SharemindModule_findSyscall(const SharemindModule * m,
     return (*(m->api->findSyscall))(m, signature);
 }
 
+SharemindSyscallWrapper SharemindModule_syscallWrapper(
+        const SharemindModule * m,
+        const char * signature)
+{
+    assert(m);
+    assert(signature);
+    SharemindModule_lockConst(m);
+    SharemindSyscall * const sc = (*(m->api->findSyscall))(m, signature);
+    if (sc) {
+        const SharemindSyscallWrapper result = {
+            SharemindSyscall_wrapper(sc).callable,
+            m->moduleHandle
+        };
+        SharemindModule_unlockConst(m);
+        return result;
+    }
+    SharemindModule_unlockConst(m);
+    static const SharemindSyscallWrapper nullWrapper = { NULL, NULL };
+    return nullWrapper;
+}
+
 size_t SharemindModule_numPdks(const SharemindModule * m) {
     assert(m);
     // No locking: all const after SharemindModule_new.

@@ -13,6 +13,7 @@
 #include <sharemind/codeblock.h>
 #include <sharemind/extern_c.h>
 #include <sharemind/preprocessor.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include "api.h"
 
@@ -244,8 +245,9 @@ struct SharemindModuleApi0x1SyscallContext_ {
             SharemindModuleApi0x1SyscallContext * c,
             uint64_t nBytes);
 
-    int (* SHAREMIND_ICONST publicFree)(SharemindModuleApi0x1SyscallContext * c,
-                                        uint64_t ptr);
+    bool (* SHAREMIND_ICONST publicFree)(
+            SharemindModuleApi0x1SyscallContext * c,
+            uint64_t ptr);
 
     size_t (* SHAREMIND_ICONST publicMemPtrSize)(
             SharemindModuleApi0x1SyscallContext * c,
@@ -261,15 +263,15 @@ struct SharemindModuleApi0x1SyscallContext_ {
             SharemindModuleApi0x1SyscallContext * c,
             size_t nBytes);
 
-    int (* SHAREMIND_ICONST freePrivate)(
+    void (* SHAREMIND_ICONST freePrivate)(
             SharemindModuleApi0x1SyscallContext * c,
             void * ptr);
 
-    int (* SHAREMIND_ICONST reservePrivate)(
+    bool (* SHAREMIND_ICONST reservePrivate)(
             SharemindModuleApi0x1SyscallContext * c,
             size_t nBytes);
 
-    int (* SHAREMIND_ICONST releasePrivate)(
+    bool (* SHAREMIND_ICONST releasePrivate)(
             SharemindModuleApi0x1SyscallContext * c,
             size_t nBytes);
 

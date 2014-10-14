@@ -244,21 +244,32 @@ void SharemindModuleApi_free(SharemindModuleApi * modapi) {
 
 size_t SharemindModuleApi_numSyscalls(const SharemindModuleApi * m) {
     assert(m);
-    return SharemindModulesSet_foreach_with_numSyscalls(&m->modules);
+    SharemindModuleApi_lockConst(m);
+    const size_t n = SharemindModulesSet_foreach_with_numSyscalls(&m->modules);
+    SharemindModuleApi_lockConst(m);
+    return n;
 }
 
 SharemindSyscall * SharemindModuleApi_syscall(const SharemindModuleApi * m,
                                               size_t index)
 {
     assert(m);
-    return SharemindModulesSet_foreach_with_syscall(&m->modules, index);
+    SharemindModuleApi_lockConst(m);
+    SharemindSyscall * const sc =
+            SharemindModulesSet_foreach_with_syscall(&m->modules, index);
+    SharemindModuleApi_unlockConst(m);
+    return sc;
 }
 
 SharemindSyscall * SharemindModuleApi_findSyscall(const SharemindModuleApi * m,
                                                   const char * signature)
 {
     assert(m);
-    return SharemindModulesSet_foreach_with_findSyscall(&m->modules, signature);
+    SharemindModuleApi_lockConst(m);
+    SharemindSyscall * const sc =
+            SharemindModulesSet_foreach_with_findSyscall(&m->modules, signature);
+    SharemindModuleApi_unlockConst(m);
+    return sc;
 }
 
 SharemindSyscallWrapper SharemindModuleApi_syscallWrapper(
@@ -276,31 +287,49 @@ SharemindSyscallWrapper SharemindModuleApi_syscallWrapper(
 
 size_t SharemindModuleApi_numPdks(const SharemindModuleApi * m) {
     assert(m);
-    return SharemindModulesSet_foreach_with_numPdks(&m->modules);
+    SharemindModuleApi_lockConst(m);
+    const size_t n = SharemindModulesSet_foreach_with_numPdks(&m->modules);
+    SharemindModuleApi_unlockConst(m);
+    return n;
 }
 
 SharemindPdk * SharemindModuleApi_pdk(const SharemindModuleApi * m,
                                       size_t index)
 {
     assert(m);
-    return SharemindModulesSet_foreach_with_pdk(&m->modules, index);
+    SharemindModuleApi_lockConst(m);
+    SharemindPdk * const pdk =
+            SharemindModulesSet_foreach_with_pdk(&m->modules, index);
+    SharemindModuleApi_unlockConst(m);
+    return pdk;
 }
 
 SharemindPdk * SharemindModuleApi_findPdk(const SharemindModuleApi * m,
                                           const char * name)
 {
     assert(m);
-    return SharemindModulesSet_foreach_with_findPdk(&m->modules, name);
+    SharemindModuleApi_lockConst(m);
+    SharemindPdk * const pdk =
+            SharemindModulesSet_foreach_with_findPdk(&m->modules, name);
+    SharemindModuleApi_unlockConst(m);
+    return pdk;
 }
 
 size_t SharemindModuleApi_numPds(const SharemindModuleApi * m) {
     assert(m);
-    return SharemindModulesSet_foreach_with_numPds(&m->modules);
+    SharemindModuleApi_lockConst(m);
+    const size_t n = SharemindModulesSet_foreach_with_numPds(&m->modules);
+    SharemindModuleApi_unlockConst(m);
+    return n;
 }
 
-SharemindPd * SharemindModuleApi_pd(const SharemindModuleApi * m, size_t index) {
+SharemindPd * SharemindModuleApi_pd(const SharemindModuleApi * m, size_t index){
     assert(m);
-    return SharemindModulesSet_foreach_with_pd(&m->modules, index);
+    SharemindModuleApi_lockConst(m);
+    SharemindPd * const pd =
+            SharemindModulesSet_foreach_with_pd(&m->modules, index);
+    SharemindModuleApi_unlockConst(m);
+    return pd;
 }
 
 SharemindPd * SharemindModuleApi_findPd(const SharemindModuleApi * m,

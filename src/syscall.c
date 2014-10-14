@@ -85,20 +85,20 @@ void SharemindSyscall_destroy(SharemindSyscall * sc) {
 const char * SharemindSyscall_signature(const SharemindSyscall * sc) {
     assert(sc);
     assert(sc->name);
-    return sc->name;
+    return sc->name; // No locking: const after SharemindSyscall_init.
 }
 
 SharemindModule * SharemindSyscall_module(const SharemindSyscall * sc) {
     assert(sc);
     assert(sc->module);
-    return sc->module;
+    return sc->module; // No locking: const after SharemindSyscall_init.
 }
 
 SharemindModuleApi * SharemindSyscall_moduleApi(const SharemindSyscall * sc) {
     assert(sc);
     assert(sc->module);
     assert(sc->module->modapi);
-    return sc->module->modapi;
+    return sc->module->modapi; // No locking: const after SharemindSyscall_init.
 }
 
 /**
@@ -108,6 +108,7 @@ SharemindModuleApi * SharemindSyscall_moduleApi(const SharemindSyscall * sc) {
 SharemindSyscallWrapper SharemindSyscall_wrapper(const SharemindSyscall * sc) {
     assert(sc);
     assert(sc->wrapper.callable);
+     // No locking: const after SharemindSyscall_init:
     const SharemindSyscallWrapper result = {
         sc->wrapper.callable,
         SharemindModule_handle(sc->module)

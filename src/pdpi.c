@@ -25,22 +25,16 @@ SharemindPdpi * SharemindPd_newPdpi(SharemindPd * pd) {
     assert(pd->pdk->module);
     assert(pd->pdk->module->modapi);
 
-    SharemindPdpi * pdpi;
-
-    if (!SharemindPd_refs_ref(pd)) {
-        SharemindPd_setErrorOor(pd);
-        goto SharemindPdpi_new_error_0;
-    }
-
-    pdpi = (SharemindPdpi *) malloc(sizeof(SharemindPdpi));
+    SharemindPdpi * const pdpi
+            = (SharemindPdpi *) malloc(sizeof(SharemindPdpi));
     if (unlikely(!pdpi)) {
         SharemindPd_setErrorOom(pd);
-        goto SharemindPdpi_new_error_1;
+        goto SharemindPdpi_new_error_0;
     }
 
     if (!SHAREMIND_RECURSIVE_LOCK_INIT(pdpi)) {
         SharemindPd_setErrorMie(pd);
-        goto SharemindPdpi_new_error_2;
+        goto SharemindPdpi_new_error_1;
     }
 
     SHAREMIND_LIBMODAPI_LASTERROR_INIT(pdpi);
@@ -53,15 +47,24 @@ SharemindPdpi * SharemindPd_newPdpi(SharemindPd * pd) {
     SharemindFacilityMap_init(&pdpi->facilityMap, &pd->pdpiFacilityMap);
     SHAREMIND_REFS_INIT(pdpi);
     SHAREMIND_NAMED_REFS_INIT(pdpi,startedRefs);
+
+    SharemindPd_lock(pd);
+    if (!SharemindPd_refs_ref(pd)) {
+        SharemindPd_setErrorOor(pd);
+        goto SharemindPdpi_new_error_2;
+    }
+    SharemindPd_unlock(pd);
     return pdpi;
 
 SharemindPdpi_new_error_2:
 
-    free(pdpi);
+    SharemindPd_unlock(pd);
+    SharemindFacilityMap_destroy(&pdpi->facilityMap);
+    SHAREMIND_RECURSIVE_LOCK_DEINIT(pdpi);
 
 SharemindPdpi_new_error_1:
 
-    SharemindPd_refs_unref(pd);
+    free(pdpi);
 
 SharemindPdpi_new_error_0:
 

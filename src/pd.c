@@ -197,14 +197,14 @@ void SharemindPd_stop(SharemindPd * pd) {
 SharemindPdk * SharemindPd_pdk(const SharemindPd * pd) {
     assert(pd);
     assert(pd->pdk);
-    return pd->pdk; // No locking: const after SharemindPd_new
+    return pd->pdk; // No locking: const after SharemindPdk_newPd.
 }
 
 SharemindModule * SharemindPd_module(const SharemindPd * pd) {
     assert(pd);
     assert(pd->pdk);
     assert(pd->pdk->module);
-    return pd->pdk->module; // No locking: const after SharemindPd_new
+    return pd->pdk->module; // No locking: const after SharemindPdk_newPd.
 }
 
 SharemindModuleApi * SharemindPd_moduleApi(const SharemindPd * pd) {
@@ -212,21 +212,22 @@ SharemindModuleApi * SharemindPd_moduleApi(const SharemindPd * pd) {
     assert(pd->pdk);
     assert(pd->pdk->module);
     assert(pd->pdk->module->modapi);
-    return pd->pdk->module->modapi; // No locking: const after SharemindPd_new
+    // No locking: const after SharemindPdk_newPd:
+    return pd->pdk->module->modapi;
 }
 
 const char * SharemindPd_name(const SharemindPd * pd) {
     assert(pd);
     assert(pd->name);
     assert(pd->name[0]);
-    return pd->name; // No locking: const after SharemindPd_new
+    return pd->name; // No locking: const after SharemindPdk_newPd.
 }
 
 const char * SharemindPd_conf(const SharemindPd * pd) {
     assert(pd);
     assert(pd->conf);
     assert(pd->conf[0]);
-    return pd->conf; // No locking: const after SharemindPd_new
+    return pd->conf; // No locking: const after SharemindPdk_newPd.
 }
 
 void * SharemindPd_handle(const SharemindPd * pd) {

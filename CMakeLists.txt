@@ -53,6 +53,7 @@ ADD_DEFINITIONS(${SharemindVmGlobals_DEFINITIONS}
 
 SET(SHAREMIND_LIBMODAPI_HEADERS
     "${CMAKE_CURRENT_SOURCE_DIR}/src/libmodapi.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/libmodapicxx.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/api.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/api_0x1.h"
 )

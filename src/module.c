@@ -273,34 +273,35 @@ void * SharemindModule_handle(const SharemindModule * m) {
 
 SharemindModuleApi * SharemindModule_moduleApi(const SharemindModule * m) {
     assert(m);
-    return m->modapi; // No locking: const after SharemindModule_new.
+    return m->modapi; // No locking: const after SharemindModuleApi_newModule.
 }
 
 const char * SharemindModule_filename(const SharemindModule * m) {
     assert(m);
-    return m->filename; // No locking: const after SharemindModule_new.
+    return m->filename; // No locking: const after SharemindModuleApi_newModule.
 }
 
 const char * SharemindModule_name(const SharemindModule * m) {
     assert(m);
-    return m->name; // No locking: const after SharemindModule_new.
+    return m->name; // No locking: const after SharemindModuleApi_newModule.
 }
 
 const char * SharemindModule_conf(const SharemindModule * m) {
     assert(m);
     assert(m->conf);
     assert(m->conf[0]);
-    return m->conf; // No locking: const after SharemindModule_new.
+    return m->conf; // No locking: const after SharemindModuleApi_newModule.
 }
 
 uint32_t SharemindModule_apiVersionInUse(const SharemindModule * m) {
     assert(m);
-    return m->apiVersion; // No locking: const after SharemindModule_new.
+    // No locking: const after SharemindModuleApi_newModule:
+    return m->apiVersion;
 }
 
 size_t SharemindModule_numSyscalls(const SharemindModule * m) {
     assert(m);
-    // No locking: all const after SharemindModule_new.
+    // No locking: all const after SharemindModuleApi_newModule.
     return (*(m->api->numSyscalls))(m);
 }
 
@@ -308,7 +309,7 @@ SharemindSyscall * SharemindModule_syscall(const SharemindModule * m,
                                            size_t index)
 {
     assert(m);
-    // No locking: all const after SharemindModule_new.
+    // No locking: all const after SharemindModuleApi_newModule.
     return (*(m->api->syscall))(m, index);
 }
 
@@ -316,7 +317,7 @@ SharemindSyscall * SharemindModule_findSyscall(const SharemindModule * m,
                                                const char * signature)
 {
     assert(m);
-    // No locking: all const after SharemindModule_new.
+    // No locking: all const after SharemindModuleApi_newModule.
     return (*(m->api->findSyscall))(m, signature);
 }
 
@@ -343,13 +344,13 @@ SharemindSyscallWrapper SharemindModule_syscallWrapper(
 
 size_t SharemindModule_numPdks(const SharemindModule * m) {
     assert(m);
-    // No locking: all const after SharemindModule_new.
+    // No locking: all const after SharemindModuleApi_newModule.
     return (*(m->api->numPdks))(m);
 }
 
 SharemindPdk * SharemindModule_pdk(const SharemindModule * m, size_t index) {
     assert(m);
-    // No locking: all const after SharemindModule_new.
+    // No locking: all const after SharemindModuleApi_newModule.
     return (*(m->api->pdk))(m, index);
 }
 
@@ -357,7 +358,7 @@ SharemindPdk * SharemindModule_findPdk(const SharemindModule * m,
                                        const char * name)
 {
     assert(m);
-    // No locking: all const after SharemindModule_new.
+    // No locking: all const after SharemindModuleApi_newModule.
     return (*(m->api->findPdk))(m, name);
 }
 

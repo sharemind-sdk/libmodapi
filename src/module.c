@@ -230,14 +230,14 @@ void SharemindModule_free(SharemindModule * m) {
 SharemindModuleApiError SharemindModule_init(SharemindModule * m) {
     assert(m);
     SharemindModule_lock(m);
-    assert(!m->isInitialized);
-    SharemindModuleApiError e;
-    if (likely((*(m->api->moduleInit))(m))) {
+    if (m->isInitialized) {
+        SharemindModule_unlock(m);
+        return SHAREMIND_MODULE_API_OK;
+    }
+    const SharemindModuleApiError e = (*(m->api->moduleInit))(m);
+    if (likely(e == SHAREMIND_MODULE_API_OK)) {
         assert(m->moduleHandle);
         m->isInitialized = true;
-        e = SHAREMIND_MODULE_API_OK;
-    } else {
-        e = m->lastError;
     }
     SharemindModule_unlock(m);
     return e;

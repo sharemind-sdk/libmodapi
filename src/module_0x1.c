@@ -35,6 +35,8 @@ SHAREMIND_STRINGMAP_DECLARE_at(SharemindPdkMap,static inline,)
 SHAREMIND_STRINGMAP_DEFINE_at(SharemindPdkMap,static inline)
 SHAREMIND_STRINGMAP_DECLARE_insertHint(SharemindPdkMap,static inline,)
 SHAREMIND_STRINGMAP_DEFINE_insertHint(SharemindPdkMap,static inline)
+SHAREMIND_STRINGMAP_DECLARE_emplaceAtHint(SharemindPdkMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_emplaceAtHint(SharemindPdkMap, static inline)
 SHAREMIND_STRINGMAP_DECLARE_insertAtHint(SharemindPdkMap,static inline,)
 SHAREMIND_STRINGMAP_DEFINE_insertAtHint(SharemindPdkMap,
                                         static inline,
@@ -104,6 +106,8 @@ SHAREMIND_STRINGMAP_DECLARE_at(SharemindSyscallMap,static inline,)
 SHAREMIND_STRINGMAP_DEFINE_at(SharemindSyscallMap,static inline)
 SHAREMIND_STRINGMAP_DECLARE_insertHint(SharemindSyscallMap,static inline,)
 SHAREMIND_STRINGMAP_DEFINE_insertHint(SharemindSyscallMap,static inline)
+SHAREMIND_STRINGMAP_DECLARE_emplaceAtHint(SharemindSyscallMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_emplaceAtHint(SharemindSyscallMap, static inline)
 SHAREMIND_STRINGMAP_DECLARE_insertAtHint(SharemindSyscallMap,static inline,)
 SHAREMIND_STRINGMAP_DEFINE_insertAtHint(SharemindSyscallMap,
                                         static inline,

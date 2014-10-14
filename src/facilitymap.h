@@ -44,6 +44,11 @@ SHAREMIND_STRINGMAP_DECLARE_insertHint(SharemindFacilityMapInner,
                                        inline,
                                        SHAREMIND_COMMA visibility("internal"))
 SHAREMIND_STRINGMAP_DEFINE_insertHint(SharemindFacilityMapInner, inline)
+SHAREMIND_STRINGMAP_DECLARE_emplaceAtHint(
+        SharemindFacilityMapInner,
+        inline,
+        SHAREMIND_COMMA visibility("internal"))
+SHAREMIND_STRINGMAP_DEFINE_emplaceAtHint(SharemindFacilityMapInner,inline)
 SHAREMIND_STRINGMAP_DECLARE_insertAtHint(SharemindFacilityMapInner,
                                          inline,
                                          SHAREMIND_COMMA visibility("internal"))

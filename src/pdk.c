@@ -169,7 +169,7 @@ SharemindModule * SharemindPdk_module(const SharemindPdk * pdk) {
     return pdk->module; // No locking: const after SharemindPdk_init
 }
 
-SharemindModuleApi * SharemindPdk_modapi(const SharemindPdk * pdk) {
+SharemindModuleApi * SharemindPdk_moduleApi(const SharemindPdk * pdk) {
     assert(pdk);
     assert(pdk->module);
     assert(pdk->module->modapi);

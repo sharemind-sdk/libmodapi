@@ -248,7 +248,7 @@ void * SharemindModule_handle(const SharemindModule * m)
         __attribute__ ((nonnull(1)));
 
 
-SharemindModuleApi * SharemindModule_modapi(const SharemindModule * m)
+SharemindModuleApi * SharemindModule_moduleApi(const SharemindModule * m)
         __attribute__ ((nonnull(1)));
 
 
@@ -303,7 +303,7 @@ const char * SharemindSyscall_signature(const SharemindSyscall * sc)
 SharemindModule * SharemindSyscall_module(const SharemindSyscall * sc)
         __attribute__ ((nonnull(1)));
 
-SharemindModuleApi * SharemindSyscall_modapi(const SharemindSyscall * sc)
+SharemindModuleApi * SharemindSyscall_moduleApi(const SharemindSyscall * sc)
         __attribute__ ((nonnull(1)));
 
 SharemindSyscallWrapper SharemindSyscall_wrapper(const SharemindSyscall * sc)
@@ -328,7 +328,7 @@ const char * SharemindPdk_name(const SharemindPdk * pdk)
 SharemindModule * SharemindPdk_module(const SharemindPdk * pdk)
         __attribute__ ((nonnull(1)));
 
-SharemindModuleApi * SharemindPdk_modapi(const SharemindPdk * pdk)
+SharemindModuleApi * SharemindPdk_moduleApi(const SharemindPdk * pdk)
         __attribute__ ((nonnull(1)));
 
 size_t SharemindPdk_index(const SharemindPdk * pdk)
@@ -379,7 +379,7 @@ SharemindPdk * SharemindPd_pdk(const SharemindPd * pd)
 SharemindModule * SharemindPd_module(const SharemindPd * pd)
         __attribute__ ((nonnull(1)));
 
-SharemindModuleApi * SharemindPd_modapi(const SharemindPd * pd)
+SharemindModuleApi * SharemindPd_moduleApi(const SharemindPd * pd)
         __attribute__ ((nonnull(1)));
 
 const char * SharemindPd_name(const SharemindPd * pd)
@@ -429,7 +429,7 @@ SharemindPdk * SharemindPdpi_pdk(const SharemindPdpi * pdpi)
 SharemindModule * SharemindPdpi_module(const SharemindPdpi * pdpi)
         __attribute__ ((nonnull(1)));
 
-SharemindModuleApi * SharemindPdpi_modapi(const SharemindPdpi * pdpi)
+SharemindModuleApi * SharemindPdpi_moduleApi(const SharemindPdpi * pdpi)
         __attribute__ ((nonnull(1)));
 
 

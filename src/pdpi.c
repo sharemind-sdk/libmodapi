@@ -176,7 +176,7 @@ SharemindModule * SharemindPdpi_module(const SharemindPdpi * pdpi) {
     return pdpi->pd->pdk->module; // No locking: const after SharemindPdpi_new
 }
 
-SharemindModuleApi * SharemindPdpi_modapi(const SharemindPdpi * pdpi) {
+SharemindModuleApi * SharemindPdpi_moduleApi(const SharemindPdpi * pdpi) {
     assert(pdpi);
     assert(pdpi->pd);
     assert(pdpi->pd->pdk);

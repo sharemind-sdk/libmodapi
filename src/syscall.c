@@ -99,7 +99,7 @@ SharemindModule * SharemindSyscall_module(const SharemindSyscall * sc) {
     return sc->module;
 }
 
-SharemindModuleApi * SharemindSyscall_modapi(const SharemindSyscall * sc) {
+SharemindModuleApi * SharemindSyscall_moduleApi(const SharemindSyscall * sc) {
     assert(sc);
     assert(sc->module);
     assert(sc->module->modapi);

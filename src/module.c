@@ -202,7 +202,6 @@ SharemindModule_new_fail_0:
 void SharemindModule_free(SharemindModule * m) {
     assert(m);
 
-
     if (likely(m->isInitialized))
         SharemindModule_deinit(m);
 
@@ -268,7 +267,7 @@ void * SharemindModule_handle(const SharemindModule * m) {
     return r;
 }
 
-SharemindModuleApi * SharemindModule_modapi(const SharemindModule * m) {
+SharemindModuleApi * SharemindModule_moduleApi(const SharemindModule * m) {
     assert(m);
     return m->modapi; // No locking: const after SharemindModule_new.
 }

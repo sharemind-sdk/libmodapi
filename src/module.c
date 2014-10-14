@@ -142,22 +142,22 @@ SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
     /* Read module version: */
     m->version = moduleInfo->moduleVersion;
 
-    /* Do API specific loading: */
-    #ifndef NDEBUG
-    SHAREMIND_REFS_INIT(m);
-    #endif
-    if (unlikely(!(*(m->api->moduleLoad))(m)))
-        goto SharemindModule_new_fail_6;
-
     SharemindFacilityMap_init(&m->facilityMap,
                               &modapi->moduleFacilityMap);
     SharemindFacilityMap_init(&m->pdFacilityMap,
                               &modapi->pdFacilityMap);
     SharemindFacilityMap_init(&m->pdpiFacilityMap,
                               &modapi->pdpiFacilityMap);
+    #ifndef NDEBUG
+    SHAREMIND_REFS_INIT(m);
+    #endif
+
+    /* Do API specific loading: */
+    SharemindModuleApi_lock(modapi);
+    if (unlikely(!(*(m->api->moduleLoad))(m)))
+        goto SharemindModule_new_fail_6;
 
     /* Register with SharemindModuleApi: */
-    SharemindModuleApi_lock(modapi);
     if (unlikely(!SharemindModulesSet_insertNew(&modapi->modules, m))) {
         SharemindModuleApi_setErrorOom(modapi);
         goto SharemindModule_new_fail_7;
@@ -167,11 +167,15 @@ SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
 
 SharemindModule_new_fail_7:
 
-    SharemindModuleApi_unlock(modapi);
     (*(m->api->moduleUnload))(m);
 
 SharemindModule_new_fail_6:
 
+    SharemindModuleApi_unlock(modapi);
+    SHAREMIND_REFS_ASSERT_IF_REFERENCED(m);
+    SharemindFacilityMap_destroy(&m->pdpiFacilityMap);
+    SharemindFacilityMap_destroy(&m->pdFacilityMap);
+    SharemindFacilityMap_destroy(&m->facilityMap);
     free(m->name);
 
 SharemindModule_new_fail_5:

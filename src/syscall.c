@@ -39,8 +39,6 @@ bool SharemindSyscall_init(SharemindSyscall * sc,
         SharemindModule_setErrorMie(m);
         goto SharemindSyscall_init_error_1;
     }
-
-    SHAREMIND_REFS_INIT(sc);
     #endif
     SHAREMIND_TAG_INIT(sc);
 
@@ -75,9 +73,6 @@ void SharemindSyscall_destroy(SharemindSyscall * sc) {
     assert(sc->wrapper.callable);
     assert(sc->name);
     assert(sc->module);
-    #ifndef NDEBUG
-    SHAREMIND_REFS_ASSERT_IF_REFERENCED(sc);
-    #endif
 
     SHAREMIND_TAG_DESTROY(sc);
     free(sc->name);
@@ -119,9 +114,5 @@ SharemindSyscallWrapper SharemindSyscall_wrapper(const SharemindSyscall * sc) {
     };
     return result;
 }
-
-#ifndef NDEBUG
-SHAREMIND_REFS_DEFINE_FUNCTIONS(SharemindSyscall)
-#endif
 
 SHAREMIND_TAG_FUNCTIONS_DEFINE(SharemindSyscall)

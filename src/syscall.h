@@ -18,9 +18,6 @@
 #include <sharemind/comma.h>
 #include <sharemind/extern_c.h>
 #include <sharemind/recursive_locks.h>
-#ifndef NDEBUG
-#include <sharemind/refs.h>
-#endif
 #include <stdbool.h>
 #include "libmodapi.h"
 #include "tag.h"
@@ -41,10 +38,6 @@ struct SharemindSyscall_ {
     /** Pointer to module providing this syscall. */
     SharemindModule * module;
 
-    #ifndef NDEBUG
-    SHAREMIND_REFS_DECLARE_FIELDS
-    #endif
-
     SHAREMIND_TAG_DECLARE_FIELDS;
 
 };
@@ -62,10 +55,6 @@ SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE_DEFINE(
         SharemindSyscall,
         inline,
         SHAREMIND_COMMA visibility("internal"))
-
-#ifndef NDEBUG
-SHAREMIND_REFS_DECLARE_FUNCTIONS(SharemindSyscall)
-#endif
 
 SHAREMIND_EXTERN_C_END
 

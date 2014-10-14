@@ -35,7 +35,8 @@ SHAREMIND_STRINGMAP_DECLARE_remove(SharemindPdMap,static inline,)
 SHAREMIND_STRINGMAP_DEFINE_remove(SharemindPdMap,
                                   static inline,
                                   SharemindPd,
-                                  free,)
+                                  free,
+                                  SharemindPd_destroy(value);)
 
 SharemindPd * SharemindPdk_newPd(SharemindPdk * pdk,
                                  const char * name,

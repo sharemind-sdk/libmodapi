@@ -51,28 +51,24 @@ SharemindPd * SharemindPdk_newPd(SharemindPdk * pdk,
     assert(name);
     assert(name[0]);
 
-    SharemindPdMap_value * v;
+    struct SharemindPdMap_detail * d;
     SharemindPd * pd;
 
-    if (unlikely(SharemindModuleApi_findPd(pdk->module->modapi, name))) {
-        SharemindPdk_setError(
-                    pdk,
-                    SHAREMIND_MODULE_API_DUPLICATE_PROTECTION_DOMAIN,
-                    "Protection domain with identical name already created!");
-        goto SharemindPd_new_fail_0;
-    }
-
-    v = SharemindPdMap_insertNew(&pdk->pds, name);
-    if (unlikely(!v)) {
+    if (unlikely(!(d = malloc(sizeof(struct SharemindPdMap_detail))))) {
         SharemindPdk_setErrorOom(pdk);
         goto SharemindPd_new_fail_0;
     }
 
-    pd = &v->value;
+    if (unlikely(!(d->v.key = strdup(name)))) {
+        SharemindPdk_setErrorOom(pdk);
+        goto SharemindPd_new_fail_1;
+    }
+
+    pd = &d->v.value;
 
     if (!SHAREMIND_RECURSIVE_LOCK_INIT(pd)) {
         SharemindPdk_setErrorMie(pdk);
-        goto SharemindPd_new_fail_1;
+        goto SharemindPd_new_fail_2;
     }
 
     SHAREMIND_LIBMODAPI_LASTERROR_INIT(pd);
@@ -81,14 +77,14 @@ SharemindPd * SharemindPdk_newPd(SharemindPdk * pdk,
     pd->name = strdup(name);
     if (unlikely(!pd->name)) {
         SharemindPdk_setErrorOom(pdk);
-        goto SharemindPd_new_fail_2;
+        goto SharemindPd_new_fail_3;
     }
 
     if (likely(conf && conf[0])) {
         pd->conf = strdup(conf);
         if (!pd->conf) {
             SharemindPdk_setErrorOom(pdk);
-            goto SharemindPd_new_fail_3;
+            goto SharemindPd_new_fail_4;
         }
     } else {
         pd->conf = NULL;
@@ -102,19 +98,50 @@ SharemindPd * SharemindPdk_newPd(SharemindPdk * pdk,
     SharemindFacilityMap_init(&pd->pdpiFacilityMap, &pdk->pdpiFacilityMap);
     SHAREMIND_REFS_INIT(pd);
     SHAREMIND_NAMED_REFS_INIT(pd,startedRefs);
+
+    SharemindModuleApi_lock(pdk->module->modapi);
+    if (unlikely(SharemindModuleApi_findPd(pdk->module->modapi, name))) {
+        SharemindPdk_setError(
+                    pdk,
+                    SHAREMIND_MODULE_API_DUPLICATE_PROTECTION_DOMAIN,
+                    "Protection domain with identical name already created!");
+        goto SharemindPd_new_fail_5;
+    }
+
+    SharemindModule_lock(pdk->module);
+    SharemindPdk_lock(pdk);
+    {
+        void * const hint = SharemindPdMap_insertHint(&pdk->pds, name);
+        assert(hint);
+        SharemindPdMap_emplaceAtHint(&pdk->pds, d, hint);
+    }
+    SharemindPdk_unlock(pdk);
+    SharemindModule_unlock(pdk->module);
+    SharemindModuleApi_unlock(pdk->module->modapi);
     return pd;
 
-SharemindPd_new_fail_3:
+SharemindPd_new_fail_5:
+
+    SharemindModuleApi_unlock(pdk->module->modapi);
+    SharemindFacilityMap_destroy(&pd->pdpiFacilityMap);
+    SharemindFacilityMap_destroy(&pd->facilityMap);
+    free(pd->conf);
+
+SharemindPd_new_fail_4:
 
     free(pd->name);
 
-SharemindPd_new_fail_2:
+SharemindPd_new_fail_3:
 
     SHAREMIND_RECURSIVE_LOCK_DEINIT(pd);
 
+SharemindPd_new_fail_2:
+
+    free(d->v.key);
+
 SharemindPd_new_fail_1:
 
-    SharemindPdMap_remove(&pdk->pds, name);
+    free(d);
 
 SharemindPd_new_fail_0:
 

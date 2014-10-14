@@ -158,14 +158,14 @@ void * SharemindPdpi_handle(const SharemindPdpi * pdpi) {
 SharemindPd * SharemindPdpi_pd(const SharemindPdpi * pdpi) {
     assert(pdpi);
     assert(pdpi->pd);
-    return pdpi->pd; // No locking: const after SharemindPdpi_new
+    return pdpi->pd; // No locking: const after SharemindPd_newPdpi.
 }
 
 SharemindPdk * SharemindPdpi_pdk(const SharemindPdpi * pdpi) {
     assert(pdpi);
     assert(pdpi->pd);
     assert(pdpi->pd->pdk);
-    return pdpi->pd->pdk; // No locking: const after SharemindPdpi_new
+    return pdpi->pd->pdk; // No locking: const after SharemindPd_newPdpi.
 }
 
 SharemindModule * SharemindPdpi_module(const SharemindPdpi * pdpi) {
@@ -173,7 +173,8 @@ SharemindModule * SharemindPdpi_module(const SharemindPdpi * pdpi) {
     assert(pdpi->pd);
     assert(pdpi->pd->pdk);
     assert(pdpi->pd->pdk->module);
-    return pdpi->pd->pdk->module; // No locking: const after SharemindPdpi_new
+    // No locking: const after SharemindPd_newPdpi:
+    return pdpi->pd->pdk->module;
 }
 
 SharemindModuleApi * SharemindPdpi_moduleApi(const SharemindPdpi * pdpi) {
@@ -182,7 +183,7 @@ SharemindModuleApi * SharemindPdpi_moduleApi(const SharemindPdpi * pdpi) {
     assert(pdpi->pd->pdk);
     assert(pdpi->pd->pdk->module);
     assert(pdpi->pd->pdk->module->modapi);
-    // No locking: const after SharemindPdpi_new
+    // No locking: const after SharemindPd_newPdpi:
     return pdpi->pd->pdk->module->modapi;
 }
 

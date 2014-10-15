@@ -181,15 +181,6 @@ SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
                 SharemindModule_findPd(item->key, signature);
         if (result)
             return result;)
-SHAREMIND_SET_DECLARE_DESTROY_WITH_INLINE(SharemindModulesSet,
-                                          moduleFree,,
-                                          static inline,)
-SHAREMIND_SET_DEFINE_DESTROY_WITH_INLINE(SharemindModulesSet,
-                                         moduleFree,
-                                         SharemindModule *,,,
-                                         free,
-                                         static inline,
-                                         SharemindModule_free(*item);)
 
 
 SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiError * error,
@@ -231,7 +222,8 @@ void SharemindModuleApi_free(SharemindModuleApi * modapi) {
 
     SHAREMIND_TAG_DESTROY(modapi);
 
-    SharemindModulesSet_destroy_with_moduleFree(&modapi->modules);
+    while (modapi->modules.size > 0u)
+        SharemindModule_free(*SharemindModulesSet_at(&modapi->modules, 0u));
 
     SHAREMIND_RECURSIVE_LOCK_DEINIT(modapi);
 

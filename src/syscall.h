@@ -18,9 +18,9 @@
 #include <sharemind/comma.h>
 #include <sharemind/extern_c.h>
 #include <sharemind/recursive_locks.h>
+#include <sharemind/tag.h>
 #include <stdbool.h>
 #include "libmodapi.h"
-#include "tag.h"
 
 
 SHAREMIND_EXTERN_C_BEGIN

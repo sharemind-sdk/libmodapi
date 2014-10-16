@@ -116,4 +116,4 @@ SharemindSyscallWrapper SharemindSyscall_wrapper(const SharemindSyscall * sc) {
     return result;
 }
 
-SHAREMIND_TAG_FUNCTIONS_DEFINE(SharemindSyscall)
+SHAREMIND_TAG_FUNCTIONS_DEFINE(SharemindSyscall,)

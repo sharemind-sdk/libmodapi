@@ -18,12 +18,12 @@
 #include <sharemind/extern_c.h>
 #include <sharemind/recursive_locks.h>
 #include <sharemind/map.h>
+#include <sharemind/tag.h>
 #include <stdbool.h>
 #include "facilitymap.h"
 #include "lasterror.h"
 #include "libmodapi.h"
 #include "pd.h"
-#include "tag.h"
 
 
 SHAREMIND_EXTERN_C_BEGIN

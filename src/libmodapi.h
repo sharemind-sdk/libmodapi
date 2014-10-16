@@ -13,6 +13,7 @@
 #include <sharemind/extern_c.h>
 #include <sharemind/lasterror.h>
 #include <sharemind/preprocessor.h>
+#include <sharemind/tag.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -61,24 +62,6 @@ SHAREMIND_EXTERN_C_BEGIN
                                                      facility, \
                                                      Facility)
 
-#define SHAREMIND_LIBMODAPI_DECLARE_TAG_FUNCTIONS(ClassName) \
-    void * ClassName ## _tag(const ClassName * c) \
-            __attribute__ ((nonnull(1))); \
-    void * ClassName ## _releaseTag(ClassName * c) \
-            __attribute__ ((nonnull(1))); \
-    void ClassName ## _destroyTag(ClassName * c) \
-            __attribute__ ((nonnull(1))); \
-    SharemindTagDestructor ClassName ## _tagDestructor(const ClassName * c) \
-            __attribute__ ((nonnull(1))); \
-    void ClassName ## _setTagWithDestructor( \
-            ClassName * c, void * tag, SharemindTagDestructor tagDestructor) \
-            __attribute__ ((nonnull(1))); \
-    void ClassName ## _setTag(ClassName * c, void * tag) \
-            __attribute__ ((nonnull(1))); \
-    void ClassName ## _setTagDestructor(ClassName * c, \
-                                        SharemindTagDestructor tagDestructor) \
-            __attribute__ ((nonnull(1))) \
-
 
 /*******************************************************************************
   Most recent API aliases
@@ -115,8 +98,6 @@ typedef struct {
     SharemindSyscallCallable callable;
     void * internal;
 } SharemindSyscallWrapper;
-
-typedef void (* SharemindTagDestructor)(void *);
 
 #define SHAREMIND_MODULE_API_ERROR_ENUM \
     ((SHAREMIND_MODULE_API_OK, = 0)) \
@@ -158,7 +139,7 @@ SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(SharemindModuleApi,
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(SharemindModuleApi,pd,Pd);
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(SharemindModuleApi,pdpi,Pdpi);
 
-SHAREMIND_LIBMODAPI_DECLARE_TAG_FUNCTIONS(SharemindModuleApi);
+SHAREMIND_TAG_FUNCTIONS_DECLARE(SharemindModuleApi,,);
 
 
 size_t SharemindModuleApi_numSyscalls(const SharemindModuleApi * m)
@@ -219,7 +200,7 @@ SHAREMIND_LIBMODAPI_DECLARE_SELF_FACILITY_FUNCTIONS(SharemindModule);
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(SharemindModule,pd,Pd);
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(SharemindModule,pdpi,Pdpi);
 
-SHAREMIND_LIBMODAPI_DECLARE_TAG_FUNCTIONS(SharemindModule);
+SHAREMIND_TAG_FUNCTIONS_DECLARE(SharemindModule,,);
 
 
 SharemindModuleApiError SharemindModule_init(SharemindModule * m)
@@ -294,7 +275,7 @@ SharemindPd * SharemindModule_findPd(const SharemindModule * m,
   SharemindSyscall
 *******************************************************************************/
 
-SHAREMIND_LIBMODAPI_DECLARE_TAG_FUNCTIONS(SharemindSyscall);
+SHAREMIND_TAG_FUNCTIONS_DECLARE(SharemindSyscall,,);
 
 
 const char * SharemindSyscall_signature(const SharemindSyscall * sc)
@@ -319,7 +300,7 @@ SHAREMIND_LIBMODAPI_DECLARE_ERROR_FUNCTIONS(SharemindPdk);
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(SharemindPdk,pd,Pd);
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(SharemindPdk,pdpi,Pdpi);
 
-SHAREMIND_LIBMODAPI_DECLARE_TAG_FUNCTIONS(SharemindPdk);
+SHAREMIND_TAG_FUNCTIONS_DECLARE(SharemindPdk,,);
 
 
 const char * SharemindPdk_name(const SharemindPdk * pdk)
@@ -363,7 +344,7 @@ SHAREMIND_LIBMODAPI_DECLARE_ERROR_FUNCTIONS(SharemindPd);
 SHAREMIND_LIBMODAPI_DECLARE_SELF_FACILITY_FUNCTIONS(SharemindPd);
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(SharemindPd,pdpi,Pdpi);
 
-SHAREMIND_LIBMODAPI_DECLARE_TAG_FUNCTIONS(SharemindPd);
+SHAREMIND_TAG_FUNCTIONS_DECLARE(SharemindPd,,);
 
 
 bool SharemindPd_isStarted(const SharemindPd * pd) __attribute__ ((nonnull(1)));
@@ -406,7 +387,7 @@ SHAREMIND_LIBMODAPI_DECLARE_ERROR_FUNCTIONS(SharemindPdpi);
 
 SHAREMIND_LIBMODAPI_DECLARE_SELF_FACILITY_FUNCTIONS(SharemindPdpi);
 
-SHAREMIND_LIBMODAPI_DECLARE_TAG_FUNCTIONS(SharemindPdpi);
+SHAREMIND_TAG_FUNCTIONS_DECLARE(SharemindPdpi,,);
 
 
 bool SharemindPdpi_isStarted(const SharemindPdpi * pdpi)
@@ -441,7 +422,6 @@ SharemindModuleApi * SharemindPdpi_moduleApi(const SharemindPdpi * pdpi)
 #undef SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS
 #undef SHAREMIND_LIBMODAPI_DECLARE_SELF_FACILITY_FUNCTIONS
 #undef SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS__
-#undef SHAREMIND_LIBMODAPI_DECLARE_TAG_FUNCTIONS
 
 
 SHAREMIND_EXTERN_C_END

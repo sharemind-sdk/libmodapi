@@ -208,4 +208,4 @@ SharemindPd * SharemindPdk_findPd(const SharemindPdk * pdk, const char * name) {
 SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindPdk,pd,Pd)
 SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindPdk,pdpi,Pdpi)
 
-SHAREMIND_TAG_FUNCTIONS_DEFINE(SharemindPdk)
+SHAREMIND_TAG_FUNCTIONS_DEFINE(SharemindPdk,)

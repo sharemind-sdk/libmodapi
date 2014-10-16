@@ -139,7 +139,7 @@ SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(SharemindModuleApi,
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(SharemindModuleApi,pd,Pd);
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(SharemindModuleApi,pdpi,Pdpi);
 
-SHAREMIND_TAG_FUNCTIONS_DECLARE(SharemindModuleApi,,);
+SHAREMIND_TAG_FUNCTIONS_DECLARE(SharemindModuleApi,,)
 
 
 size_t SharemindModuleApi_numSyscalls(const SharemindModuleApi * m)
@@ -200,7 +200,7 @@ SHAREMIND_LIBMODAPI_DECLARE_SELF_FACILITY_FUNCTIONS(SharemindModule);
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(SharemindModule,pd,Pd);
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(SharemindModule,pdpi,Pdpi);
 
-SHAREMIND_TAG_FUNCTIONS_DECLARE(SharemindModule,,);
+SHAREMIND_TAG_FUNCTIONS_DECLARE(SharemindModule,,)
 
 
 SharemindModuleApiError SharemindModule_init(SharemindModule * m)
@@ -275,7 +275,7 @@ SharemindPd * SharemindModule_findPd(const SharemindModule * m,
   SharemindSyscall
 *******************************************************************************/
 
-SHAREMIND_TAG_FUNCTIONS_DECLARE(SharemindSyscall,,);
+SHAREMIND_TAG_FUNCTIONS_DECLARE(SharemindSyscall,,)
 
 
 const char * SharemindSyscall_signature(const SharemindSyscall * sc)
@@ -300,7 +300,7 @@ SHAREMIND_LIBMODAPI_DECLARE_ERROR_FUNCTIONS(SharemindPdk);
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(SharemindPdk,pd,Pd);
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(SharemindPdk,pdpi,Pdpi);
 
-SHAREMIND_TAG_FUNCTIONS_DECLARE(SharemindPdk,,);
+SHAREMIND_TAG_FUNCTIONS_DECLARE(SharemindPdk,,)
 
 
 const char * SharemindPdk_name(const SharemindPdk * pdk)
@@ -344,7 +344,7 @@ SHAREMIND_LIBMODAPI_DECLARE_ERROR_FUNCTIONS(SharemindPd);
 SHAREMIND_LIBMODAPI_DECLARE_SELF_FACILITY_FUNCTIONS(SharemindPd);
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(SharemindPd,pdpi,Pdpi);
 
-SHAREMIND_TAG_FUNCTIONS_DECLARE(SharemindPd,,);
+SHAREMIND_TAG_FUNCTIONS_DECLARE(SharemindPd,,)
 
 
 bool SharemindPd_isStarted(const SharemindPd * pd) __attribute__ ((nonnull(1)));
@@ -387,7 +387,7 @@ SHAREMIND_LIBMODAPI_DECLARE_ERROR_FUNCTIONS(SharemindPdpi);
 
 SHAREMIND_LIBMODAPI_DECLARE_SELF_FACILITY_FUNCTIONS(SharemindPdpi);
 
-SHAREMIND_TAG_FUNCTIONS_DECLARE(SharemindPdpi,,);
+SHAREMIND_TAG_FUNCTIONS_DECLARE(SharemindPdpi,,)
 
 
 bool SharemindPdpi_isStarted(const SharemindPdpi * pdpi)

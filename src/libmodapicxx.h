@@ -13,7 +13,6 @@
 #include <cassert>
 #include <exception>
 #include <new>
-#include <stdexcept>
 #include <type_traits>
 #include "libmodapi.h"
 

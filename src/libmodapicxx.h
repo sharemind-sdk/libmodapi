@@ -23,9 +23,9 @@ namespace sharemind {
   Some type aliases
 *******************************************************************************/
 
-using SyscallCallable = SharemindSyscallCallable;
-using SyscallWrapper = SharemindSyscallWrapper;
-using Facility = SharemindFacility;
+using SyscallCallable = ::SharemindSyscallCallable;
+using SyscallWrapper = ::SharemindSyscallWrapper;
+using Facility = ::SharemindFacility;
 
 class ModuleApi;
 class Module;
@@ -45,17 +45,20 @@ class Pdpi;
                           void * context = nullptr) \
             __attribute__ ((nonnull(2))) \
     { \
-        ClassName ## _set ## FF(m_c, \
-                                (assert(name), name), \
-                                facility, \
-                                context); \
+        ::Sharemind ## ClassName ## _set ## FF(m_c, \
+                                               (assert(name), name), \
+                                               facility, \
+                                               context); \
     } \
     inline bool unset ## FF(const char * name) noexcept \
             __attribute__ ((nonnull(2))) \
-    { return ClassName ## _unset ## FF(m_c, (assert(name), name)); } \
+    { \
+        return ::Sharemind ## ClassName ## _unset ## FF(m_c, \
+                                                        (assert(name), name)); \
+    } \
     inline const SharemindFacility * fF(const char * name) const noexcept \
             __attribute__ ((nonnull(2))) \
-    { return ClassName ## _ ## fF(m_c, (assert(name), name)); }
+    { return ::Sharemind ## ClassName ## _ ## fF(m_c, (assert(name), name)); }
 
 #define SHAREMIND_LIBMODAPI_CXX_DEFINE_FACILITY_FUNCTIONS(ClassName,fN,FN) \
     SHAREMIND_LIBMODAPI_CXX_DEFINE_FACILITY_FUNCTIONS__(ClassName, \
@@ -70,69 +73,69 @@ class Pdpi;
 #define SHAREMIND_LIBMODAPI_CXX_EXCEPT_OVERRIDES_TEST(capture,error) \
     ([capture]{ \
         const ModuleApiError e = (error); \
-        if (e == SHAREMIND_MODULE_API_OUT_OF_MEMORY) \
+        if (e == ::SHAREMIND_MODULE_API_OUT_OF_MEMORY) \
             throw std::bad_alloc(); \
         return e; \
     }())
 
 #define SHAREMIND_LIBMODAPI_CXX_DEFINE_PDCHILD_STUFF(ClassName) \
     inline size_t numPds() const noexcept \
-{ return Sharemind ## ClassName ## _numPds(m_c); } \
+{ return ::Sharemind ## ClassName ## _numPds(m_c); } \
     inline Pd * pd(size_t index) const noexcept { \
         return Detail::libmodapi::optChild( \
-                    Sharemind ## ClassName ## _pd(m_c, index)); \
+                    ::Sharemind ## ClassName ## _pd(m_c, index)); \
     } \
     inline Pd * findPd(const char * name) \
             const noexcept __attribute__ ((nonnull(2))) \
     { \
         assert(name); \
         return Detail::libmodapi::optChild( \
-                    Sharemind ## ClassName ## _findPd(m_c, name)); \
+                    ::Sharemind ## ClassName ## _findPd(m_c, name)); \
     }
 
 #define SHAREMIND_LIBMODAPI_CXX_DEFINE_PDK_AND_SYSCALL_CHILD_STUFF(ClassName) \
     inline size_t numSyscalls() const noexcept \
-    { return Sharemind ## ClassName ## _numSyscalls(m_c); } \
+    { return ::Sharemind ## ClassName ## _numSyscalls(m_c); } \
     inline Syscall * syscall(size_t index) const noexcept { \
         return Detail::libmodapi::optChild( \
-                    Sharemind ## ClassName ## _syscall(m_c, index)); \
+                    ::Sharemind ## ClassName ## _syscall(m_c, index)); \
     } \
     inline Syscall * findSyscall(const char * const signature) \
             const noexcept __attribute__ ((nonnull(2))) \
     { \
         assert(signature); \
         return Detail::libmodapi::optChild( \
-                    Sharemind ## ClassName ## _findSyscall(m_c, signature));\
+                    ::Sharemind ## ClassName ## _findSyscall(m_c, signature));\
     } \
     inline SyscallWrapper syscallWrapper(const char * const signature) \
             const noexcept __attribute__ ((nonnull(2))) \
     { \
         assert(signature); \
-        return Sharemind ## ClassName ## _syscallWrapper(m_c, signature); \
+        return ::Sharemind ## ClassName ## _syscallWrapper(m_c, signature); \
     } \
     inline size_t numPdks() const noexcept \
-    { return Sharemind ## ClassName ## _numPdks(m_c); } \
+    { return ::Sharemind ## ClassName ## _numPdks(m_c); } \
     inline Pdk * pdk(size_t index) const noexcept { \
         return Detail::libmodapi::optChild( \
-                    Sharemind ## ClassName ## _pdk(m_c, index)); \
+                    ::Sharemind ## ClassName ## _pdk(m_c, index)); \
     } \
     inline Pdk * findPdk(const char * name) \
             const noexcept __attribute__ ((nonnull(2))) \
     { \
         assert(name); \
         return Detail::libmodapi::optChild( \
-                    Sharemind ## ClassName ## _findPdk(m_c, name)); \
+                    ::Sharemind ## ClassName ## _findPdk(m_c, name)); \
     }
 
 #define SHAREMIND_LIBMODAPI_CXX_DEFINE_PARENT_GETTER(ClassName,Parent,parent) \
     inline Parent * parent() const noexcept { \
         return Detail::libmodapi::mustTag( \
-                Sharemind ## ClassName ## _ ## parent(m_c)); \
+                ::Sharemind ## ClassName ## _ ## parent(m_c)); \
     }
 
 #define SHAREMIND_LIBMODAPI_CXX_DEFINE_CPTR_GETTERS(ClassName) \
-    inline Sharemind ## ClassName * cPtr() noexcept { return m_c; } \
-    inline const Sharemind ## ClassName * cPtr() const noexcept { return m_c; }
+    inline ::Sharemind ## ClassName * cPtr() noexcept { return m_c; } \
+    inline const ::Sharemind ## ClassName * cPtr() const noexcept { return m_c;}
 
 
 /*******************************************************************************
@@ -145,12 +148,12 @@ namespace libmodapi {
 template <typename CType> struct TypeInv;
 
 #define SHAREMIND_LIBMODAPI_CXX_DEFINE_TYPEINV(t) \
-    template <> struct TypeInv<t> { using type = Sharemind ## t; };\
-    template <> struct TypeInv<Sharemind ## t> { using type = t; };
+    template <> struct TypeInv<t> { using type = ::Sharemind ## t; };\
+    template <> struct TypeInv<::Sharemind ## t> { using type = t; };
 
 #define SHAREMIND_LIBMODAPI_CXX_DEFINE_TAGGETTER(type) \
-    inline type * modapiGetTag(const Sharemind ## type * const o) noexcept \
-    { return static_cast<type *>(Sharemind ## type ## _tag(o)); }
+    inline type * modapiGetTag(const ::Sharemind ## type * const o) noexcept \
+    { return static_cast<type *>(::Sharemind ## type ## _tag(o)); }
 
 #define SHAREMIND_LIBMODAPI_CXX_DEFINE_TYPE_STUFF(type) \
     SHAREMIND_LIBMODAPI_CXX_DEFINE_TYPEINV(type) \
@@ -189,10 +192,10 @@ inline typename TypeInv<CType>::type * optChild(CType * const ssc) noexcept
   ModuleApiError
 *******************************************************************************/
 
-using ModuleApiError = SharemindModuleApiError;
+using ModuleApiError = ::SharemindModuleApiError;
 
 inline const char * ModuleApiError_toString(const ModuleApiError e) noexcept
-{ return SharemindModuleApiError_toString(e); }
+{ return ::SharemindModuleApiError_toString(e); }
 
 
 
@@ -206,7 +209,8 @@ public: /* Methods: */
 
     inline ModuleApiExceptionBase(const ModuleApiError errorCode,
                                   const char * const errorStr)
-        : m_errorCode((assert(errorCode != SHAREMIND_MODULE_API_OK), errorCode))
+        : m_errorCode((assert(errorCode != ::SHAREMIND_MODULE_API_OK),
+                       errorCode))
         , m_errorStr((assert(errorStr), errorStr))
     {}
 
@@ -223,12 +227,12 @@ private: /* Fields: */
 #define SHAREMIND_LIBMODAPI_CXX_DEFINE_EXCEPTION(ClassName) \
     class ClassName ## Exception: public ModuleApiExceptionBase { \
     public: /* Methods: */ \
-        inline ClassName ## Exception(const Sharemind ## ClassName & c) \
+        inline ClassName ## Exception(const ::Sharemind ## ClassName & c) \
             : ModuleApiExceptionBase( \
                       SHAREMIND_LIBMODAPI_CXX_EXCEPT_OVERRIDES_TEST( \
                               &c, \
-                              Sharemind ## ClassName ## _lastError(&c)), \
-                      Sharemind ## ClassName ## _lastErrorString(&c)) \
+                              ::Sharemind ## ClassName ## _lastError(&c)), \
+                      ::Sharemind ## ClassName ## _lastErrorString(&c)) \
         {} \
         template <typename T, \
                   typename = typename std::enable_if< \
@@ -241,10 +245,10 @@ private: /* Fields: */
             : ModuleApiExceptionBase(error, errorStr) \
         {} \
         inline ClassName ## Exception(const ModuleApiError error, \
-                                      const Sharemind ## ClassName & c) \
+                                      const ::Sharemind ## ClassName & c) \
             : ModuleApiExceptionBase( \
                     error, \
-                    Sharemind ## ClassName ## _lastErrorString(&c)) \
+                    ::Sharemind ## ClassName ## _lastErrorString(&c)) \
         {} \
         template <typename T, \
                   typename = typename std::enable_if< \
@@ -282,17 +286,17 @@ public: /* Methods: */
     SHAREMIND_LIBMODAPI_CXX_DEFINE_PARENT_GETTER(Syscall,ModuleApi,moduleApi)
 
     inline SyscallWrapper wrapper() const noexcept
-    { return SharemindSyscall_wrapper(m_c); }
+    { return ::SharemindSyscall_wrapper(m_c); }
 
     inline const char * signature() const noexcept
-    { return SharemindSyscall_signature(m_c); }
+    { return ::SharemindSyscall_signature(m_c); }
 
 private: /* Methods: */
 
-    inline Syscall(SharemindSyscall * const sc) noexcept
+    inline Syscall(::SharemindSyscall * const sc) noexcept
         : m_c((assert(sc), sc))
     {
-        SharemindSyscall_setTagWithDestructor(
+        ::SharemindSyscall_setTagWithDestructor(
                     sc,
                     this,
                     [](void * s) { delete static_cast<Syscall *>(s); });
@@ -302,7 +306,7 @@ private: /* Methods: */
 
 private: /* Fields: */
 
-    SharemindSyscall * m_c;
+    ::SharemindSyscall * m_c;
 
 }; /* class Syscall { */
 
@@ -326,9 +330,9 @@ public: /* Methods: */
 
     inline ~Pdpi() noexcept {
         if (m_c) {
-            if (SharemindPdpi_tag(m_c) == this)
-                SharemindPdpi_releaseTag(m_c);
-            SharemindPdpi_free(m_c);
+            if (::SharemindPdpi_tag(m_c) == this)
+                ::SharemindPdpi_releaseTag(m_c);
+            ::SharemindPdpi_free(m_c);
         }
     }
 
@@ -337,25 +341,25 @@ public: /* Methods: */
     SHAREMIND_LIBMODAPI_CXX_DEFINE_PARENT_GETTER(Pdpi,Pdk,pdk)
     SHAREMIND_LIBMODAPI_CXX_DEFINE_PARENT_GETTER(Pdpi,Module,module)
     SHAREMIND_LIBMODAPI_CXX_DEFINE_PARENT_GETTER(Pdpi,ModuleApi,moduleApi)
-    SHAREMIND_LIBMODAPI_CXX_DEFINE_SELF_FACILITY_FUNCTIONS(SharemindPdpi)
+    SHAREMIND_LIBMODAPI_CXX_DEFINE_SELF_FACILITY_FUNCTIONS(Pdpi)
 
     inline bool isStarted() const noexcept
-    { return SharemindPdpi_isStarted(m_c); }
+    { return ::SharemindPdpi_isStarted(m_c); }
 
     inline void start() {
-        const ModuleApiError r = SharemindPdpi_start(m_c);
-        if (r != SHAREMIND_MODULE_API_OK)
+        const ModuleApiError r = ::SharemindPdpi_start(m_c);
+        if (r != ::SHAREMIND_MODULE_API_OK)
             throw PdpiException(r, *this);
     }
 
-    inline void stop() noexcept { SharemindPdpi_stop(m_c); }
+    inline void stop() noexcept { ::SharemindPdpi_stop(m_c); }
 
     inline void * handle() const noexcept
-    { return SharemindPdpi_handle(m_c); }
+    { return ::SharemindPdpi_handle(m_c); }
 
 private: /* Fields: */
 
-    SharemindPdpi * m_c;
+    ::SharemindPdpi * m_c;
 
 }; /* class Pd { */
 
@@ -381,9 +385,9 @@ public: /* Methods: */
 
     virtual inline ~Pd() noexcept {
         if (m_c) {
-            if (SharemindPd_tag(m_c) == this)
-                SharemindPd_releaseTag(m_c);
-            SharemindPd_free(m_c);
+            if (::SharemindPd_tag(m_c) == this)
+                ::SharemindPd_releaseTag(m_c);
+            ::SharemindPd_free(m_c);
         }
     }
 
@@ -391,33 +395,33 @@ public: /* Methods: */
     SHAREMIND_LIBMODAPI_CXX_DEFINE_PARENT_GETTER(Pd,Pdk,pdk)
     SHAREMIND_LIBMODAPI_CXX_DEFINE_PARENT_GETTER(Pd,Module,module)
     SHAREMIND_LIBMODAPI_CXX_DEFINE_PARENT_GETTER(Pd,ModuleApi,moduleApi)
-    SHAREMIND_LIBMODAPI_CXX_DEFINE_SELF_FACILITY_FUNCTIONS(SharemindPd)
-    SHAREMIND_LIBMODAPI_CXX_DEFINE_FACILITY_FUNCTIONS(SharemindPd, pdpi, Pdpi)
+    SHAREMIND_LIBMODAPI_CXX_DEFINE_SELF_FACILITY_FUNCTIONS(Pd)
+    SHAREMIND_LIBMODAPI_CXX_DEFINE_FACILITY_FUNCTIONS(Pd, pdpi, Pdpi)
 
     inline bool isStarted() const noexcept
-    { return SharemindPd_isStarted(m_c); }
+    { return ::SharemindPd_isStarted(m_c); }
 
     inline void start() {
-        const ModuleApiError r = SharemindPd_start(m_c);
-        if (r != SHAREMIND_MODULE_API_OK)
+        const ModuleApiError r = ::SharemindPd_start(m_c);
+        if (r != ::SHAREMIND_MODULE_API_OK)
             throw PdException(r, *m_c);
     }
 
-    inline void stop() noexcept { SharemindPd_stop(m_c); }
+    inline void stop() noexcept { ::SharemindPd_stop(m_c); }
 
     inline const char * name() const noexcept
-    { return SharemindPd_name(m_c); }
+    { return ::SharemindPd_name(m_c); }
 
     inline const char * conf() const noexcept
-    { return SharemindPd_conf(m_c); }
+    { return ::SharemindPd_conf(m_c); }
 
     inline void * handle() const noexcept
-    { return SharemindPd_handle(m_c); }
+    { return ::SharemindPd_handle(m_c); }
 
 private: /* Methods: */
 
-    inline SharemindPdpi & newPdpi() {
-        SharemindPdpi * const pdpi = SharemindPd_newPdpi(m_c);
+    inline ::SharemindPdpi & newPdpi() {
+        ::SharemindPdpi * const pdpi = ::SharemindPd_newPdpi(m_c);
         if (pdpi)
             return *pdpi;
         throw PdException(*m_c);
@@ -425,7 +429,7 @@ private: /* Methods: */
 
 private: /* Fields: */
 
-    SharemindPd * m_c;
+    ::SharemindPd * m_c;
 
 }; /* class Pd { */
 
@@ -450,22 +454,22 @@ public: /* Methods: */
     SHAREMIND_LIBMODAPI_CXX_DEFINE_CPTR_GETTERS(Pdk)
     SHAREMIND_LIBMODAPI_CXX_DEFINE_PARENT_GETTER(Pdk,Module,module)
     SHAREMIND_LIBMODAPI_CXX_DEFINE_PARENT_GETTER(Pdk,ModuleApi,moduleApi)
-    SHAREMIND_LIBMODAPI_CXX_DEFINE_FACILITY_FUNCTIONS(SharemindPdk, pd, Pd)
-    SHAREMIND_LIBMODAPI_CXX_DEFINE_FACILITY_FUNCTIONS(SharemindPdk, pdpi, Pdpi)
+    SHAREMIND_LIBMODAPI_CXX_DEFINE_FACILITY_FUNCTIONS(Pdk, pd, Pd)
+    SHAREMIND_LIBMODAPI_CXX_DEFINE_FACILITY_FUNCTIONS(Pdk, pdpi, Pdpi)
     SHAREMIND_LIBMODAPI_CXX_DEFINE_PDCHILD_STUFF(Pdk)
 
     inline const char * name() const noexcept
-    { return SharemindPdk_name(m_c); }
+    { return ::SharemindPdk_name(m_c); }
 
     inline size_t index() const noexcept
-    { return SharemindPdk_index(m_c); }
+    { return ::SharemindPdk_index(m_c); }
 
 private: /* Methods: */
 
-    Pdk(SharemindPdk * const pdk) noexcept
+    Pdk(::SharemindPdk * const pdk) noexcept
         : m_c((assert(pdk), pdk))
     {
-        SharemindPdk_setTagWithDestructor(
+        ::SharemindPdk_setTagWithDestructor(
                     pdk,
                     this,
                     [](void * p) noexcept { delete static_cast<Pdk *>(p); });
@@ -473,11 +477,12 @@ private: /* Methods: */
 
     inline ~Pdk() noexcept {}
 
-    SharemindPd & newPd(const char * name, const char * configuration)
+    ::SharemindPd & newPd(const char * name, const char * configuration)
             __attribute__ ((nonnull(2)))
     {
         assert(name);
-        SharemindPd * const pd = SharemindPdk_newPd(m_c, name, configuration);
+        ::SharemindPd * const pd =
+                ::SharemindPdk_newPd(m_c, name, configuration);
         if (pd)
             return *pd;
         throw PdkException(*this);
@@ -485,7 +490,7 @@ private: /* Methods: */
 
 private: /* Fields: */
 
-    SharemindPdk * const m_c;
+    ::SharemindPdk * const m_c;
 
 }; /* class Pdk { */
 
@@ -510,9 +515,9 @@ public: /* Methods: */
 
     virtual inline ~Module() noexcept {
         if (m_c) {
-            if (SharemindModule_tag(m_c) == this)
-                SharemindModule_releaseTag(m_c);
-            SharemindModule_free(m_c);
+            if (::SharemindModule_tag(m_c) == this)
+                ::SharemindModule_releaseTag(m_c);
+            ::SharemindModule_free(m_c);
         }
     }
 
@@ -520,41 +525,39 @@ public: /* Methods: */
     SHAREMIND_LIBMODAPI_CXX_DEFINE_PARENT_GETTER(Module,ModuleApi,moduleApi)
     SHAREMIND_LIBMODAPI_CXX_DEFINE_PDK_AND_SYSCALL_CHILD_STUFF(Module)
     SHAREMIND_LIBMODAPI_CXX_DEFINE_PDCHILD_STUFF(Module)
-    SHAREMIND_LIBMODAPI_CXX_DEFINE_SELF_FACILITY_FUNCTIONS(SharemindModule)
-    SHAREMIND_LIBMODAPI_CXX_DEFINE_FACILITY_FUNCTIONS(SharemindModule, pd, Pd)
-    SHAREMIND_LIBMODAPI_CXX_DEFINE_FACILITY_FUNCTIONS(SharemindModule,
-                                                      pdpi,
-                                                      Pdpi)
+    SHAREMIND_LIBMODAPI_CXX_DEFINE_SELF_FACILITY_FUNCTIONS(Module)
+    SHAREMIND_LIBMODAPI_CXX_DEFINE_FACILITY_FUNCTIONS(Module, pd, Pd)
+    SHAREMIND_LIBMODAPI_CXX_DEFINE_FACILITY_FUNCTIONS(Module, pdpi, Pdpi)
 
     inline void init() {
-        const ModuleApiError r = SharemindModule_init(m_c);
-        if (r != SHAREMIND_MODULE_API_OK)
+        const ModuleApiError r = ::SharemindModule_init(m_c);
+        if (r != ::SHAREMIND_MODULE_API_OK)
             throw ModuleException(r, *this);
     }
 
-    inline void deinit() noexcept { SharemindModule_deinit(m_c); }
+    inline void deinit() noexcept { ::SharemindModule_deinit(m_c); }
 
     inline bool isInitialized() const noexcept
-    { return SharemindModule_isInitialized(m_c); }
+    { return ::SharemindModule_isInitialized(m_c); }
 
     inline const char * filename() const noexcept
-    { return SharemindModule_filename(m_c); }
+    { return ::SharemindModule_filename(m_c); }
 
     inline const char * name() const noexcept
-    { return SharemindModule_name(m_c); }
+    { return ::SharemindModule_name(m_c); }
 
     inline const char * conf() const noexcept
-    { return SharemindModule_conf(m_c); }
+    { return ::SharemindModule_conf(m_c); }
 
     inline uint32_t apiVersionInUse() const noexcept
-    { return SharemindModule_apiVersionInUse(m_c); }
+    { return ::SharemindModule_apiVersionInUse(m_c); }
 
     inline void * handle() const noexcept
-    { return SharemindModule_handle(m_c); }
+    { return ::SharemindModule_handle(m_c); }
 
 private: /* Fields: */
 
-    SharemindModule * m_c;
+    ::SharemindModule * m_c;
 
 }; /* class Module { */
 
@@ -577,8 +580,8 @@ public: /* Methods: */
         : m_c([]{
                   ModuleApiError error;
                   const char * errorStr;
-                  SharemindModuleApi * const modapi =
-                          SharemindModuleApi_new(&error, &errorStr);
+                  ::SharemindModuleApi * const modapi =
+                          ::SharemindModuleApi_new(&error, &errorStr);
                   if (modapi)
                       return modapi;
                   throw ModuleApiException(
@@ -586,7 +589,7 @@ public: /* Methods: */
                         errorStr);
               }())
     {
-        SharemindModuleApi_setTagWithDestructor(
+        ::SharemindModuleApi_setTagWithDestructor(
                     m_c,
                     this,
                     [](void * m) noexcept {
@@ -599,34 +602,28 @@ public: /* Methods: */
 
     virtual inline ~ModuleApi() noexcept {
         if (m_c) {
-            if (SharemindModuleApi_tag(m_c) == this)
-                SharemindModuleApi_releaseTag(m_c);
-            SharemindModuleApi_free(m_c);
+            if (::SharemindModuleApi_tag(m_c) == this)
+                ::SharemindModuleApi_releaseTag(m_c);
+            ::SharemindModuleApi_free(m_c);
         }
     }
 
     SHAREMIND_LIBMODAPI_CXX_DEFINE_CPTR_GETTERS(ModuleApi)
     SHAREMIND_LIBMODAPI_CXX_DEFINE_PDK_AND_SYSCALL_CHILD_STUFF(ModuleApi)
     SHAREMIND_LIBMODAPI_CXX_DEFINE_PDCHILD_STUFF(ModuleApi)
-    SHAREMIND_LIBMODAPI_CXX_DEFINE_FACILITY_FUNCTIONS(SharemindModuleApi,
-                                                      module,
-                                                      Module)
-    SHAREMIND_LIBMODAPI_CXX_DEFINE_FACILITY_FUNCTIONS(SharemindModuleApi,
-                                                      pd,
-                                                      Pd)
-    SHAREMIND_LIBMODAPI_CXX_DEFINE_FACILITY_FUNCTIONS(SharemindModuleApi,
-                                                      pdpi,
-                                                      Pdpi)
+    SHAREMIND_LIBMODAPI_CXX_DEFINE_FACILITY_FUNCTIONS(ModuleApi, module, Module)
+    SHAREMIND_LIBMODAPI_CXX_DEFINE_FACILITY_FUNCTIONS(ModuleApi, pd, Pd)
+    SHAREMIND_LIBMODAPI_CXX_DEFINE_FACILITY_FUNCTIONS(ModuleApi, pdpi, Pdpi)
 
 private: /* Methods: */
 
-    SharemindModule & newModule(const char * const filename,
-                                const char * const configuration)
+    ::SharemindModule & newModule(const char * const filename,
+                                  const char * const configuration)
             __attribute__((nonnull(2)))
     {
         assert(filename);
-        SharemindModule * const m =
-                SharemindModuleApi_newModule(m_c, filename, configuration);
+        ::SharemindModule * const m =
+                ::SharemindModuleApi_newModule(m_c, filename, configuration);
         if (m)
             return *m;
         throw ModuleApiException(*m_c);
@@ -634,7 +631,7 @@ private: /* Methods: */
 
 private: /* Fields: */
 
-    SharemindModuleApi * m_c;
+    ::SharemindModuleApi * m_c;
 
 }; /* class ModuleApi { */
 
@@ -646,7 +643,7 @@ private: /* Fields: */
 inline Pdpi::Pdpi(Pd & pd)
     : m_c(&pd.newPdpi())
 {
-    SharemindPdpi_setTagWithDestructor(
+    ::SharemindPdpi_setTagWithDestructor(
                 m_c,
                 this,
                 [](void * p) noexcept {
@@ -664,7 +661,7 @@ inline Pdpi::Pdpi(Pd & pd)
 inline Pd::Pd(Pdk & pdk, const char * name, const char * configuration)
     : m_c(&pdk.newPd(name, configuration))
 {
-    SharemindPd_setTagWithDestructor(
+    ::SharemindPd_setTagWithDestructor(
                 m_c,
                 this,
                 [](void * p) noexcept {
@@ -688,13 +685,13 @@ inline Module::Module(ModuleApi & moduleApi,
         {
             const size_t nscs = numSyscalls();
             for (size_t i = 0u; i < nscs; i++)
-                new Syscall(SharemindModule_syscall(m_c, i));
+                new Syscall(::SharemindModule_syscall(m_c, i));
         }{
             const size_t npdks = numPdks();
             for (size_t i = 0u; i < npdks; i++)
-                new Pdk(SharemindModule_pdk(m_c, i));
+                new Pdk(::SharemindModule_pdk(m_c, i));
         }
-        SharemindModule_setTagWithDestructor(
+        ::SharemindModule_setTagWithDestructor(
                     m_c,
                     this,
                     [](void * m) noexcept {
@@ -703,7 +700,7 @@ inline Module::Module(ModuleApi & moduleApi,
                         delete module;
                     });
     } catch (...) {
-        SharemindModule_free(m_c);
+        ::SharemindModule_free(m_c);
         throw;
     }
 }

@@ -211,7 +211,7 @@ public: /* Methods: */
                                   const char * const errorStr)
         : m_errorCode((assert(errorCode != ::SHAREMIND_MODULE_API_OK),
                        errorCode))
-        , m_errorStr((assert(errorStr), errorStr))
+        , m_errorStr(errorStr ? errorStr : ModuleApiError_toString(errorCode))
     {}
 
     inline ModuleApiError code() const noexcept { return m_errorCode; }

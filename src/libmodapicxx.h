@@ -225,44 +225,32 @@ private: /* Fields: */
 }; /* class ModuleApiExceptionBase { */
 
 #define SHAREMIND_LIBMODAPI_CXX_DEFINE_EXCEPTION(ClassName) \
-    class ClassName ## Exception: public ModuleApiExceptionBase { \
+    class Exception: public ModuleApiExceptionBase { \
     public: /* Methods: */ \
-        inline ClassName ## Exception(const ::Sharemind ## ClassName & c) \
+        inline Exception(const ::Sharemind ## ClassName & c) \
             : ModuleApiExceptionBase( \
                       SHAREMIND_LIBMODAPI_CXX_EXCEPT_OVERRIDES_TEST( \
                               &c, \
                               ::Sharemind ## ClassName ## _lastError(&c)), \
                       ::Sharemind ## ClassName ## _lastErrorString(&c)) \
         {} \
-        template <typename T, \
-                  typename = typename std::enable_if< \
-                      std::is_same<T, ClassName>::value>::type> \
-        inline ClassName ## Exception(const T & c) \
-            : ClassName ## Exception(*(c.cPtr())) \
+        inline Exception(const ClassName & c) \
+            : Exception(*(c.cPtr())) \
         {} \
-        inline ClassName ## Exception(const ModuleApiError error, \
-                                      const char * const errorStr) \
+        inline Exception(const ModuleApiError error, \
+                         const char * const errorStr = nullptr) \
             : ModuleApiExceptionBase(error, errorStr) \
         {} \
-        inline ClassName ## Exception(const ModuleApiError error, \
-                                      const ::Sharemind ## ClassName & c) \
+        inline Exception(const ModuleApiError error, \
+                         const ::Sharemind ## ClassName & c) \
             : ModuleApiExceptionBase( \
                     error, \
                     ::Sharemind ## ClassName ## _lastErrorString(&c)) \
         {} \
-        template <typename T, \
-                  typename = typename std::enable_if< \
-                      std::is_same<T, ClassName>::value>::type> \
-        inline ClassName ## Exception(const ModuleApiError error, const T & c) \
-            : ClassName ## Exception(error, *(c.cPtr())) \
+        inline Exception(const ModuleApiError error, const ClassName & c) \
+            : Exception(error, *(c.cPtr())) \
         {} \
     }
-SHAREMIND_LIBMODAPI_CXX_DEFINE_EXCEPTION(ModuleApi);
-SHAREMIND_LIBMODAPI_CXX_DEFINE_EXCEPTION(Module);
-SHAREMIND_LIBMODAPI_CXX_DEFINE_EXCEPTION(Pdk);
-SHAREMIND_LIBMODAPI_CXX_DEFINE_EXCEPTION(Pd);
-SHAREMIND_LIBMODAPI_CXX_DEFINE_EXCEPTION(Pdpi);
-#undef SHAREMIND_LIBMODAPI_CXX_DEFINE_EXCEPTION
 
 
 /*******************************************************************************
@@ -317,6 +305,10 @@ private: /* Fields: */
 
 class Pdpi {
 
+public: /* Types: */
+
+    SHAREMIND_LIBMODAPI_CXX_DEFINE_EXCEPTION(Pdpi);
+
 public: /* Methods: */
 
     Pdpi() = delete;
@@ -349,7 +341,7 @@ public: /* Methods: */
     inline void start() {
         const ModuleApiError r = ::SharemindPdpi_start(m_c);
         if (r != ::SHAREMIND_MODULE_API_OK)
-            throw PdpiException(r, *this);
+            throw Exception(r, *this);
     }
 
     inline void stop() noexcept { ::SharemindPdpi_stop(m_c); }
@@ -371,6 +363,10 @@ private: /* Fields: */
 class Pd {
 
     friend Pdpi::Pdpi(Pd &);
+
+public: /* Types: */
+
+    SHAREMIND_LIBMODAPI_CXX_DEFINE_EXCEPTION(Pd);
 
 public: /* Methods: */
 
@@ -404,7 +400,7 @@ public: /* Methods: */
     inline void start() {
         const ModuleApiError r = ::SharemindPd_start(m_c);
         if (r != ::SHAREMIND_MODULE_API_OK)
-            throw PdException(r, *m_c);
+            throw Exception(r, *m_c);
     }
 
     inline void stop() noexcept { ::SharemindPd_stop(m_c); }
@@ -424,7 +420,7 @@ private: /* Methods: */
         ::SharemindPdpi * const pdpi = ::SharemindPd_newPdpi(m_c);
         if (pdpi)
             return *pdpi;
-        throw PdException(*m_c);
+        throw Exception(*m_c);
     }
 
 private: /* Fields: */
@@ -442,6 +438,10 @@ class Pdk final {
 
     friend Pd::Pd(Pdk & pdk, const char * name, const char * configuration);
     friend class Module;
+
+public: /* Types: */
+
+    SHAREMIND_LIBMODAPI_CXX_DEFINE_EXCEPTION(Pdk);
 
 public: /* Methods: */
 
@@ -485,7 +485,7 @@ private: /* Methods: */
                 ::SharemindPdk_newPd(m_c, name, configuration);
         if (pd)
             return *pd;
-        throw PdkException(*this);
+        throw Exception(*this);
     }
 
 private: /* Fields: */
@@ -500,6 +500,10 @@ private: /* Fields: */
 *******************************************************************************/
 
 class Module {
+
+public: /* Types: */
+
+    SHAREMIND_LIBMODAPI_CXX_DEFINE_EXCEPTION(Module);
 
 public: /* Methods: */
 
@@ -532,7 +536,7 @@ public: /* Methods: */
     inline void init() {
         const ModuleApiError r = ::SharemindModule_init(m_c);
         if (r != ::SHAREMIND_MODULE_API_OK)
-            throw ModuleException(r, *this);
+            throw Exception(r, *this);
     }
 
     inline void deinit() noexcept { ::SharemindModule_deinit(m_c); }
@@ -569,6 +573,10 @@ class ModuleApi {
 
     friend Module::Module(ModuleApi &, const char * const, const char * const);
 
+public: /* Types: */
+
+    SHAREMIND_LIBMODAPI_CXX_DEFINE_EXCEPTION(ModuleApi);
+
 public: /* Methods: */
 
     ModuleApi(ModuleApi &&) = delete;
@@ -584,7 +592,7 @@ public: /* Methods: */
                           ::SharemindModuleApi_new(&error, &errorStr);
                   if (modapi)
                       return modapi;
-                  throw ModuleApiException(
+                  throw Exception(
                         SHAREMIND_LIBMODAPI_CXX_EXCEPT_OVERRIDES_TEST(=,error),
                         errorStr);
               }())
@@ -626,7 +634,7 @@ private: /* Methods: */
                 ::SharemindModuleApi_newModule(m_c, filename, configuration);
         if (m)
             return *m;
-        throw ModuleApiException(*m_c);
+        throw Exception(*m_c);
     }
 
 private: /* Fields: */
@@ -712,6 +720,7 @@ inline Module::Module(ModuleApi & moduleApi,
   Undefine helper macros
 *******************************************************************************/
 
+#undef SHAREMIND_LIBMODAPI_CXX_DEFINE_EXCEPTION
 #undef SHAREMIND_LIBMODAPI_CXX_DEFINE_CPTR_GETTERS
 #undef SHAREMIND_LIBMODAPI_CXX_DEFINE_PARENT_GETTER
 #undef SHAREMIND_LIBMODAPI_CXX_DEFINE_PDK_AND_SYSCALL_CHILD_STUFF

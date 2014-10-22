@@ -75,10 +75,12 @@ ADD_LIBRARY("libmodapi" ${SHAREMIND_LIBMODAPI_LINKING_MODE}
 )
 SET(LIBMODAPI_VERSION "0.2.0.0")
 SET(LIBMODAPI_COMPAT_VERSION "0.2.0.0")
+STRING(REGEX REPLACE "(([^\\.]+\\.[^\\.]+)\\.).*" "\\2" LIBMODAPI_SOVERSION
+                     "${LIBMODAPI_VERSION}")
 SET_TARGET_PROPERTIES("libmodapi" PROPERTIES
                       OUTPUT_NAME "sharemind_modapi"
                       VERSION "${LIBMODAPI_VERSION}"
-                      SOVERSION "0.2")
+                      SOVERSION "${LIBMODAPI_SOVERSION}")
 TARGET_LINK_LIBRARIES("libmodapi" "-ldl")
 
 INSTALL(TARGETS "libmodapi"

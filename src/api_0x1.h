@@ -97,11 +97,21 @@ typedef enum {
 SHAREMIND_ENUM_CUSTOM_DEFINE(SharemindModuleApi0x1Error,
                              SHAREMIND_MODULE_API_0x1_ERROR_ENUM);
 
+
+/*******************************************************************************
+  FACILITIES
+*******************************************************************************/
+
 /** A facility with a context. */
 typedef struct {
     void * facility;
     void * context;
 } SharemindModuleApi0x1Facility;
+
+
+/*******************************************************************************
+  MODULE
+*******************************************************************************/
 
 /** Environment passed to a Sharemind module initializer and deinitializer: */
 typedef struct SharemindModuleApi0x1ModuleContext_

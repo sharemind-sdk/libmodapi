@@ -124,14 +124,17 @@ SHAREMIND_EXTERN_C_END
         assert(name[0]); \
         SharemindModuleApiError r = SHAREMIND_MODULE_API_OK; \
         CN ## _lock(c); \
-        void * const insertHint = \
-                SharemindFacilityMapInner_insertHint(&c->fF ## Map.realMap, \
-                                                     name); \
-        if (unlikely(!insertHint)) { \
+        const SharemindFacility * const f = \
+                SharemindFacilityMap_get(&c->fF ## Map, name); \
+        if (unlikely(f)) { \
             r = SHAREMIND_MODULE_API_FACILITY_ALREADY_EXISTS; \
             CN ## _setError(c, r, "Facility with this name already exists!"); \
             goto CN ## _set ## FF ## _exit; \
         } \
+        void * const insertHint = \
+                SharemindFacilityMapInner_insertHint(&c->fF ## Map.realMap, \
+                                                     name); \
+        assert(insertHint); \
         SharemindFacilityMapInner_value * const v = \
                 SharemindFacilityMapInner_insertAtHint(&c->fF ## Map.realMap, \
                                                        name, \

@@ -153,7 +153,7 @@ void SharemindModuleApi_free(SharemindModuleApi * modapi)
         __attribute__ ((nonnull(1)));
 
 
-SHAREMIND_LIBMODAPI_DECLARE_ERROR_FUNCTIONS(SharemindModuleApi);
+SHAREMIND_LIBMODAPI_DECLARE_ERROR_FUNCTIONS(SharemindModuleApi)
 
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(SharemindModuleApi,
                                                module,
@@ -216,7 +216,7 @@ SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
 void SharemindModule_free(SharemindModule * m) __attribute__ ((nonnull(1)));
 
 
-SHAREMIND_LIBMODAPI_DECLARE_ERROR_FUNCTIONS(SharemindModule);
+SHAREMIND_LIBMODAPI_DECLARE_ERROR_FUNCTIONS(SharemindModule)
 
 SHAREMIND_LIBMODAPI_DECLARE_SELF_FACILITY_FUNCTIONS(SharemindModule);
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(SharemindModule,pd,Pd);
@@ -317,7 +317,7 @@ SharemindSyscallWrapper SharemindSyscall_wrapper(const SharemindSyscall * sc)
   SharemindPdk
 *******************************************************************************/
 
-SHAREMIND_LIBMODAPI_DECLARE_ERROR_FUNCTIONS(SharemindPdk);
+SHAREMIND_LIBMODAPI_DECLARE_ERROR_FUNCTIONS(SharemindPdk)
 
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(SharemindPdk,pd,Pd);
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(SharemindPdk,pdpi,Pdpi);
@@ -361,7 +361,7 @@ SharemindPd * SharemindPdk_newPd(SharemindPdk * pdk,
 void SharemindPd_free(SharemindPd * pd) __attribute__ ((nonnull(1)));
 
 
-SHAREMIND_LIBMODAPI_DECLARE_ERROR_FUNCTIONS(SharemindPd);
+SHAREMIND_LIBMODAPI_DECLARE_ERROR_FUNCTIONS(SharemindPd)
 
 SHAREMIND_LIBMODAPI_DECLARE_SELF_FACILITY_FUNCTIONS(SharemindPd);
 SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(SharemindPd,pdpi,Pdpi);
@@ -405,7 +405,7 @@ SharemindPdpi * SharemindPd_newPdpi(SharemindPd * pd)
 void SharemindPdpi_free(SharemindPdpi * pdpi) __attribute__ ((nonnull(1)));
 
 
-SHAREMIND_LIBMODAPI_DECLARE_ERROR_FUNCTIONS(SharemindPdpi);
+SHAREMIND_LIBMODAPI_DECLARE_ERROR_FUNCTIONS(SharemindPdpi)
 
 SHAREMIND_LIBMODAPI_DECLARE_SELF_FACILITY_FUNCTIONS(SharemindPdpi);
 

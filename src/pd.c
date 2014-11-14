@@ -31,8 +31,6 @@ SHAREMIND_STRINGMAP_DEFINE_insertAtHint(SharemindPdMap,
                                         strdup,
                                         malloc,
                                         free)
-SHAREMIND_STRINGMAP_DECLARE_insertNew(SharemindPdMap,static inline,)
-SHAREMIND_STRINGMAP_DEFINE_insertNew(SharemindPdMap,static inline)
 SHAREMIND_STRINGMAP_DECLARE_remove(SharemindPdMap,static inline,)
 SHAREMIND_STRINGMAP_DEFINE_remove(SharemindPdMap,
                                   static inline,

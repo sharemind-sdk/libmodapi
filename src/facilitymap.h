@@ -67,28 +67,15 @@ SHAREMIND_STRINGMAP_DEFINE_remove(SharemindFacilityMapInner,
 
 SHAREMIND_EXTERN_C_BEGIN
 
+typedef const SharemindFacility * (* SharemindFacilityMapNextGetter)(
+        void * context,
+        const char * name);
+
 typedef struct SharemindFacilityMap_ {
     SharemindFacilityMapInner realMap;
-    struct SharemindFacilityMap_ * nextMap;
+    SharemindFacilityMapNextGetter nextGetter;
+    void * nextContext;
 } SharemindFacilityMap;
-
-inline void SharemindFacilityMap_init(SharemindFacilityMap * fm,
-                                      SharemindFacilityMap * nextMap)
-        __attribute__ ((nonnull(1), visibility("internal")));
-inline void SharemindFacilityMap_init(SharemindFacilityMap * fm,
-                                      SharemindFacilityMap * nextMap)
-{
-    assert(fm);
-    fm->nextMap = nextMap;
-    SharemindFacilityMapInner_init(&fm->realMap);
-}
-
-inline void SharemindFacilityMap_destroy(SharemindFacilityMap * fm)
-        __attribute__ ((nonnull(1), visibility("internal")));
-inline void SharemindFacilityMap_destroy(SharemindFacilityMap * fm) {
-    assert(fm);
-    SharemindFacilityMapInner_destroy(&fm->realMap);
-}
 
 inline const SharemindFacility * SharemindFacilityMap_get(
             const SharemindFacilityMap * fm,
@@ -105,9 +92,54 @@ inline const SharemindFacility * SharemindFacilityMap_get(
             SharemindFacilityMapInner_get(&fm->realMap, name);
     if (v)
         return &v->value;
-    if (fm->nextMap)
-        return SharemindFacilityMap_get(fm->nextMap, name);
+    if (fm->nextGetter)
+        return (*(fm->nextGetter))(fm->nextContext, name);
     return NULL;
+}
+
+const SharemindFacility * SharemindFacilityMap_nextMapGetter(
+        void * context,
+        const char * name)
+        __attribute__ ((nonnull(1, 2), visibility("internal")));
+
+inline void SharemindFacilityMap_init(SharemindFacilityMap * fm,
+                                      SharemindFacilityMap * nextMap)
+        __attribute__ ((nonnull(1), visibility("internal")));
+inline void SharemindFacilityMap_init(SharemindFacilityMap * fm,
+                                      SharemindFacilityMap * nextMap)
+{
+    assert(fm);
+    if (nextMap) {
+        fm->nextGetter = &SharemindFacilityMap_nextMapGetter;
+        fm->nextContext = nextMap;
+    } else {
+        fm->nextGetter = NULL;
+        fm->nextContext = NULL;
+    }
+    SharemindFacilityMapInner_init(&fm->realMap);
+}
+
+inline void SharemindFacilityMap_init_with_getter(
+        SharemindFacilityMap * fm,
+        SharemindFacilityMapNextGetter nextGetter,
+        void * context)
+        __attribute__ ((nonnull(1), visibility("internal")));
+inline void SharemindFacilityMap_init_with_getter(
+        SharemindFacilityMap * fm,
+        SharemindFacilityMapNextGetter nextGetter,
+        void * context)
+{
+    assert(fm);
+    fm->nextGetter = nextGetter;
+    fm->nextContext = context;
+    SharemindFacilityMapInner_init(&fm->realMap);
+}
+
+inline void SharemindFacilityMap_destroy(SharemindFacilityMap * fm)
+        __attribute__ ((nonnull(1), visibility("internal")));
+inline void SharemindFacilityMap_destroy(SharemindFacilityMap * fm) {
+    assert(fm);
+    SharemindFacilityMapInner_destroy(&fm->realMap);
 }
 
 SHAREMIND_EXTERN_C_END

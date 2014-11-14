@@ -183,7 +183,8 @@ SHAREMIND_SET_DEFINE_FOREACH_WITH_INLINE(
             return result;)
 
 
-SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiError * error,
+SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiContext * context,
+                                            SharemindModuleApiError * error,
                                             const char ** errorStr)
 {
     SharemindModuleApi * const modapi =
@@ -209,10 +210,25 @@ SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiError * error,
     SHAREMIND_TAG_INIT(modapi);
 
     SharemindModulesSet_init(&modapi->modules);
-    SharemindFacilityMap_init(&modapi->moduleFacilityMap, NULL);
-    SharemindFacilityMap_init(&modapi->pdFacilityMap, NULL);
-    SharemindFacilityMap_init(&modapi->pdpiFacilityMap, NULL);
+#define SHAREMIND_LIBMODAPI_MODAPI_FACILITYMAP_INIT(name) \
+    do { \
+        if (context && context->name ## Facility) { \
+            SharemindFacilityMap_init_with_getter( \
+                &modapi->name ## FacilityMap, \
+                (SharemindFacilityMapNextGetter) &context->name ## Facility, \
+                context); \
+        } else { \
+            SharemindFacilityMap_init_with_getter(&modapi->name ## FacilityMap,\
+                                                  NULL, \
+                                                  NULL); \
+        } \
+    } while (0)
 
+    SHAREMIND_LIBMODAPI_MODAPI_FACILITYMAP_INIT(module);
+    SHAREMIND_LIBMODAPI_MODAPI_FACILITYMAP_INIT(pd);
+    SHAREMIND_LIBMODAPI_MODAPI_FACILITYMAP_INIT(pdpi);
+
+    modapi->context = context;
 
     return modapi;
 }
@@ -230,6 +246,9 @@ void SharemindModuleApi_free(SharemindModuleApi * modapi) {
     SharemindFacilityMap_destroy(&modapi->moduleFacilityMap);
     SharemindFacilityMap_destroy(&modapi->pdFacilityMap);
     SharemindFacilityMap_destroy(&modapi->pdpiFacilityMap);
+
+    if (modapi->context && modapi->context->destructor)
+        (*(modapi->context->destructor))(modapi->context);
 
     free(modapi);
 }

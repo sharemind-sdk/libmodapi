@@ -57,6 +57,8 @@ struct SharemindModuleApi_ {
     /** PDPI facility name to pointer mapping: */
     SharemindFacilityMap pdpiFacilityMap;
 
+    SharemindModuleApiContext * context;
+
 };
 
 SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE_DEFINE(

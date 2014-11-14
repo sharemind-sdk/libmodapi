@@ -121,10 +121,32 @@ SHAREMIND_ENUM_DECLARE_TOSTRING(SharemindModuleApiError);
 
 
 /*******************************************************************************
+  SharemindModuleApiContext
+*******************************************************************************/
+
+struct SharemindModuleApiContext_;
+typedef struct SharemindModuleApiContext_ SharemindModuleApiContext;
+struct SharemindModuleApiContext_ {
+    void * internal;
+    void (* destructor)(SharemindModuleApiContext * context);
+    SharemindFacility const * (* moduleFacility)(
+            SharemindModuleApiContext * context,
+            const char * signature);
+    SharemindFacility const * (* pdFacility)(
+            SharemindModuleApiContext * context,
+            const char * signature);
+    SharemindFacility const * (* pdpiFacility)(
+            SharemindModuleApiContext * context,
+            const char * signature);
+};
+
+
+/*******************************************************************************
   SharemindModuleApi
 *******************************************************************************/
 
-SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiError * error,
+SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiContext * context,
+                                            SharemindModuleApiError * error,
                                             const char ** errorStr);
 
 void SharemindModuleApi_free(SharemindModuleApi * modapi)

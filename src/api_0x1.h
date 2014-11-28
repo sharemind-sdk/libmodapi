@@ -134,18 +134,23 @@ struct SharemindModuleApi0x1ModuleContext_ {
     */
     const char * SHAREMIND_ICONST conf;
 
-    /**
-      \brief Finds a module specific system facility.
-      \param wrapper Pointer to the SharemindModuleApi0x1ModuleContext instance.
-      \param[in] name Name of the facility.
-      \returns a pointer to the facility and its context.
-      \retval NULL if no such facility is associated with this module.
-    */
     const SharemindModuleApi0x1Facility * (* SHAREMIND_ICONST getModuleFacility)
             (SharemindModuleApi0x1ModuleContext * w,
              const char * name);
 
 };
+
+/**
+  \fn const SharemindModuleApi0x1Facility *
+      SharemindModuleApi0x1ModuleContext::getModuleFacility(
+            SharemindModuleApi0x1ModuleContext * w,
+            const char * name)
+  \brief Finds a module specific system facility.
+  \param wrapper Pointer to the SharemindModuleApi0x1ModuleContext instance.
+  \param[in] name Name of the facility.
+  \returns a pointer to the facility and its context.
+  \retval NULL if no such facility is associated with this module.
+*/
 
 /** Module initializer function signature: */
 typedef SharemindModuleApi0x1Error (*SharemindModuleApi0x1ModuleInitializer)(
@@ -237,14 +242,6 @@ struct SharemindModuleApi0x1SyscallContext_ {
     */
     void * moduleHandle;
 
-    /**
-      Used to get access to internal data of protection domain per-process data.
-      \param[in] c context
-      \param[in] pd_index the protection domain index.
-      \returns a pointer to a SharemindModuleApi0x1PdpiInfo structure for the
-               PDPI.
-      \retval NULL if no PDPI was found.
-    */
     const SharemindModuleApi0x1PdpiInfo * (* SHAREMIND_ICONST get_pdpi_info)(
             SharemindModuleApi0x1SyscallContext * c,
             uint64_t pd_index);
@@ -288,6 +285,20 @@ struct SharemindModuleApi0x1SyscallContext_ {
     /* OTHER STUFF */
 
 };
+
+/**
+  \fn const SharemindModuleApi0x1PdpiInfo *
+      SharemindModuleApi0x1SyscallContext::get_pdpi_info(
+            SharemindModuleApi0x1SyscallContext * c,
+            uint64_t pd_index)
+  \brief Used to get access to internal data of protection domain per-process
+         data.
+  \param[in] c context
+  \param[in] pd_index the protection domain index.
+  \returns a pointer to a SharemindModuleApi0x1PdpiInfo structure for the
+           PDPI.
+  \retval NULL if no PDPI was found.
+*/
 
 /** System call function signature: */
 typedef SharemindModuleApi0x1Error (* SharemindModuleApi0x1Syscall)(
@@ -412,14 +423,6 @@ struct SharemindModuleApi0x1PdWrapper_ {
     /** A handle to the configuration of the protection domain. */
     const SharemindModuleApi0x1PdConf * SHAREMIND_ICONST conf;
 
-    /**
-      \brief Finds a protection-domain specific system facility.
-      \param wrapper Pointer to this SharemindModuleApi0x1PdWrapper instance.
-      \param[in] name Name of the facility.
-      \returns a pointer to the facility and its context.
-      \retval NULL if no such facility is associated with this protection
-                   domain.
-    */
     const SharemindModuleApi0x1Facility * (* SHAREMIND_ICONST getPdFacility)(
             SharemindModuleApi0x1PdWrapper * w,
             const char * name);
@@ -427,6 +430,19 @@ struct SharemindModuleApi0x1PdWrapper_ {
     /* OTHER STUFF */
 
 };
+
+/**
+  \fn const SharemindModuleApi0x1Facility *
+      SharemindModuleApi0x1PdWrapper::getPdFacility(
+            SharemindModuleApi0x1PdWrapper * w,
+            const char * name)
+  \brief Finds a protection-domain specific system facility.
+  \param wrapper Pointer to this SharemindModuleApi0x1PdWrapper instance.
+  \param[in] name Name of the facility.
+  \returns a pointer to the facility and its context.
+  \retval NULL if no such facility is associated with this protection
+               domain.
+*/
 
 /** Protection-domain instance process instance specific data wrapper. */
 typedef struct SharemindModuleApi0x1PdpiWrapper_
@@ -447,15 +463,6 @@ struct SharemindModuleApi0x1PdpiWrapper_ {
     */
     void * SHAREMIND_ICONST pdHandle;
 
-    /**
-      \brief Finds a system facility specific to the protection domain and
-             process.
-      \param wrapper Pointer to this SharemindModuleApi0x1PdpiWrapper instance.
-      \param[in] name Name of the facility.
-      \returns a pointer to the facility and its context.
-      \retval NULL if no such facility is associated with this protection domain
-              process instance.
-    */
     const SharemindModuleApi0x1Facility * (* SHAREMIND_ICONST getPdpiFacility)(
             SharemindModuleApi0x1PdpiWrapper * w,
             const char * name);
@@ -463,6 +470,20 @@ struct SharemindModuleApi0x1PdpiWrapper_ {
     /* OTHER STUFF */
 
 };
+
+/**
+  \fn const SharemindModuleApi0x1Facility *
+      SharemindModuleApi0x1PdpiWrapper::getPdpiFacility(
+            SharemindModuleApi0x1PdpiWrapper * w,
+            const char * name)
+  \brief Finds a system facility specific to the protection domain and
+         process.
+  \param wrapper Pointer to this SharemindModuleApi0x1PdpiWrapper instance.
+  \param[in] name Name of the facility.
+  \returns a pointer to the facility and its context.
+  \retval NULL if no such facility is associated with this protection domain
+          process instance.
+*/
 
 /** Protection domain initialization function signature */
 typedef SharemindModuleApi0x1Error (* SharemindModuleApi0x1PdStartup)(

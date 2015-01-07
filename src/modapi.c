@@ -215,7 +215,7 @@ SharemindModuleApi * SharemindModuleApi_new(SharemindModuleApiContext * context,
         if (context && context->name ## Facility) { \
             SharemindFacilityMap_init_with_getter( \
                 &modapi->name ## FacilityMap, \
-                (SharemindFacilityMapNextGetter) &context->name ## Facility, \
+                (SharemindFacilityMapNextGetter) context->name ## Facility, \
                 context); \
         } else { \
             SharemindFacilityMap_init_with_getter(&modapi->name ## FacilityMap,\

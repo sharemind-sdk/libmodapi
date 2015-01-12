@@ -16,9 +16,9 @@ INCLUDE("${CMAKE_CURRENT_SOURCE_DIR}/config.local" OPTIONAL)
 INCLUDE("${CMAKE_CURRENT_BINARY_DIR}/config.local" OPTIONAL)
 
 FIND_PACKAGE(Boost REQUIRED)
-FIND_PACKAGE(SharemindVmGlobals REQUIRED)
+FIND_PACKAGE(SharemindCHeaders REQUIRED)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS}
-                    ${SharemindVmGlobals_INCLUDE_DIRS})
+                    ${SharemindCHeaders_INCLUDE_DIRS})
 
 ADD_COMPILE_OPTIONS(
     "-std=c99" "-O2" "-fwrapv" "-Wall" "-Wextra" "-Wunused" "-Wabi"
@@ -44,7 +44,7 @@ CHECK_ADD_COMPILER_FLAG("-Wlogical-op")
 
 SET(LIBMODAPI_INSTALL_DEFINITIONS "-D__STDC_LIMIT_MACROS"
                                   "-D_XOPEN_SOURCE=700")
-ADD_DEFINITIONS(${SharemindVmGlobals_DEFINITIONS}
+ADD_DEFINITIONS(${SharemindCHeaders_DEFINITIONS}
                 ${LIBMODAPI_INSTALL_DEFINITIONS})
 
 

@@ -44,12 +44,12 @@ bool SharemindSyscall_init(SharemindSyscall * sc,
         SharemindModule_setErrorOor(m);
         goto SharemindSyscall_init_error_0;
     }
+    #endif
 
     if (!SHAREMIND_RECURSIVE_LOCK_INIT(sc)) {
         SharemindModule_setErrorMie(m);
         goto SharemindSyscall_init_error_1;
     }
-    #endif
     SHAREMIND_TAG_INIT(sc);
 
     sc->name = strdup(name);

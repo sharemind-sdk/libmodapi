@@ -137,7 +137,9 @@ SharemindPdk_init_error_1:
     SharemindModule_refs_unref(module);
     #endif
 
+    #ifndef NDEBUG
 SharemindPdk_init_error_0:
+    #endif
 
     return false;
 }

@@ -73,7 +73,9 @@ SharemindSyscall_init_error_1:
 
     SHAREMIND_RECURSIVE_LOCK_DEINIT(sc);
 
+    #ifndef NDEBUG
 SharemindSyscall_init_error_0:
+    #endif
 
     return false;
 }

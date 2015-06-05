@@ -35,12 +35,6 @@ SHAREMIND_STRINGMAP_DECLARE_insertHint(SharemindPdMap,static inline,)
 SHAREMIND_STRINGMAP_DEFINE_insertHint(SharemindPdMap,static inline)
 SHAREMIND_STRINGMAP_DECLARE_emplaceAtHint(SharemindPdMap,static inline,)
 SHAREMIND_STRINGMAP_DEFINE_emplaceAtHint(SharemindPdMap, static inline)
-SHAREMIND_STRINGMAP_DECLARE_insertAtHint(SharemindPdMap,static inline,)
-SHAREMIND_STRINGMAP_DEFINE_insertAtHint(SharemindPdMap,
-                                        static inline,
-                                        strdup,
-                                        malloc,
-                                        free)
 SHAREMIND_STRINGMAP_DECLARE_remove(SharemindPdMap,static inline,)
 SHAREMIND_STRINGMAP_DEFINE_remove(SharemindPdMap,
                                   static inline,

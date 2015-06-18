@@ -87,8 +87,13 @@ SharemindModuleApiError SharemindPdpi_start_0x1(SharemindPdpi * pdpi) {
                                    SHAREMIND_MODULE_API_API_ERROR,
                                    "Module returned an unexpected error!");
             return SHAREMIND_MODULE_API_API_ERROR;
-        #ifndef __clang__
+        #ifdef __clang__
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wcovered-switch-default"
+        #endif
         default: SHAREMIND_ABORT("lMA P+i1 %d", (int) r);
+        #ifdef __clang__
+        #pragma GCC diagnostic pop
         #endif
     }
 }

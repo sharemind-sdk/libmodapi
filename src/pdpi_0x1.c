@@ -22,6 +22,7 @@
 #include "pdpi_0x1.h"
 
 #include <assert.h>
+#include <sharemind/abort.h>
 #include <stdio.h>
 #include "modapi.h"
 #include "module.h"
@@ -57,9 +58,10 @@ SharemindModuleApiError SharemindPdpi_start_0x1(SharemindPdpi * pdpi) {
         .internal = pdpi
     };
 
-    switch((*((SharemindModuleApi0x1PdpiStartup)
-                  pd->pdk->pdpi_startup_impl_or_wrapper))(&pdpiWrapper))
-    {
+    SharemindModuleApi0x1Error const r =
+            (*((SharemindModuleApi0x1PdpiStartup)
+               pd->pdk->pdpi_startup_impl_or_wrapper))(&pdpiWrapper);
+    switch(r) {
         case SHAREMIND_MODULE_API_0x1_OK:
             pdpi->pdProcessHandle = pdpiWrapper.pdProcessHandle;
             return SHAREMIND_MODULE_API_OK;
@@ -78,11 +80,16 @@ SharemindModuleApiError SharemindPdpi_start_0x1(SharemindPdpi * pdpi) {
         SHAREMIND_EC(MISSING_FACILITY, MODULE_ERROR);
         #undef SHAREMIND_EC2
         #undef SHAREMIND_EC
-        default:
+        case SHAREMIND_MODULE_API_0x1_INVALID_CALL:
+        case SHAREMIND_MODULE_API_0x1_INVALID_PD_CONFIGURATION:
+        case SHAREMIND_MODULE_API_0x1_INVALID_MODULE_CONFIGURATION:
             SharemindPdpi_setError(pdpi,
                                    SHAREMIND_MODULE_API_API_ERROR,
                                    "Module returned an unexpected error!");
             return SHAREMIND_MODULE_API_API_ERROR;
+        #ifndef __clang__
+        default: SHAREMIND_ABORT("lMA P+i1 %d", (int) r);
+        #endif
     }
 }
 

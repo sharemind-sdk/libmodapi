@@ -22,6 +22,7 @@
 #include "pd_0x1.h"
 
 #include <assert.h>
+#include <sharemind/abort.h>
 #include <stdio.h>
 #include "modapi.h"
 #include "module.h"
@@ -71,7 +72,9 @@ SharemindModuleApiError SharemindPd_start_0x1(SharemindPd * pd) {
     pdWrapper.internal = pd;
 
     typedef SharemindModuleApi0x1PdStartup PdStartup;
-    switch ((*((PdStartup) pdk->pd_startup_impl_or_wrapper))(&pdWrapper)) {
+    SharemindModuleApi0x1Error const r =
+            (*((PdStartup) pdk->pd_startup_impl_or_wrapper))(&pdWrapper);
+    switch (r) {
         case SHAREMIND_MODULE_API_0x1_OK:
             pd->pdHandle = pdWrapper.pdHandle;
             return SHAREMIND_MODULE_API_OK;
@@ -91,11 +94,15 @@ SharemindModuleApiError SharemindPd_start_0x1(SharemindPd * pd) {
         SHAREMIND_EC(INVALID_PD_CONFIGURATION, MODULE_ERROR);
         #undef SHAREMIND_EC2
         #undef SHAREMIND_EC
-        default:
+        case SHAREMIND_MODULE_API_0x1_INVALID_CALL:
+        case SHAREMIND_MODULE_API_0x1_INVALID_MODULE_CONFIGURATION:
             SharemindPd_setError(pd,
                                  SHAREMIND_MODULE_API_API_ERROR,
                                  "Module returned an unexpected error!");
             return SHAREMIND_MODULE_API_API_ERROR;
+        #ifndef __clang__
+        default: SHAREMIND_ABORT("lMA Pi1 %d", (int) r);
+        #endif
     }
 }
 

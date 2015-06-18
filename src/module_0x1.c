@@ -23,6 +23,7 @@
 
 #include <assert.h>
 #include <dlfcn.h>
+#include <sharemind/abort.h>
 #include <sharemind/stringmap.h>
 #include "modapi.h"
 #include "module.h"
@@ -406,7 +407,8 @@ SharemindModuleApiError SharemindModule_init_0x1(SharemindModule * const m) {
         .internal = m,
         .conf = m->conf
     };
-    switch (apiData->initializer(&context)) {
+    SharemindModuleApi0x1Error const r = apiData->initializer(&context);
+    switch (r) {
         case SHAREMIND_MODULE_API_0x1_OK:
             if (!context.moduleHandle) {
                 apiData->deinitializer(&context);
@@ -433,11 +435,15 @@ SharemindModuleApiError SharemindModule_init_0x1(SharemindModule * const m) {
         SHAREMIND_EC(INVALID_MODULE_CONFIGURATION, MODULE_ERROR);
         #undef SHAREMIND_EC2
         #undef SHAREMIND_EC
-        default:
+        case SHAREMIND_MODULE_API_0x1_INVALID_CALL:
+        case SHAREMIND_MODULE_API_0x1_INVALID_PD_CONFIGURATION:
             SharemindModule_setError(m,
                                      SHAREMIND_MODULE_API_API_ERROR,
                                      "Module returned an unexpected error!");
             return SHAREMIND_MODULE_API_API_ERROR;
+        #ifndef __clang__
+        default: SHAREMIND_ABORT("lMA Mi1 %d", (int) r);
+        #endif
     }
 }
 

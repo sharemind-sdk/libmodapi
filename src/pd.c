@@ -27,10 +27,6 @@
 #include "pdk.h"
 
 
-// Include API list:
-#include "apis.c"
-
-
 SHAREMIND_STRINGMAP_DECLARE_insertHint(SharemindPdMap,static inline,)
 SHAREMIND_STRINGMAP_DEFINE_insertHint(SharemindPdMap,static inline)
 SHAREMIND_STRINGMAP_DECLARE_emplaceAtHint(SharemindPdMap,static inline,)

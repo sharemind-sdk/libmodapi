@@ -20,7 +20,7 @@
 #ifndef SHAREMIND_LIBMODAPI_PDPI_H
 #define SHAREMIND_LIBMODAPI_PDPI_H
 
-#ifndef SHAREMIND_INTERNAL__
+#ifndef SHAREMIND_INTERNAL_
 #error including an internal header!
 #endif
 

@@ -49,7 +49,7 @@ SHAREMIND_EXTERN_C_BEGIN
     SHAREMIND_LASTERROR_PUBLIC_FUNCTIONS_DECLARE(ClassName,, \
                                                  SharemindModuleApiError,)
 
-#define SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS__(ClassName,fF,FF) \
+#define SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS_(ClassName,fF,FF) \
     SharemindModuleApiError ClassName ## _set ## FF(ClassName * c, \
                                                     const char * name, \
                                                     void * facility, \
@@ -63,12 +63,12 @@ SHAREMIND_EXTERN_C_BEGIN
             __attribute__ ((nonnull(1,2))) \
 
 #define SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS(ClassName,fN,FN) \
-    SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS__(ClassName, \
+    SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS_(ClassName, \
                                                      fN ## Facility, \
                                                      FN ## Facility)
 
 #define SHAREMIND_LIBMODAPI_DECLARE_SELF_FACILITY_FUNCTIONS(ClassName) \
-    SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS__(ClassName, \
+    SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS_(ClassName, \
                                                      facility, \
                                                      Facility)
 
@@ -453,7 +453,7 @@ SharemindModuleApi * SharemindPdpi_moduleApi(const SharemindPdpi * pdpi)
 #undef SHAREMIND_LIBMODAPI_DECLARE_ERROR_FUNCTIONS
 #undef SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS
 #undef SHAREMIND_LIBMODAPI_DECLARE_SELF_FACILITY_FUNCTIONS
-#undef SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS__
+#undef SHAREMIND_LIBMODAPI_DECLARE_FACILITY_FUNCTIONS_
 
 
 SHAREMIND_EXTERN_C_END

@@ -20,7 +20,7 @@
 #ifndef SHAREMIND_LIBMODAPI_FACILITYMAP_H
 #define SHAREMIND_LIBMODAPI_FACILITYMAP_H
 
-#ifndef SHAREMIND_INTERNAL__
+#ifndef SHAREMIND_INTERNAL_
 #error including an internal header!
 #endif
 
@@ -154,7 +154,7 @@ inline void SharemindFacilityMap_destroy(SharemindFacilityMap * fm) {
 
 SHAREMIND_EXTERN_C_END
 
-#define SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS__(CN,fF,FF) \
+#define SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS_(CN,fF,FF) \
     SHAREMIND_EXTERN_C_BEGIN \
     SharemindModuleApiError CN ## _set ## FF(CN * c, \
                                              const char * name, \
@@ -216,11 +216,11 @@ SHAREMIND_EXTERN_C_END
     SHAREMIND_EXTERN_C_END
 
 #define SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(ClassName,fN,FN) \
-    SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS__(ClassName, \
+    SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS_(ClassName, \
                                              fN ## Facility, \
                                              FN ## Facility)
 
 #define SHAREMIND_DEFINE_SELF_FACILITYMAP_ACCESSORS(ClassName) \
-    SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS__(ClassName, facility, Facility)
+    SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS_(ClassName, facility, Facility)
 
 #endif /* SHAREMIND_LIBMODAPI_FACILITYMAP_H */

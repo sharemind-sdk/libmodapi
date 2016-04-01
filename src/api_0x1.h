@@ -256,6 +256,10 @@ struct SharemindModuleApi0x1SyscallContext_ {
             SharemindModuleApi0x1SyscallContext * c,
             uint64_t pd_index);
 
+    void * (* SHAREMIND_ICONST processFacility)(
+            SharemindModuleApi0x1SyscallContext const * c,
+            char const * facilityName);
+
 
     /* Access to public dynamic memory inside the VM process: */
     uint64_t (* SHAREMIND_ICONST publicAlloc)(

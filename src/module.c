@@ -104,7 +104,7 @@ SharemindModule * SharemindModuleApi_newModule(SharemindModuleApi * modapi,
         SharemindModuleApi_setError(
                     modapi,
                     SHAREMIND_MODULE_API_UNABLE_TO_OPEN_MODULE,
-                    "dlopen() failed!");
+                    dlerror());
         goto SharemindModule_new_fail_4;
     }
 

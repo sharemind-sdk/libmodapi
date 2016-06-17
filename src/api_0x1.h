@@ -69,9 +69,6 @@ typedef enum {
     /** Module implementation limits reached. */
     SHAREMIND_MODULE_API_0x1_IMPLEMENTATION_LIMITS_REACHED,
 
-    /** Sharemind acted in an unspecified manner. */
-    SHAREMIND_MODULE_API_0x1_SHAREMIND_ERROR,
-
     /** Programming fault in the module. */
     SHAREMIND_MODULE_API_0x1_MODULE_ERROR,
 
@@ -97,7 +94,6 @@ typedef enum {
     ((SHAREMIND_MODULE_API_0x1_OK, = 0)) \
     ((SHAREMIND_MODULE_API_0x1_OUT_OF_MEMORY,)) \
     ((SHAREMIND_MODULE_API_0x1_IMPLEMENTATION_LIMITS_REACHED,)) \
-    ((SHAREMIND_MODULE_API_0x1_SHAREMIND_ERROR,)) \
     ((SHAREMIND_MODULE_API_0x1_MODULE_ERROR,)) \
     ((SHAREMIND_MODULE_API_0x1_GENERAL_ERROR,)) \
     ((SHAREMIND_MODULE_API_0x1_INVALID_CALL,)) \

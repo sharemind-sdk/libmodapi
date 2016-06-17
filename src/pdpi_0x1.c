@@ -65,20 +65,17 @@ SharemindModuleApiError SharemindPdpi_start_0x1(SharemindPdpi * pdpi) {
         case SHAREMIND_MODULE_API_0x1_OK:
             pdpi->pdProcessHandle = pdpiWrapper.pdProcessHandle;
             return SHAREMIND_MODULE_API_OK;
-        #define SHAREMIND_EC(theirs,ours) \
-            case SHAREMIND_MODULE_API_0x1_ ## theirs: \
+        #define SHAREMIND_EC(e) \
+            case SHAREMIND_MODULE_API_0x1_ ## e: \
                 SharemindPdpi_setError(pdpi, \
-                                       SHAREMIND_MODULE_API_ ## ours, \
-                                       "Module returned " #theirs "!"); \
-                return SHAREMIND_MODULE_API_ ## ours
-        #define SHAREMIND_EC2(e) SHAREMIND_EC(e,e)
-        SHAREMIND_EC2(OUT_OF_MEMORY);
-        SHAREMIND_EC2(IMPLEMENTATION_LIMITS_REACHED);
-        SHAREMIND_EC2(SHAREMIND_ERROR);
-        SHAREMIND_EC2(MODULE_ERROR);
-        SHAREMIND_EC(GENERAL_ERROR, MODULE_ERROR);
-        SHAREMIND_EC(MISSING_FACILITY, MODULE_ERROR);
-        #undef SHAREMIND_EC2
+                                       SHAREMIND_MODULE_API_ ## e, \
+                                       "Module returned " #e "!"); \
+                return SHAREMIND_MODULE_API_ ## e
+        SHAREMIND_EC(OUT_OF_MEMORY);
+        SHAREMIND_EC(IMPLEMENTATION_LIMITS_REACHED);
+        SHAREMIND_EC(MODULE_ERROR);
+        SHAREMIND_EC(GENERAL_ERROR);
+        SHAREMIND_EC(MISSING_FACILITY);
         #undef SHAREMIND_EC
         case SHAREMIND_MODULE_API_0x1_INVALID_CALL:
         case SHAREMIND_MODULE_API_0x1_INVALID_PD_CONFIGURATION:

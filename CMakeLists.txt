@@ -90,7 +90,7 @@ SET_TARGET_PROPERTIES("libmodapi" PROPERTIES
                       OUTPUT_NAME "sharemind_modapi"
                       VERSION "${LIBMODAPI_VERSION}"
                       SOVERSION "${LIBMODAPI_SOVERSION}")
-TARGET_LINK_LIBRARIES("libmodapi" "-ldl")
+TARGET_LINK_LIBRARIES("libmodapi" ${SharemindCHeaders_LIBRARIES} "-ldl")
 
 INSTALL(TARGETS "libmodapi"
         LIBRARY DESTINATION "lib")
@@ -103,7 +103,8 @@ FILE(GLOB_RECURSE sharemind_libmodapi_in_files
      "${CMAKE_CURRENT_SOURCE_DIR}/*.in")
 ADD_CUSTOM_TARGET("include_sharemind_libmodapi_in_files_in_IDE"
                   SOURCES ${sharemind_libmodapi_in_files})
-SET(LIBMODAPI_INSTALL_LINK_LIBRARIES "-L${CMAKE_INSTALL_PREFIX}/lib"
+SET(LIBMODAPI_INSTALL_LINK_LIBRARIES ${SharemindCHeaders_LIBRARIES}
+                                     "-L${CMAKE_INSTALL_PREFIX}/lib"
                                      "-lsharemind_modapi")
 SET(LIBMODAPI_INSTALL_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include")
 

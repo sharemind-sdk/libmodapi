@@ -67,6 +67,10 @@ SHAREMIND_STRINGMAP_DEFINE_insertAtHint(SharemindFacilityMapInner,
                                         strdup,
                                         malloc,
                                         free)
+SHAREMIND_STRINGMAP_DECLARE_take(SharemindFacilityMapInner,
+                                 inline,
+                                 SHAREMIND_COMMA visibility("internal"))
+SHAREMIND_STRINGMAP_DEFINE_take(SharemindFacilityMapInner, inline)
 SHAREMIND_STRINGMAP_DECLARE_remove(SharemindFacilityMapInner,
                                    inline,
                                    SHAREMIND_COMMA visibility("internal"))

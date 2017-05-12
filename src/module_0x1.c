@@ -54,6 +54,8 @@ SHAREMIND_STRINGMAP_DEFINE_insertAtHint(SharemindPdkMap,
                                         strdup,
                                         malloc,
                                         free)
+SHAREMIND_STRINGMAP_DECLARE_take(SharemindPdkMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_take(SharemindPdkMap,static inline)
 SHAREMIND_STRINGMAP_DECLARE_remove(SharemindPdkMap,static inline,)
 SHAREMIND_STRINGMAP_DEFINE_remove(SharemindPdkMap,
                                   static inline,
@@ -125,6 +127,8 @@ SHAREMIND_STRINGMAP_DEFINE_insertAtHint(SharemindSyscallMap,
                                         strdup,
                                         malloc,
                                         free)
+SHAREMIND_STRINGMAP_DECLARE_take(SharemindSyscallMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_take(SharemindSyscallMap,static inline)
 SHAREMIND_STRINGMAP_DECLARE_remove(SharemindSyscallMap,static inline,)
 SHAREMIND_STRINGMAP_DEFINE_remove(SharemindSyscallMap,
                                   static inline,

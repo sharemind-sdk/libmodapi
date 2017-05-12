@@ -31,6 +31,8 @@ SHAREMIND_STRINGMAP_DECLARE_insertHint(SharemindPdMap,static inline,)
 SHAREMIND_STRINGMAP_DEFINE_insertHint(SharemindPdMap,static inline)
 SHAREMIND_STRINGMAP_DECLARE_emplaceAtHint(SharemindPdMap,static inline,)
 SHAREMIND_STRINGMAP_DEFINE_emplaceAtHint(SharemindPdMap, static inline)
+SHAREMIND_STRINGMAP_DECLARE_take(SharemindPdMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_take(SharemindPdMap,static inline)
 SHAREMIND_STRINGMAP_DECLARE_remove(SharemindPdMap,static inline,)
 SHAREMIND_STRINGMAP_DEFINE_remove(SharemindPdMap,
                                   static inline,
@@ -49,10 +51,10 @@ SharemindPd * SharemindPdk_newPd(SharemindPdk * pdk,
     assert(name);
     assert(name[0]);
 
-    struct SharemindPdMap_detail * d;
+    SharemindPdMap_detail * d;
     SharemindPd * pd;
 
-    if (unlikely(!(d = malloc(sizeof(struct SharemindPdMap_detail))))) {
+    if (unlikely(!(d = malloc(sizeof(SharemindPdMap_detail))))) {
         SharemindPdk_setErrorOom(pdk);
         goto SharemindPd_new_fail_0;
     }

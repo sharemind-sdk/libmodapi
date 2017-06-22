@@ -56,7 +56,6 @@ SharemindPdpi * SharemindPd_newPdpi(SharemindPd * pd) {
     pdpi->facilityContext = NULL; /* Just in case */
     SharemindFacilityMap_init(&pdpi->facilityMap, &pd->pdpiFacilityMap);
     SHAREMIND_REFS_INIT(pdpi);
-    SHAREMIND_NAMED_REFS_INIT(pdpi,startedRefs);
 
     SharemindPd_lock(pd);
     if (!SharemindPd_refs_ref(pd)) {
@@ -151,7 +150,6 @@ void SharemindPdpi_stop(SharemindPdpi * pdpi) {
     assert(pdpi->pd->pdk->module->api);
 
     SharemindPdpi_lock(pdpi);
-    SHAREMIND_NAMED_REFS_ASSERT_IF_REFERENCED(pdpi,startedRefs);
 
     (*(pdpi->pd->pdk->module->api->stopPdpi))(pdpi);
 
@@ -205,4 +203,3 @@ SHAREMIND_DEFINE_SELF_FACILITYMAP_ACCESSORS(SharemindPdpi)
 SHAREMIND_TAG_FUNCTIONS_DEFINE(SharemindPdpi,)
 
 SHAREMIND_REFS_DEFINE_FUNCTIONS_WITH_RECURSIVE_MUTEX(SharemindPdpi)
-SHAREMIND_NAMED_REFS_DEFINE_FUNCTIONS_WITH_RECURSIVE_MUTEX(SharemindPdpi,startedRefs)

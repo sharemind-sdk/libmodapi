@@ -121,7 +121,7 @@ SharemindModuleApiError SharemindPdpi_start(SharemindPdpi * pdpi) {
     SharemindPdpi_lock(pdpi);
     if (pdpi->isStarted) {
         SharemindPdpi_unlock(pdpi);
-        return true;
+        return SHAREMIND_MODULE_API_OK;
     }
 
     SharemindPd * const pd = pdpi->pd;

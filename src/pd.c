@@ -51,10 +51,11 @@ SharemindPd * SharemindPdk_newPd(SharemindPdk * pdk,
     assert(name);
     assert(name[0]);
 
-    SharemindPdMap_detail * d;
     SharemindPd * pd;
 
-    if (unlikely(!(d = malloc(sizeof(SharemindPdMap_detail))))) {
+    SharemindPdMap_detail * d =
+            (SharemindPdMap_detail *) malloc(sizeof(SharemindPdMap_detail));
+    if (unlikely(!d)) {
         SharemindPdk_setErrorOom(pdk);
         goto SharemindPd_new_fail_0;
     }

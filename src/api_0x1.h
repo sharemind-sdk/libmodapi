@@ -22,6 +22,7 @@
 
 #include <sharemind/codeblock.h>
 #include <sharemind/extern_c.h>
+#include <sharemind/null.h>
 #include <sharemind/preprocessor.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -384,7 +385,7 @@ typedef SharemindModuleApi0x1SyscallDefinition const
             sharemindModuleApi0x1SyscallDefinitions = \
     { \
         __VA_ARGS__ , \
-        { "", NULL } \
+        { "", SHAREMIND_NULL } \
     }
 
 
@@ -568,7 +569,7 @@ typedef SharemindModuleApi0x1PdkDefinition const
             sharemindModuleApi0x1PdkDefinitions = \
     { \
         __VA_ARGS__, \
-        { "", NULL, NULL, NULL, NULL } \
+        { "", SHAREMIND_NULL, SHAREMIND_NULL, SHAREMIND_NULL, SHAREMIND_NULL } \
     }
 
 SHAREMIND_EXTERN_C_END

@@ -438,6 +438,7 @@ SharemindModuleApiError SharemindModule_init_0x1(SharemindModule * const m) {
         #undef SHAREMIND_EC
         case SHAREMIND_MODULE_API_0x1_INVALID_CALL:
         case SHAREMIND_MODULE_API_0x1_INVALID_PD_CONFIGURATION:
+        case SHAREMIND_MODULE_API_0x1_ACCESS_DENIED:
             SharemindModule_setError(m,
                                      SHAREMIND_MODULE_API_API_ERROR,
                                      "Module returned an unexpected error!");

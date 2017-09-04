@@ -80,6 +80,7 @@ SharemindModuleApiError SharemindPdpi_start_0x1(SharemindPdpi * pdpi) {
         case SHAREMIND_MODULE_API_0x1_INVALID_CALL:
         case SHAREMIND_MODULE_API_0x1_INVALID_PD_CONFIGURATION:
         case SHAREMIND_MODULE_API_0x1_INVALID_MODULE_CONFIGURATION:
+        case SHAREMIND_MODULE_API_0x1_ACCESS_DENIED:
             SharemindPdpi_setError(pdpi,
                                    SHAREMIND_MODULE_API_API_ERROR,
                                    "Module returned an unexpected error!");

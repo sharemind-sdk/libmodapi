@@ -22,12 +22,12 @@
 
 #include <sharemind/extern_c.h>
 #include <sharemind/lasterror.h>
+#include <sharemind/module-apis/api_0x1.h>
 #include <sharemind/preprocessor.h>
 #include <sharemind/tag.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "api_0x1.h"
 
 
 SHAREMIND_EXTERN_C_BEGIN

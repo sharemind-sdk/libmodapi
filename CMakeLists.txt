@@ -29,6 +29,8 @@ SharemindSetProjectVersion()
 
 
 FIND_PACKAGE(SharemindCHeaders REQUIRED)
+FIND_PACKAGE(SharemindModuleApis REQUIRED)
+
 
 ################################################################################
 # libmodapi
@@ -39,15 +41,6 @@ SET(SHAREMIND_LIBMODAPI_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/src/libmodapi.h")
 INSTALL(FILES ${SHAREMIND_LIBMODAPI_HEADERS}
         DESTINATION "include/sharemind/libmodapi"
         COMPONENT "dev")
-
-# API headers:
-SET(SHAREMIND_LIBMODAPI_API_HEADERS
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/api.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/api_0x1.h"
-)
-INSTALL(FILES ${SHAREMIND_LIBMODAPI_API_HEADERS}
-        DESTINATION "include/sharemind/libmodapi"
-        COMPONENT "api-dev")
 
 # Private headers:
 FILE(GLOB_RECURSE SHAREMIND_LIBMODAPI_HEADERS_P
@@ -75,12 +68,12 @@ SharemindAddSharedLibrary("libmodapi"
         "_XOPEN_SOURCE=700"
     INCLUDE_DIRECTORIES
         ${SharemindCHeaders_INCLUDE_DIRS}
+        ${SharemindModuleApis_INCLUDE_DIRS}
 )
 
 
 # Install cmake files:
 SharemindCreateCMakeFindFiles(
-    COMPONENT "common-dev"
     INCLUDE_DIRS
         "${CMAKE_INSTALL_PREFIX}/include"
     DEFINITIONS
@@ -101,34 +94,14 @@ SharemindAddComponentPackage("lib"
     DEB_SECTION "libs"
     DEB_DEPENDS "libc6 (>= 2.19)"
 )
-SharemindAddComponentPackage("common-dev"
-    NAME "libsharemind-modapi-common-dev"
-    DESCRIPTION "Sharemind Module API library common development files"
-    DEB_SECTION "libdevel"
-)
-SharemindAddComponentPackage("api-dev"
-    NAME "libsharemind-modapi-api-dev"
-    DESCRIPTION "Sharemind Module API library API headers"
-    DEB_SECTION "libdevel"
-    DEB_DEPENDS
-        "libsharemind-modapi-common-dev (= ${SharemindLibModapi_VERSION})"
-        "libsharemind-cheaders-dev (>= 0.1.0)"
-        "libc6-dev (>= 2.19)"
-        "libgcc-4.8-dev"
-        "| libgcc-4.9-dev"
-        "| libgcc-5-dev"
-        "| libgcc-6-dev"
-        "| libgcc-7-dev"
-)
 SharemindAddComponentPackage("dev"
     NAME "libsharemind-modapi-dev"
     DESCRIPTION "Sharemind Module API library development headers"
     DEB_SECTION "libdevel"
     DEB_DEPENDS
         "libsharemind-modapi (= ${SharemindLibModapi_VERSION})"
-        "libsharemind-modapi-common-dev (= ${SharemindLibModapi_VERSION})"
-        "libsharemind-modapi-api-dev (= ${SharemindLibModapi_VERSION})"
         "libsharemind-cheaders-dev (>= 0.1.0)"
+        "sharemind-module-apis-dev (>= 1.0.0)"
         "libc6-dev (>= 2.19)"
         "libgcc-4.8-dev"
         "| libgcc-4.9-dev"

@@ -134,7 +134,7 @@ SharemindModuleApiError SharemindPdpi_start(SharemindPdpi * pdpi) {
 
     const SharemindModuleApiError r = (*(module->api->startPdpi))(pdpi);
     if (likely(r == SHAREMIND_MODULE_API_OK)) {
-        pdpi->isStarted = r;
+        pdpi->isStarted = true;
     } else {
         SharemindPd_startedRefs_unref(pd);
     }

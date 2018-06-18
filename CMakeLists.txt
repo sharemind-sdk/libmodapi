@@ -99,7 +99,7 @@ SharemindAddComponentPackage("dev"
     DESCRIPTION "Sharemind Module API library development headers"
     DEB_SECTION "libdevel"
     DEB_DEPENDS
-        "libsharemind-modapi (= ${SharemindLibModapi_VERSION})"
+        "libsharemind-modapi (= ${SharemindLibModapi_DEB_lib_PACKAGE_VERSION})"
         "libsharemind-cheaders-dev (>= 0.1.0)"
         "sharemind-module-apis-dev (>= 1.0.0)"
         "libc6-dev (>= 2.19)"
@@ -113,6 +113,6 @@ SharemindAddComponentPackage("debug"
     NAME "libsharemind-modapi-dbg"
     DESCRIPTION "Sharemind Module API library debug symbols"
     DEB_SECTION "debug"
-    DEB_DEPENDS "libsharemind-modapi (= ${SharemindLibModapi_VERSION})"
+    DEB_DEPENDS "libsharemind-modapi (= ${SharemindLibModapi_DEB_lib_PACKAGE_VERSION})"
 )
 SharemindPackagingFinalize()

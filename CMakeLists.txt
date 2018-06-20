@@ -29,7 +29,7 @@ SharemindSetProjectVersion()
 
 
 FIND_PACKAGE(SharemindCHeaders 1.1.0 REQUIRED)
-FIND_PACKAGE(SharemindModuleApis REQUIRED)
+FIND_PACKAGE(SharemindModuleApis 1.0.0 REQUIRED)
 
 
 ################################################################################

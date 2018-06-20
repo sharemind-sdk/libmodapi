@@ -100,7 +100,7 @@ SharemindAddComponentPackage("dev"
     DEB_SECTION "libdevel"
     DEB_DEPENDS
         "libsharemind-modapi (= ${SharemindLibModapi_DEB_lib_PACKAGE_VERSION})"
-        "libsharemind-cheaders-dev (>= 0.1.0)"
+        "libsharemind-cheaders-dev (>= 1.1.0)"
         "sharemind-module-apis-dev (>= 1.0.0)"
         "libc6-dev (>= 2.19)"
         "libgcc-4.8-dev"

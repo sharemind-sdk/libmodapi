@@ -23,9 +23,7 @@ PROJECT(SharemindLibModapi VERSION "0.3.3" LANGUAGES "C")
 INCLUDE("${CMAKE_CURRENT_SOURCE_DIR}/config.local" OPTIONAL)
 INCLUDE("${CMAKE_CURRENT_BINARY_DIR}/config.local" OPTIONAL)
 
-FIND_PACKAGE(SharemindCMakeHelpers 1.2 REQUIRED)
-
-SharemindSetProjectVersion()
+FIND_PACKAGE(SharemindCMakeHelpers 1.3 REQUIRED)
 
 
 FIND_PACKAGE(SharemindCHeaders 1.1.0 REQUIRED)

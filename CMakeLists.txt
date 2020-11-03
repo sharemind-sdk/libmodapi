@@ -23,11 +23,10 @@ PROJECT(SharemindLibModapi VERSION "0.3.4" LANGUAGES "C")
 INCLUDE("${CMAKE_CURRENT_SOURCE_DIR}/config.local" OPTIONAL)
 INCLUDE("${CMAKE_CURRENT_BINARY_DIR}/config.local" OPTIONAL)
 
-FIND_PACKAGE(SharemindCMakeHelpers 1.3 REQUIRED)
+FIND_PACKAGE(SharemindCMakeHelpers 1.6 REQUIRED)
 
-
-FIND_PACKAGE(SharemindCHeaders 1.1.0 REQUIRED)
-FIND_PACKAGE(SharemindModuleApis 1.0.0 REQUIRED)
+FIND_PACKAGE(SharemindCHeaders 1.3.0 REQUIRED)
+FIND_PACKAGE(SharemindModuleApis 1.1.0 REQUIRED)
 
 
 ################################################################################
@@ -51,37 +50,35 @@ LIST(REMOVE_ITEM SHAREMIND_LIBMODAPI_HEADERS_P
 SharemindSetC99CompileOptions(COMPILE_FLAGS "-fwrapv")
 FILE(GLOB_RECURSE SHAREMIND_LIBMODAPI_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c")
-SharemindAddSharedLibrary("libmodapi"
+SharemindAddSharedLibrary(LibModapi
     SOURCES ${SHAREMIND_LIBMODAPI_SOURCES}
             ${SHAREMIND_LIBMODAPI_HEADERS}
             ${SHAREMIND_LIBMODAPI_API_HEADERS}
             ${SHAREMIND_LIBMODAPI_HEADERS_P}
     OUTPUT_NAME "sharemind_modapi"
-    LINK_LIBRARIES
-        ${SharemindCHeaders_LIBRARIES}
-        "-ldl"
-    LEGACY_DEFINITIONS
-        ${SharemindCHeaders_DEFINITIONS}
-    COMPILE_DEFINITIONS
+)
+TARGET_INCLUDE_DIRECTORIES(LibModapi
+    INTERFACE
+        # $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src> # TODO
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
+    )
+TARGET_COMPILE_DEFINITIONS(LibModapi
+    PUBLIC
         "_XOPEN_SOURCE=700"
-    INCLUDE_DIRECTORIES
-        ${SharemindCHeaders_INCLUDE_DIRS}
-        ${SharemindModuleApis_INCLUDE_DIRS}
-)
-
-
-# Install cmake files:
-SharemindCreateCMakeFindFiles(
-    INCLUDE_DIRS
-        "${CMAKE_INSTALL_PREFIX}/include"
-    DEFINITIONS
-        "-D__STDC_LIMIT_MACROS"
-        "-D_XOPEN_SOURCE=700"
-    LIBRARIES
-        ${SharemindCHeaders_LIBRARIES}
-        "-L${CMAKE_INSTALL_PREFIX}/lib"
-        "-lsharemind_modapi"
-)
+        "__STDC_LIMIT_MACROS"
+    )
+TARGET_LINK_LIBRARIES(LibModapi
+    PRIVATE
+        "dl"
+    PUBLIC
+        "Sharemind::CHeaders"
+        "Sharemind::ModuleApis"
+    )
+SharemindCreateCMakeFindFilesForTarget(LibModapi
+    DEPENDENCIES
+        "SharemindCHeaders 1.3.0"
+        "SharemindModuleApis 1.1.0"
+    )
 
 
 # Packaging:
@@ -98,8 +95,8 @@ SharemindAddComponentPackage("dev"
     DEB_SECTION "libdevel"
     DEB_DEPENDS
         "libsharemind-modapi (= ${SharemindLibModapi_DEB_lib_PACKAGE_VERSION})"
-        "libsharemind-cheaders-dev (>= 1.1.0)"
-        "sharemind-module-apis-dev (>= 1.0.0)"
+        "libsharemind-cheaders-dev (>= 1.3.0)"
+        "sharemind-module-apis-dev (>= 1.1.0)"
         "libc6-dev (>= 2.19)"
 )
 SharemindAddComponentPackage("debug"

@@ -69,7 +69,7 @@ TARGET_COMPILE_DEFINITIONS(LibModapi
     )
 TARGET_LINK_LIBRARIES(LibModapi
     PRIVATE
-        "dl"
+        ${CMAKE_DL_LIBS}
     PUBLIC
         "Sharemind::CHeaders"
         "Sharemind::ModuleApis"

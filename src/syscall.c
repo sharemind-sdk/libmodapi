@@ -128,4 +128,7 @@ SharemindSyscallWrapper SharemindSyscall_wrapper(const SharemindSyscall * sc) {
     return result;
 }
 
+// Instantiations for inline lock functions:
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE(SharemindSyscall,,)
+
 SHAREMIND_TAG_FUNCTIONS_DEFINE(SharemindSyscall,)

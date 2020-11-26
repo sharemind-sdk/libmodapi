@@ -198,6 +198,9 @@ SharemindModuleApi * SharemindPdpi_moduleApi(const SharemindPdpi * pdpi) {
     return pdpi->pd->pdk->module->modapi;
 }
 
+// Instantiations for inline lock functions:
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE(SharemindPdpi,,)
+
 SHAREMIND_DEFINE_SELF_FACILITYMAP_ACCESSORS(SharemindPdpi)
 
 SHAREMIND_TAG_FUNCTIONS_DEFINE(SharemindPdpi,)

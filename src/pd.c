@@ -268,6 +268,9 @@ void * SharemindPd_handle(const SharemindPd * pd) {
     return r;
 }
 
+// Instantiations for inline lock functions:
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE(SharemindPd,,)
+
 SHAREMIND_DEFINE_SELF_FACILITYMAP_ACCESSORS(SharemindPd)
 SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindPd,pdpi,Pdpi)
 

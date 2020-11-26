@@ -418,6 +418,9 @@ SharemindPd * SharemindModule_findPd(const SharemindModule * m,
     return r;
 }
 
+// Instantiations for inline lock functions:
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE(SharemindModule,,)
+
 SHAREMIND_LIBMODAPI_LASTERROR_FUNCTIONS_DEFINE(SharemindModule)
 
 SHAREMIND_DEFINE_SELF_FACILITYMAP_ACCESSORS(SharemindModule)

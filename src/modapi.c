@@ -27,6 +27,9 @@
 SHAREMIND_ENUM_CUSTOM_DEFINE_TOSTRING(SharemindModuleApiError,
                                       SHAREMIND_MODULE_API_ERROR_ENUM)
 
+// Instantiations for inline set functions:
+SHAREMIND_SET_DECLARE_FUNCTIONS(SharemindModulesSet, SharemindModule *,,)
+
 SHAREMIND_SET_DECLARE_FOREACH_WITH_INLINE(
         static inline size_t,
         SharemindModulesSet,
@@ -363,6 +366,9 @@ SharemindPd * SharemindModuleApi_findPd(const SharemindModuleApi * m,
     SharemindModuleApi_unlockConst(m);
     return r;
 }
+
+// Instantiations for inline lock functions:
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE(SharemindModuleApi,,)
 
 SHAREMIND_LIBMODAPI_LASTERROR_FUNCTIONS_DEFINE(SharemindModuleApi)
 

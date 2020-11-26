@@ -217,6 +217,9 @@ SharemindPd * SharemindPdk_findPd(const SharemindPdk * pdk, const char * name) {
     return v ? (&v->value) : NULL;
 }
 
+// Instantiations for inline lock functions:
+SHAREMIND_RECURSIVE_LOCK_FUNCTIONS_DECLARE(SharemindPdk,,)
+
 SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindPdk,pd,Pd)
 SHAREMIND_DEFINE_FACILITYMAP_ACCESSORS(SharemindPdk,pdpi,Pdpi)
 

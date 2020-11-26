@@ -22,6 +22,27 @@
 #include "facilitymap.h"
 
 
+// Instantiations for inline functions:
+SHAREMIND_STRINGMAP_DECLARE_init(SharemindFacilityMapInner,,)
+SHAREMIND_STRINGMAP_DECLARE_destroy(SharemindFacilityMapInner,,,)
+SHAREMIND_STRINGMAP_DECLARE_get(SharemindFacilityMapInner,,)
+SHAREMIND_STRINGMAP_DECLARE_insertHint(SharemindFacilityMapInner,,)
+SHAREMIND_STRINGMAP_DECLARE_emplaceAtHint(SharemindFacilityMapInner,,)
+SHAREMIND_STRINGMAP_DECLARE_insertAtHint(SharemindFacilityMapInner,,)
+SHAREMIND_STRINGMAP_DECLARE_take(SharemindFacilityMapInner,,)
+SHAREMIND_STRINGMAP_DECLARE_remove(SharemindFacilityMapInner,,)
+SharemindFacility const * SharemindFacilityMap_get(
+            SharemindFacilityMap const * fm,
+            char const * name);
+void SharemindFacilityMap_init(SharemindFacilityMap * fm,
+                               SharemindFacilityMap * nextMap);
+void SharemindFacilityMap_init_with_getter(
+        SharemindFacilityMap * fm,
+        SharemindFacilityMapNextGetter nextGetter,
+        void * context);
+void SharemindFacilityMap_destroy(SharemindFacilityMap * fm);
+
+
 const SharemindFacility * SharemindFacilityMap_nextMapGetter(
         void * context,
         const char * name)

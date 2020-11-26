@@ -31,6 +31,7 @@
 #include "pd.h"
 
 
+SHAREMIND_STRINGMAP_DECLARE_strHash(SharemindPdMap,) // Instatiation of inline
 SHAREMIND_STRINGMAP_DECLARE_init(SharemindPdMap,static inline,)
 SHAREMIND_STRINGMAP_DEFINE_init(SharemindPdMap,static inline)
 SHAREMIND_STRINGMAP_DECLARE_destroy(SharemindPdMap,static inline,,)

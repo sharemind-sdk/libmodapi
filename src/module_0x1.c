@@ -32,6 +32,8 @@
 
 
 SHAREMIND_STRINGMAP_DECLARE_BODY(SharemindPdkMap, SharemindPdk)
+SHAREMIND_STRINGMAP_DECLARE_strHash(SharemindPdkMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_strHash(SharemindPdkMap,static inline)
 SHAREMIND_STRINGMAP_DECLARE_init(SharemindPdkMap,static inline,)
 SHAREMIND_STRINGMAP_DEFINE_init(SharemindPdkMap,static inline)
 SHAREMIND_STRINGMAP_DECLARE_destroy(SharemindPdkMap,static inline,,)
@@ -105,6 +107,8 @@ SHAREMIND_STRINGMAP_DEFINE_foreach_detail(
             return result;)
 
 SHAREMIND_STRINGMAP_DECLARE_BODY(SharemindSyscallMap, SharemindSyscall)
+SHAREMIND_STRINGMAP_DECLARE_strHash(SharemindSyscallMap,static inline,)
+SHAREMIND_STRINGMAP_DEFINE_strHash(SharemindSyscallMap,static inline)
 SHAREMIND_STRINGMAP_DECLARE_init(SharemindSyscallMap,static inline,)
 SHAREMIND_STRINGMAP_DEFINE_init(SharemindSyscallMap,static inline)
 SHAREMIND_STRINGMAP_DECLARE_destroy(SharemindSyscallMap,static inline,,)

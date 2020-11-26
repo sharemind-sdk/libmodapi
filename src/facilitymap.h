@@ -35,6 +35,10 @@
 
 
 SHAREMIND_STRINGMAP_DECLARE_BODY(SharemindFacilityMapInner, SharemindFacility)
+SHAREMIND_STRINGMAP_DECLARE_strHash(SharemindFacilityMapInner,
+                                    inline,
+                                    SHAREMIND_COMMA visibility("internal"))
+SHAREMIND_STRINGMAP_DEFINE_strHash(SharemindFacilityMapInner, inline)
 SHAREMIND_STRINGMAP_DECLARE_init(SharemindFacilityMapInner,
                                  inline,
                                  SHAREMIND_COMMA visibility("internal"))

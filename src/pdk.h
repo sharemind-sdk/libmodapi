@@ -39,6 +39,10 @@
 SHAREMIND_EXTERN_C_BEGIN
 
 SHAREMIND_STRINGMAP_DECLARE_BODY(SharemindPdMap, SharemindPd)
+SHAREMIND_STRINGMAP_DECLARE_strHash(SharemindPdMap,
+                                    inline,
+                                    SHAREMIND_COMMA visibility("internal"))
+SHAREMIND_STRINGMAP_DEFINE_strHash(SharemindPdMap,inline)
 
 struct SharemindPdk_ {
 

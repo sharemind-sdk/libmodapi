@@ -23,6 +23,7 @@
 
 
 // Instantiations for inline functions:
+SHAREMIND_STRINGMAP_DECLARE_strHash(SharemindFacilityMapInner,,)
 SHAREMIND_STRINGMAP_DECLARE_init(SharemindFacilityMapInner,,)
 SHAREMIND_STRINGMAP_DECLARE_destroy(SharemindFacilityMapInner,,,)
 SHAREMIND_STRINGMAP_DECLARE_get(SharemindFacilityMapInner,,)
